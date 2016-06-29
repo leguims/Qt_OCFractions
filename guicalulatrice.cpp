@@ -3,7 +3,13 @@
 
 GUICalulatrice::GUICalulatrice(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::GUICalulatrice)
+    ui(new Ui::GUICalulatrice),
+    membre_(),
+    oper_(Membre::aucune),
+    saisieNumerateur_(0),
+    saisieDenominateur_(1),
+    saisieDecimales_(false),
+    saisieVide_(true)
 {
     ui->setupUi(this);
 }
@@ -13,17 +19,17 @@ GUICalulatrice::GUICalulatrice(QWidget *parent) :
 //
 void GUICalulatrice::on_bouton_fraction_clicked(void)
 {
-    if(true == m_afficherFraction)
+    membre_.setAfficherFraction(!membre_.getAfficherFraction());
+
+    if(!membre_.getAfficherFraction())
     {
-        m_afficherFraction = false;
         ui->formatAffichageNombreReel->setText("Virgule");
-        ui->affichageResultat->setText("Virgule");
+        //ui->affichageResultat->setText("Virgule");
     }
     else
     {
-        m_afficherFraction = true;
         ui->formatAffichageNombreReel->setText("Fraction");
-        ui->affichageResultat->setText("Fraction");
+        //ui->affichageResultat->setText("Fraction");
     }
 }
 
@@ -33,31 +39,68 @@ void GUICalulatrice::on_bouton_fraction_clicked(void)
 //
 void GUICalulatrice::on_bouton_addition_clicked(void)
 {
-    ui->affichageResultat->setText("addition");
+    // Enregistrer la saisie realisee dans membre_
+    enregistrerNombre();
+
+    // Enregistrer la prochaine operation
+    oper_ = Membre::addition;
+
+    //ui->affichageResultat->setText("addition");
+    //ui->affichageResultat->insertPlainText("+");
+    afficherMembre();
 }
 
 void GUICalulatrice::on_bouton_soustraction_clicked()
 {
-    ui->affichageResultat->setText("soustraction");
+    // Enregistrer la saisie realisee dans membre_
+    enregistrerNombre();
+
+    // Enregistrer la prochaine operation
+    oper_ = Membre::soustraction;
+
+    //ui->affichageResultat->insertPlainText("-");
+    afficherMembre();
 }
 
 void GUICalulatrice::on_bouton_multiplication_clicked()
 {
-    ui->affichageResultat->setText("multiplication");
+    // Enregistrer la saisie realisee dans membre_
+    enregistrerNombre();
+
+    // Enregistrer la prochaine operation
+    oper_ = Membre::multiplication;
+
+    //ui->affichageResultat->insertPlainText("*");
+    afficherMembre();
 }
 
 void GUICalulatrice::on_bouton_division_clicked()
 {
-    ui->affichageResultat->setText("division");
+    // Enregistrer la saisie realisee dans membre_
+    enregistrerNombre();
+
+    // Enregistrer la prochaine operation
+    oper_ = Membre::division;
+
+    //ui->affichageResultat->insertPlainText("/");
+    afficherMembre();
 }
 
 void GUICalulatrice::on_bouton_parenthese_ouvrante_clicked()
 {
+    // Reinitialise la saisie des decimales et du nombre
+    saisieDecimales_ = false;
+    saisieVide_ = true;
+
     ui->affichageResultat->setText("parenthese ouvrante");
 }
 
 void GUICalulatrice::on_bouton_parenthese_fermante_clicked()
 {
+    // Reinitialise la saisie des decimales et du nombre
+    saisieDecimales_ = false;
+    saisieVide_ = true;
+
     ui->affichageResultat->setText("parenthese fermante");
 }
 
@@ -67,7 +110,21 @@ void GUICalulatrice::on_bouton_parenthese_fermante_clicked()
 //
 void GUICalulatrice::on_bouton_resultat_clicked()
 {
-    ui->affichageResultat->setText("resultat");
+    if (Membre::aucune != oper_)
+    {
+        // Enregistrer la saisie realisee dans membre_
+        enregistrerNombre();
+    }
+
+    // Enregistrer la prochaine operation
+    oper_ = Membre::aucune;
+
+    std::cout << membre_ << std::endl;
+    membre_.simplifier();
+
+    //ui->affichageResultat->setText("resultat");
+    //afficherMembre();
+    afficherResultat();
 }
 
 
@@ -81,7 +138,15 @@ void GUICalulatrice::on_bouton_inverse_clicked()
 
 void GUICalulatrice::on_bouton_effacer_clicked()
 {
-    ui->affichageResultat->setText("effacer");
+    //ui->affichageResultat->setText("effacer");
+    ui->affichageResultat->clear();
+
+    membre_.vider();
+    oper_ = Membre::aucune;
+    saisieNumerateur_ = 0;
+    saisieDenominateur_ = 1;
+    saisieDecimales_ = false;
+    saisieVide_ = true;
 }
 
 void GUICalulatrice::on_bouton_oppose_clicked()
@@ -91,57 +156,162 @@ void GUICalulatrice::on_bouton_oppose_clicked()
 
 void GUICalulatrice::on_bouton_virgule_clicked()
 {
+    if (!saisieDecimales_)
+    {
+        saisieDecimales_ = true;
+    }
+
     ui->affichageResultat->setText("virgule");
+}
+
+void GUICalulatrice::enregistrerNombre()
+{
+    if( 0!=saisieNumerateur_ || !saisieVide_)
+        {
+        // Reinitialise la saisie des decimales et du nombre
+        saisieDecimales_ = false;
+        saisieVide_ = true;
+
+        // Appliquer l'attribut "oper" comme operation sur le membre
+        // Si "oper==aucune", initialiser le membre avec la saisie
+        switch (oper_)
+        {
+        case Membre::aucune:
+            membre_ = ZFraction(saisieNumerateur_, saisieDenominateur_);
+            break;
+        case Membre::addition:
+            membre_ += ZFraction(saisieNumerateur_, saisieDenominateur_);
+            break;
+        case Membre::soustraction:
+            membre_ -= ZFraction(saisieNumerateur_, saisieDenominateur_);
+            break;
+        case Membre::multiplication:
+            membre_ *= ZFraction(saisieNumerateur_, saisieDenominateur_);
+            break;
+        case Membre::division:
+            membre_ /= ZFraction(saisieNumerateur_, saisieDenominateur_);
+            break;
+        default:
+            break;
+        }
+        saisieNumerateur_ = 0;
+        saisieDenominateur_ = 1;
+    }
+}
+
+void GUICalulatrice::afficherMembre()
+{
+    ui->affichageResultat->setText( QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
+
+    // Move cursor into end of line
+    QTextCursor cursor = ui->affichageResultat->textCursor();
+    cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
+    ui->affichageResultat->setTextCursor(cursor);
+
+    ui->affichageResultat->insertPlainText( QString::fromUtf8( Membre::afficherOperationPlainText(oper_).data(), Membre::afficherOperationPlainText(oper_).size() ) );
+    //ui->affichageResultat->append( QString::fromUtf8( Membre::afficherOperationPlainText(oper_).data(), Membre::afficherOperationPlainText(oper_).size() ) );
+}
+
+void GUICalulatrice::afficherResultat()
+{
+    ui->affichageResultat->append( QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
 }
 
 void GUICalulatrice::on_bouton_chiffre_9_clicked()
 {
-    ui->affichageResultat->setText("chiffre_9");
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 9;
+    if(saisieDecimales_)
+    {
+        saisieDenominateur_ *= 10;
+    }
+
+    ui->affichageResultat->insertPlainText("9");
 }
 
 void GUICalulatrice::on_bouton_chiffre_8_clicked()
 {
-    ui->affichageResultat->setText("chiffre_8");
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 8;
+    saisieDecimales_ && (saisieDenominateur_ *= 10);
+
+    ui->affichageResultat->insertPlainText("8");
 }
 
 void GUICalulatrice::on_bouton_chiffre_7_clicked()
 {
-    ui->affichageResultat->setText("chiffre_7");
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 7;
+    saisieDecimales_ && (saisieDenominateur_*=10);
+
+    ui->affichageResultat->insertPlainText("7");
 }
 
 void GUICalulatrice::on_bouton_chiffre_6_clicked()
 {
-    ui->affichageResultat->setText("chiffre_6");
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 6;
+    saisieDecimales_ && (saisieDenominateur_ *= 10);
+
+    ui->affichageResultat->insertPlainText("6");
 }
 
 void GUICalulatrice::on_bouton_chiffre_5_clicked()
 {
-    ui->affichageResultat->setText("chiffre_5");
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 5;
+    saisieDecimales_ && (saisieDenominateur_ *= 10);
+
+    ui->affichageResultat->insertPlainText("5");
 }
 
 void GUICalulatrice::on_bouton_chiffre_4_clicked()
 {
-    ui->affichageResultat->setText("chiffre_4");
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 4;
+    saisieDecimales_ && (saisieDenominateur_ *= 10);
+
+    ui->affichageResultat->insertPlainText("4");
 }
 
 void GUICalulatrice::on_bouton_chiffre_3_clicked()
 {
-    ui->affichageResultat->setText("chiffre_3");
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 3;
+    saisieDecimales_ && (saisieDenominateur_ *= 10);
+
+    ui->affichageResultat->insertPlainText("3");
 }
 
 void GUICalulatrice::on_bouton_chiffre_2_clicked()
 {
-    ui->affichageResultat->setText("chiffre_2");
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 2;
+    saisieDecimales_ && (saisieDenominateur_ *= 10);
+
+    ui->affichageResultat->insertPlainText("2");
 }
 
 void GUICalulatrice::on_bouton_chiffre_1_clicked()
 {
-    ui->affichageResultat->setText("chiffre_1");
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 1;
+    saisieDecimales_ && (saisieDenominateur_ *= 10);
+
+    ui->affichageResultat->insertPlainText("1");
 }
 
 void GUICalulatrice::on_bouton_chiffre_0_clicked()
 {
-    ui->affichageResultat->setText("chiffre_0");
+    // Pour detecter le cas particulier d'operation sans nombre
+    // Absence de saisie : "Numerateur==0 && saisieVide"
+    saisieVide_ = false;
+
+    saisieNumerateur_ *= 10;
+    saisieNumerateur_ += 0;
+    saisieDecimales_ && (saisieDenominateur_ *= 10);
+
+    ui->affichageResultat->insertPlainText("0");
 }
 
 

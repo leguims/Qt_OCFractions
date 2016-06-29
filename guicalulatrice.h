@@ -2,7 +2,8 @@
 #define GUICALULATRICE_H
 
 #include <QDialog>
-#include "ZFraction.h"
+#include <QString>
+#include "Membre.h"
 
 namespace Ui {
 class GUICalulatrice;
@@ -43,14 +44,24 @@ public slots:
     void on_bouton_chiffre_8_clicked(void);
     void on_bouton_chiffre_9_clicked(void);
 
+private:
+    void enregistrerNombre();
+    void afficherMembre();
+    void afficherResultat();
+
 public:
     explicit GUICalulatrice(QWidget *parent = 0);
     ~GUICalulatrice();
 
 private:
+    Membre	membre_;
+    Membre::operation oper_;
+    int		saisieNumerateur_;
+    int		saisieDenominateur_;
+    bool	saisieDecimales_;
+    bool	saisieVide_;
+
     Ui::GUICalulatrice *ui;
-    bool m_afficherFraction = true;
-    ZFraction m_saisieCourante;
 };
 
 #endif // GUICALULATRICE_H

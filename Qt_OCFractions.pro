@@ -14,11 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     guicalulatrice.cpp \
-    ZFraction.cpp
+    ZFraction.cpp \
+    Membre.cpp
 
 HEADERS  += \
     guicalulatrice.h \
-    ZFraction.h
+    ZFraction.h \
+    Membre.h
 
 FORMS    += \
     guicalulatrice.ui

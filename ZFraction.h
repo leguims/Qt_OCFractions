@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 class ZFraction
 {
@@ -10,9 +11,13 @@ public:
 	ZFraction(ZFraction const&);
 	~ZFraction();
 	void afficher(std::ostream &out) const;
+	std::string afficherPlainText(void) const;
+	std::string afficherHTML(void) const;
 	long int getNumerateur(void) const;
 	long int getDenominateur(void) const;
 	double getDouble(void) const;
+	void setAfficherFraction(bool);
+	bool getAfficherFraction(void) const;
 	bool estEgal(ZFraction a) const;
 	bool estSuperieur(ZFraction a) const;
 	ZFraction& operator+=(const ZFraction& a);
@@ -24,8 +29,9 @@ public:
 	ZFraction& operator/=(const long int& a);
 	ZFraction& operator*=(const long int& a);
 private:
-	long int m_numerateur;
-	long int m_denominateur;
+	bool afficherFraction_;
+	long int numerateur_;
+	long int denominateur_;
 private:
 	void simplifier();
 };
