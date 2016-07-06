@@ -61,7 +61,8 @@ void ZFraction::afficher(ostream &out) const
 	}
 }
 
- std::string ZFraction::afficherPlainText(void) const
+//std::string ZFraction::afficherHTML(void) const
+std::string ZFraction::afficherPlainText(void) const
 {
 	std::string out;
 	if (afficherFraction_)
@@ -79,16 +80,34 @@ void ZFraction::afficher(ostream &out) const
 	return out;
 }
 
- std::string ZFraction::afficherHTML(void) const
+//std::string ZFraction::afficherPlainText(void) const
+std::string ZFraction::afficherHTML(void) const
 {
 	std::string out;
 	if (afficherFraction_)
 	{
-		out += std::to_string(numerateur_);
-		if (denominateur_ != 1)
-		{
-			out += "/" + std::to_string(denominateur_);
+        if (denominateur_ != 1)
+        {
+            out += "<table style=\"border-collapse:collapse;\">\n   <tr>\n      <td style=\"border-bottom:5px solid #000;\">"
+                    + std::to_string(numerateur_)
+                    + "</td>"
+                    + "   </tr>"
+                    + "   <tr>"
+                    + "      <td>"+ std::to_string(denominateur_) +"</td>"
+                    + "   </tr>"
+                    + "</table>";
+
+// Ne fonctionne pas
+//            out += "<span style=\"postion:relative;\">\n   <span style=\"position:absolute;\">"
+//                    + std::to_string(numerateur_) + "</span>"
+//                    + "   <span style=\"position:absolute;\">________</span>"
+//                    + "   <span style=\"position:absolute;margin-top:15px;\">"+ std::to_string(denominateur_) +"</span>"
+//                    + "</span>";
 		}
+        else
+        {
+            out += std::to_string(numerateur_);
+        }
 	}
 	else
 	{

@@ -60,6 +60,7 @@ private:
     int		saisieDenominateur_;
     bool	saisieDecimales_;
     bool	saisieVide_;
+    bool	plainText_;
 
     Ui::GUICalulatrice *ui;
 };

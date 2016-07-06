@@ -9,6 +9,7 @@ GUICalulatrice::GUICalulatrice(QWidget *parent) :
     saisieDenominateur_(1),
     saisieDecimales_(false),
     saisieVide_(true),
+    plainText_(false),
     ui(new Ui::GUICalulatrice)
 {
     ui->setupUi(this);
@@ -201,20 +202,42 @@ void GUICalulatrice::enregistrerNombre()
 
 void GUICalulatrice::afficherMembre()
 {
-    ui->affichageResultat->setText( QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
+    if(plainText_)
+    {
+        ui->affichageResultat->setText( QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
 
-    // Move cursor into end of line
-    QTextCursor cursor = ui->affichageResultat->textCursor();
-    cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
-    ui->affichageResultat->setTextCursor(cursor);
+        // Move cursor into end of line
+        QTextCursor cursor = ui->affichageResultat->textCursor();
+        cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
+        ui->affichageResultat->setTextCursor(cursor);
 
-    ui->affichageResultat->insertPlainText( QString::fromUtf8( Membre::afficherOperationPlainText(oper_).data(), Membre::afficherOperationPlainText(oper_).size() ) );
-    //ui->affichageResultat->append( QString::fromUtf8( Membre::afficherOperationPlainText(oper_).data(), Membre::afficherOperationPlainText(oper_).size() ) );
+        ui->affichageResultat->insertPlainText( QString::fromUtf8( Membre::afficherOperationPlainText(oper_).data(), Membre::afficherOperationPlainText(oper_).size() ) );
+        //ui->affichageResultat->append( QString::fromUtf8( Membre::afficherOperationPlainText(oper_).data(), Membre::afficherOperationPlainText(oper_).size() ) );
+    }
+    else
+    {
+        ui->affichageResultat->setHtml( QString::fromUtf8( membre_.afficherHTML().data(), membre_.afficherHTML().size() ) );
+
+        // Move cursor into end of line
+        QTextCursor cursor = ui->affichageResultat->textCursor();
+        cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
+        ui->affichageResultat->setTextCursor(cursor);
+
+        ui->affichageResultat->insertHtml( QString::fromUtf8( Membre::afficherOperationHTML(oper_).data(), Membre::afficherOperationHTML(oper_).size() ) );
+        //ui->affichageResultat->append( QString::fromUtf8( Membre::afficherOperationHTML(oper_).data(), Membre::afficherOperationHTML(oper_).size() ) );
+    }
 }
 
 void GUICalulatrice::afficherResultat()
 {
-    ui->affichageResultat->append( QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
+    if(plainText_)
+    {
+        ui->affichageResultat->append( QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
+    }
+    else
+    {
+        ui->affichageResultat->append( QString::fromUtf8( membre_.afficherHTML().data(), membre_.afficherHTML().size() ) );
+    }
 }
 
 void GUICalulatrice::on_bouton_chiffre_9_clicked()

@@ -332,27 +332,27 @@ std::string Membre::afficherHTML(void) const
 	if (isSimple())
 	{
 		//out << m_nombre->getNombre();
-		out += nombre_->afficherHTML();
+        out += nombre_->afficherHTML();
 	}
 	else if (isHalfComplex())
 	{
 		if (nullptr != membre1_)
 		{
-			out += membre1_->afficherHTML();
+            out += membre1_->afficherHTML();
 		}
 
 		if (nullptr != membre2_)
 		{
-			out += membre2_->afficherHTML();
+            out += membre2_->afficherHTML();
 		}
 	}
 	else if (isComplex())
 	{
-		out += "(" + membre1_->afficherHTML();
+        out += "("+membre1_->afficherHTML();
 
 		out += afficherOperationHTML();
 
-		out += membre2_->afficherHTML() + ")";
+        out += membre2_->afficherHTML() + ")";
 	}
 	else
 	{
