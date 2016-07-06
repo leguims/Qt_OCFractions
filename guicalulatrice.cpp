@@ -3,13 +3,13 @@
 
 GUICalulatrice::GUICalulatrice(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::GUICalulatrice),
     membre_(),
     oper_(Membre::aucune),
     saisieNumerateur_(0),
     saisieDenominateur_(1),
     saisieDecimales_(false),
-    saisieVide_(true)
+    saisieVide_(true),
+    ui(new Ui::GUICalulatrice)
 {
     ui->setupUi(this);
 }
@@ -191,8 +191,8 @@ void GUICalulatrice::enregistrerNombre()
         case Membre::division:
             membre_ /= ZFraction(saisieNumerateur_, saisieDenominateur_);
             break;
-        default:
-            break;
+//        default:
+//            break;
         }
         saisieNumerateur_ = 0;
         saisieDenominateur_ = 1;

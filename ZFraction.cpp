@@ -4,37 +4,37 @@
 
 using namespace std;
 
-ZFraction::ZFraction(int numerateur, int denominateur) : numerateur_(numerateur), denominateur_(denominateur), afficherFraction_(true)
+ZFraction::ZFraction(int numerateur, int denominateur) : afficherFraction_(true), numerateur_(numerateur), denominateur_(denominateur)
 {
 	simplifier();
 }
 
 
-ZFraction::ZFraction(long int numerateur, long int denominateur) : numerateur_(numerateur), denominateur_(denominateur), afficherFraction_(true)
+ZFraction::ZFraction(long int numerateur, long int denominateur) : afficherFraction_(true), numerateur_(numerateur), denominateur_(denominateur)
 {
 	simplifier();
 }
 
 
-ZFraction::ZFraction(double numerateur): denominateur_(1), afficherFraction_(true)
+ZFraction::ZFraction(double numerateur): afficherFraction_(true), denominateur_(1)
 {
 	long int	entier(0);
 	
 	// elimine les decimales de 'numerateur'
-	entier = numerateur;
+    entier = static_cast<long int>(numerateur);
 	while (entier != numerateur)
 	{
 		numerateur *= 10;
 		denominateur_ *= 10;
-		entier = numerateur;
+        entier = static_cast<long int>(numerateur);
 	}
-	numerateur_ = numerateur;
+    numerateur_ = static_cast<long int>(numerateur);
 
 	simplifier();
 }
 
 
-ZFraction::ZFraction(ZFraction const& a) : numerateur_(a.numerateur_), denominateur_(a.denominateur_), afficherFraction_(true)
+ZFraction::ZFraction(ZFraction const& a) : afficherFraction_(true), numerateur_(a.numerateur_), denominateur_(a.denominateur_)
 {
 	simplifier();
 }
@@ -131,7 +131,7 @@ bool ZFraction::estEgal(ZFraction a) const
 
 bool ZFraction::estSuperieur(ZFraction a) const
 {
-	return ( ((double)numerateur_/denominateur_) > ((double)a.numerateur_/a.denominateur_) );
+    return ( ( static_cast<double>(numerateur_)/denominateur_) > (static_cast<double>(a.numerateur_)/a.denominateur_) );
 }
 
 

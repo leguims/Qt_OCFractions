@@ -3,7 +3,7 @@
 using namespace std;
 
 Membre::Membre() 
-	: membre1_(nullptr), membre2_(nullptr), operation_(aucune), nombre_(nullptr), parenthese_(false), afficherFraction_(true)
+    : parenthese_(false), afficherFraction_(true), membre1_(nullptr), operation_(aucune), membre2_(nullptr), nombre_(nullptr)
 {
 }
 
@@ -24,12 +24,12 @@ Membre::Membre(double d)
 }
 
 Membre::Membre(ZFraction n)
-	: membre1_(nullptr), membre2_(nullptr), operation_(aucune), nombre_(new ZFraction(n)), parenthese_(false), afficherFraction_(true)
+    : parenthese_(false), afficherFraction_(true), membre1_(nullptr), operation_(aucune), membre2_(nullptr), nombre_(new ZFraction(n))
 {
 }
 
 Membre::Membre(Membre m1, operation oper, Membre m2)
-	: membre1_(new Membre(m1)), membre2_(new Membre(m2)), operation_(oper), nombre_(nullptr), parenthese_(false), afficherFraction_(true)
+    : parenthese_(false), afficherFraction_(true), membre1_(new Membre(m1)), operation_(oper), membre2_(new Membre(m2)), nombre_(nullptr)
 {
 }
 
@@ -37,17 +37,17 @@ Membre::Membre(int i1, operation oper, int i2) : Membre(i1, 1, oper, i2, 1)
 {
 }
 
-Membre::Membre(int n1, int d1, operation oper, int n2, int d2) : membre1_(new Membre(n1, d1)), membre2_(new Membre(n2, d2)), operation_(oper), nombre_(nullptr), parenthese_(false), afficherFraction_(true)
+Membre::Membre(int n1, int d1, operation oper, int n2, int d2) : parenthese_(false), afficherFraction_(true), membre1_(new Membre(n1, d1)), operation_(oper), membre2_(new Membre(n2, d2)), nombre_(nullptr)
 {
 }
 
 Membre::Membre(Membre const &membreACopier)
-	: membre1_(nullptr!=membreACopier.membre1_ ? new Membre(*(membreACopier.membre1_)) : nullptr), 
-	membre2_(nullptr!=membreACopier.membre2_ ? new Membre(*(membreACopier.membre2_)) : nullptr), 
+    : 	parenthese_(membreACopier.parenthese_),
+    afficherFraction_(membreACopier.afficherFraction_),
+    membre1_(nullptr!=membreACopier.membre1_ ? new Membre(*(membreACopier.membre1_)) : nullptr),
 	operation_(membreACopier.operation_), 
-	nombre_(nullptr!=membreACopier.nombre_ ? new ZFraction(*(membreACopier.nombre_)) : nullptr), 
-	parenthese_(membreACopier.parenthese_), 
-	afficherFraction_(membreACopier.afficherFraction_)
+    membre2_(nullptr!=membreACopier.membre2_ ? new Membre(*(membreACopier.membre2_)) : nullptr),
+    nombre_(nullptr!=membreACopier.nombre_ ? new ZFraction(*(membreACopier.nombre_)) : nullptr)
 {
 }
 
@@ -379,7 +379,7 @@ void Membre::afficherOperation(std::ostream &out) const
 		out << "/";
 		break;
 	case aucune:
-	default:
+//	default:
 		out << " ";
 		break;
 	}
@@ -415,7 +415,7 @@ std::string Membre::afficherOperationPlainText(operation oper)
         out += "/";
         break;
     case aucune:
-    default:
+//    default:
         out += " ";
         break;
     }
@@ -440,7 +440,7 @@ std::string Membre::afficherOperationHTML(operation oper)
         out += "/";
         break;
     case aucune:
-    default:
+//    default:
         out += " ";
         break;
     }
@@ -477,7 +477,7 @@ bool Membre::isSimple() const
 bool Membre::isHalfComplex() const
 {
 	// Semi-complexe = 1 membre utilisé.
-	if (nullptr == nombre_ && (nullptr != membre1_ && nullptr == membre2_ || nullptr == membre1_ && nullptr != membre2_) )
+    if (nullptr == nombre_ && ( (nullptr != membre1_ && nullptr == membre2_) || (nullptr == membre1_ && nullptr != membre2_) ) )
 	{
 		return true;
 	}
@@ -524,7 +524,7 @@ bool Membre::simplifier()
 			nombre_ = new ZFraction(*(membre1_->nombre_) / *(membre2_->nombre_));
 			break;
 		case aucune:
-		default:
+//		default:
 			break;
 		}
 		// Definir l'affichage de fraction
