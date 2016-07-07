@@ -88,14 +88,25 @@ std::string ZFraction::afficherHTML(void) const
 	{
         if (denominateur_ != 1)
         {
-            out += "<table style=\"border-collapse:collapse;\">\n   <tr>\n      <td style=\"border-bottom:5px solid #000;\">"
+            out += "<table style=\"border-collapse:collapse;\">\n   <tr>\n      <td style=\"text-align:center;\">"
                     + std::to_string(numerateur_)
-                    + "</td>"
+                    + "<hr /></td>"     // Barre de fraction
                     + "   </tr>"
                     + "   <tr>"
-                    + "      <td>"+ std::to_string(denominateur_) +"</td>"
+                    + "      <td style=\"text-align:center;\">"+ std::to_string(denominateur_) +"</td>"
                     + "   </tr>"
                     + "</table>";
+
+// Ne fonctionne pas
+//            out += "<table style=\"border-collapse:collapse;\">\n   <tr>\n      <td style=\"border-bottom:5px solid #000;\">"
+//                    + std::to_string(numerateur_)
+//                    + "</td>"
+//                    + "   </tr>"
+//                    + "   <tr>"
+//                    + "      <td>"+ std::to_string(denominateur_) +"</td>"
+//                    + "   </tr>"
+//                    + "</table>";
+
 
 // Ne fonctionne pas
 //            out += "<span style=\"postion:relative;\">\n   <span style=\"position:absolute;\">"
