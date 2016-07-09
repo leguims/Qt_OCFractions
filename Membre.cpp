@@ -375,10 +375,6 @@ std::string Membre::afficherHTML(void) const
 
             break;
         }
-
-//        out += "("+membre1_->afficherHTML();
-//		out += afficherOperationHTML();
-//        out += membre2_->afficherHTML() + ")";
 	}
 	else
 	{
