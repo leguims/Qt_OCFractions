@@ -348,17 +348,44 @@ std::string Membre::afficherHTML(void) const
 	}
 	else if (isComplex())
 	{
-        out += "("+membre1_->afficherHTML();
+        switch (operation_)
+        {
+        case addition:
+        case soustraction:
+        case multiplication:
+        case aucune:
+            out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
+                    + membre1_->afficherHTML() +"</td>"
+                    + "      <td>"+ afficherOperationHTML() +"</td>"
+                    + "      <td>"+ membre2_->afficherHTML() +"</td><td>)</td>"
+                    + "   </tr>"
+                    + "</table>";
 
-		out += afficherOperationHTML();
+            break;
+        case division:
+            out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td rowspan=\"2\">(</td><td style=\"text-align:center;\">"
+                    + membre1_->afficherHTML()
+                    + "<hr /></td>"     // Barre de fraction
+                    + "<td rowspan=\"2\">)</td>"
+                    + "   </tr>"
+                    + "   <tr style=\"vertical-align:middle;\">"
+                    + "      <td style=\"text-align:center;\">"+ membre2_->afficherHTML() +"</td>"
+                    + "   </tr>"
+                    + "</table>";
 
-        out += membre2_->afficherHTML() + ")";
+            break;
+        }
+
+//        out += "("+membre1_->afficherHTML();
+//		out += afficherOperationHTML();
+//        out += membre2_->afficherHTML() + ")";
 	}
 	else
 	{
 		// Erreur
 		out += "Erreur : Membre vide";
 	}
+    cout << out << endl;
 	return out;
 }
 

@@ -232,11 +232,11 @@ void GUICalulatrice::afficherResultat()
 {
     if(plainText_)
     {
-        ui->affichageResultat->append( QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
+        ui->affichageResultat->append( "\n" + QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
     }
     else
     {
-        ui->affichageResultat->append( QString::fromUtf8( membre_.afficherHTML().data(), membre_.afficherHTML().size() ) );
+        ui->affichageResultat->append( "<br/>\n" + QString::fromUtf8( membre_.afficherHTML().data(), membre_.afficherHTML().size() ) );
     }
 }
 

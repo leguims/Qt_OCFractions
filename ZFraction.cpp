@@ -88,12 +88,12 @@ std::string ZFraction::afficherHTML(void) const
 	{
         if (denominateur_ != 1)
         {
-            out += "<table style=\"border-collapse:collapse;\">\n   <tr>\n      <td style=\"text-align:center;\">"
+            out += "\n<table style=\"border-collapse:collapse;\">   <tr>      <td style=\"text-align:center;vertical-align:middle;\">"
                     + std::to_string(numerateur_)
                     + "<hr /></td>"     // Barre de fraction
                     + "   </tr>"
                     + "   <tr>"
-                    + "      <td style=\"text-align:center;\">"+ std::to_string(denominateur_) +"</td>"
+                    + "      <td style=\"text-align:center;vertical-align:middle;\">"+ std::to_string(denominateur_) +"</td>"
                     + "   </tr>"
                     + "</table>";
 
@@ -124,7 +124,8 @@ std::string ZFraction::afficherHTML(void) const
 	{
 		out += std::to_string(getDouble());
 	}
-	return out;
+    cout << out << endl;
+    return out;
 }
 
 long int ZFraction::getNumerateur(void) const
