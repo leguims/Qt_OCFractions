@@ -115,17 +115,22 @@ void GUICalulatrice::on_bouton_resultat_clicked()
     {
         // Enregistrer la saisie realisee dans membre_
         enregistrerNombre();
+        // Enregistrer la prochaine operation
+        oper_ = Membre::aucune;
+
+        // Afficher l'operation complete a resoudre
+        std::cout << membre_ << std::endl;
+        afficherResultat();
     }
+    else
+    {
+        // Resoudre l'operation
+        membre_.simplifier();
 
-    // Enregistrer la prochaine operation
-    oper_ = Membre::aucune;
-
-    std::cout << membre_ << std::endl;
-    membre_.simplifier();
-
-    //ui->affichageResultat->setText("resultat");
-    //afficherMembre();
-    afficherResultat();
+        //ui->affichageResultat->setText("resultat");
+        //afficherMembre();
+        afficherResultat();
+    }
 }
 
 

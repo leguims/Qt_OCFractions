@@ -3,7 +3,7 @@
 using namespace std;
 
 Membre::Membre() 
-    : parenthese_(false), afficherFraction_(true), membre1_(nullptr), operation_(aucune), membre2_(nullptr), nombre_(nullptr)
+    : parenthese_(true), afficherFraction_(true), membre1_(nullptr), operation_(aucune), membre2_(nullptr), nombre_(nullptr)
 {
 }
 
@@ -24,12 +24,12 @@ Membre::Membre(double d)
 }
 
 Membre::Membre(ZFraction n)
-    : parenthese_(false), afficherFraction_(true), membre1_(nullptr), operation_(aucune), membre2_(nullptr), nombre_(new ZFraction(n))
+    : parenthese_(true), afficherFraction_(true), membre1_(nullptr), operation_(aucune), membre2_(nullptr), nombre_(new ZFraction(n))
 {
 }
 
 Membre::Membre(Membre m1, operation oper, Membre m2)
-    : parenthese_(false), afficherFraction_(true), membre1_(new Membre(m1)), operation_(oper), membre2_(new Membre(m2)), nombre_(nullptr)
+    : parenthese_(true), afficherFraction_(true), membre1_(new Membre(m1)), operation_(oper), membre2_(new Membre(m2)), nombre_(nullptr)
 {
 }
 
@@ -37,7 +37,7 @@ Membre::Membre(int i1, operation oper, int i2) : Membre(i1, 1, oper, i2, 1)
 {
 }
 
-Membre::Membre(int n1, int d1, operation oper, int n2, int d2) : parenthese_(false), afficherFraction_(true), membre1_(new Membre(n1, d1)), operation_(oper), membre2_(new Membre(n2, d2)), nombre_(nullptr)
+Membre::Membre(int n1, int d1, operation oper, int n2, int d2) : parenthese_(true), afficherFraction_(true), membre1_(new Membre(n1, d1)), operation_(oper), membre2_(new Membre(n2, d2)), nombre_(nullptr)
 {
 }
 
@@ -276,12 +276,20 @@ void Membre::afficher(std::ostream &out) const
 	}
 	else if (isComplex())
 	{
-		out << "(" << *membre1_;
+        if(parenthese_)
+        {
+            out << "(";
+        }
+        out << *membre1_;
 
 		afficherOperation(out);
 
-		out << *membre2_ << ")";
-	}
+        out << *membre2_ ;
+        if(parenthese_)
+        {
+            out << ")";
+        }
+    }
 	else
 	{
 		// Erreur
@@ -312,12 +320,20 @@ std::string Membre::afficherPlainText(void) const
 	}
 	else if (isComplex())
 	{
-		out += "(" + membre1_->afficherPlainText();
+        if(parenthese_)
+        {
+            out += "(";
+        }
+        out += membre1_->afficherPlainText();
 
 		out += afficherOperationPlainText();
 
-		out += membre2_->afficherPlainText() + ")";
-	}
+        out += membre2_->afficherPlainText();
+        if(parenthese_)
+        {
+            out += ")";
+        }
+    }
 	else
 	{
 		// Erreur
@@ -354,25 +370,49 @@ std::string Membre::afficherHTML(void) const
         case soustraction:
         case multiplication:
         case aucune:
-            out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
-                    + membre1_->afficherHTML() +"</td>"
-                    + "      <td>"+ afficherOperationHTML() +"</td>"
-                    + "      <td>"+ membre2_->afficherHTML() +"</td><td>)</td>"
-                    + "   </tr>"
-                    + "</table>";
-
+            if(parenthese_)
+            {
+                out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
+                        + membre1_->afficherHTML() +"</td>"
+                        + "      <td>"+ afficherOperationHTML() +"</td>"
+                        + "      <td>"+ membre2_->afficherHTML() +"</td><td>)</td>"
+                        + "   </tr>"
+                        + "</table>";
+            }
+            else
+            {
+                out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>"
+                        + membre1_->afficherHTML() +"</td>"
+                        + "      <td>"+ afficherOperationHTML() +"</td>"
+                        + "      <td>"+ membre2_->afficherHTML() +"</td>"
+                        + "   </tr>"
+                        + "</table>";
+            }
             break;
         case division:
-            out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td rowspan=\"2\">(</td><td style=\"text-align:center;\">"
-                    + membre1_->afficherHTML()
-                    + "<hr /></td>"     // Barre de fraction
-                    + "<td rowspan=\"2\">)</td>"
-                    + "   </tr>"
-                    + "   <tr style=\"vertical-align:middle;\">"
-                    + "      <td style=\"text-align:center;\">"+ membre2_->afficherHTML() +"</td>"
-                    + "   </tr>"
-                    + "</table>";
-
+            if(parenthese_)
+            {
+                out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td rowspan=\"2\" style=\"font-size:20px;\">(</td><td style=\"text-align:center;\">"
+                        + membre1_->afficherHTML()
+                        + "<hr /></td>"     // Barre de fraction
+                        + "<td rowspan=\"2\" style=\"font-size:20px;\">)</td>"
+                        + "   </tr>"
+                        + "   <tr style=\"vertical-align:middle;\">"
+                        + "      <td style=\"text-align:center;\">"+ membre2_->afficherHTML() +"</td>"
+                        + "   </tr>"
+                        + "</table>";
+            }
+            else
+            {
+                out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td style=\"text-align:center;\">"
+                        + membre1_->afficherHTML()
+                        + "<hr /></td>"     // Barre de fraction
+                        + "   </tr>"
+                        + "   <tr style=\"vertical-align:middle;\">"
+                        + "      <td style=\"text-align:center;\">"+ membre2_->afficherHTML() +"</td>"
+                        + "   </tr>"
+                        + "</table>";
+            }
             break;
         }
 	}
