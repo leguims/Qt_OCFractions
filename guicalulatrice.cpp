@@ -22,15 +22,17 @@ void GUICalulatrice::on_bouton_fraction_clicked(void)
 {
     membre_.setAfficherFraction(!membre_.getAfficherFraction());
 
-    if(!membre_.getAfficherFraction())
+    if(membre_.getAfficherFraction())
     {
-        ui->formatAffichageNombreReel->setText("Virgule");
-        //ui->affichageResultat->setText("Virgule");
+        ui->bouton_fraction->setText("x/y");
+        ui->formatAffichageNombreReel->setText("Fraction");
+        //ui->affichageResultat->setText("Fraction");
     }
     else
     {
-        ui->formatAffichageNombreReel->setText("Fraction");
-        //ui->affichageResultat->setText("Fraction");
+        ui->bouton_fraction->setText("x.yz");
+        ui->formatAffichageNombreReel->setText("Virgule");
+        //ui->affichageResultat->setText("Virgule");
     }
 }
 
@@ -170,10 +172,11 @@ void GUICalulatrice::on_bouton_virgule_clicked()
     ui->affichageResultat->setText("virgule");
 }
 
+// Enregistrer la saisie realisee dans membre_
 void GUICalulatrice::enregistrerNombre()
 {
     if( 0!=saisieNumerateur_ || !saisieVide_)
-        {
+    {
         // Reinitialise la saisie des decimales et du nombre
         saisieDecimales_ = false;
         saisieVide_ = true;
@@ -197,8 +200,8 @@ void GUICalulatrice::enregistrerNombre()
         case Membre::division:
             membre_ /= ZFraction(saisieNumerateur_, saisieDenominateur_);
             break;
-//        default:
-//            break;
+            //default:
+            //    break;
         }
         saisieNumerateur_ = 0;
         saisieDenominateur_ = 1;
