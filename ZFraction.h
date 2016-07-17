@@ -37,7 +37,7 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& , ZFraction const& );
-ZFraction operator-(ZFraction const& a); // opérateur « moins unaire » (exemple : a= -b)
+ZFraction operator-(ZFraction const& a); // opÃ©rateur Â« moins unaire Â» (exemple : a= -b)
 
 ZFraction operator+(ZFraction const& a, ZFraction const& b);
 ZFraction operator-(ZFraction const& a, ZFraction const& b);

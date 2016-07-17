@@ -234,7 +234,7 @@ void ZFraction::simplifier()
 		}
 	}
 
-	// Mettre le signe de la fraction au numérateur
+	// Mettre le signe de la fraction au numÃ©rateur
 	if ((numerateur_ > 0 && denominateur_ < 0) || (numerateur_<0 && denominateur_<0))
 	{
 		numerateur_ *= -1;
@@ -263,8 +263,8 @@ ZFraction operator-(ZFraction const& a)
 ZFraction operator+(ZFraction const& a, ZFraction const& b)
 {
 	ZFraction copie(a);	//On utilise le constructeur de copie de la classe Duree !
-	copie += b;			//On appelle la méthode d'addition qui modifie l'objet 'copie'
-	return copie;		//Et on renvoie le résultat. Ni a ni b n'ont changé.
+	copie += b;			//On appelle la mÃ©thode d'addition qui modifie l'objet 'copie'
+	return copie;		//Et on renvoie le rÃ©sultat. Ni a ni b n'ont changÃ©.
 }
 
 
@@ -295,8 +295,8 @@ ZFraction operator/(ZFraction const& a, ZFraction const& b)
 ZFraction operator+(ZFraction const& a, long int const& b)
 {
 	ZFraction copie(a);	//On utilise le constructeur de copie de la classe Duree !
-	copie += b;			//On appelle la méthode d'addition qui modifie l'objet 'copie'
-	return copie;		//Et on renvoie le résultat. Ni a ni b n'ont changé.
+	copie += b;			//On appelle la mÃ©thode d'addition qui modifie l'objet 'copie'
+	return copie;		//Et on renvoie le rÃ©sultat. Ni a ni b n'ont changÃ©.
 }
 
 

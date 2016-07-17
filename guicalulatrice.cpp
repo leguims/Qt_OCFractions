@@ -4,7 +4,7 @@
 GUICalulatrice::GUICalulatrice(QWidget *parent) :
     QDialog(parent),
     membre_(),
-    oper_(Membre::aucune),
+    oper_(Membre::operation_Aucune),
     saisieNumerateur_(0),
     saisieDenominateur_(1),
     saisieDecimales_(false),
@@ -46,7 +46,7 @@ void GUICalulatrice::on_bouton_addition_clicked(void)
     enregistrerNombre();
 
     // Enregistrer la prochaine operation
-    oper_ = Membre::addition;
+    oper_ = Membre::operation_addition;
 
     //ui->affichageResultat->setText("addition");
     //ui->affichageResultat->insertPlainText("+");
@@ -59,7 +59,7 @@ void GUICalulatrice::on_bouton_soustraction_clicked()
     enregistrerNombre();
 
     // Enregistrer la prochaine operation
-    oper_ = Membre::soustraction;
+    oper_ = Membre::operation_soustraction;
 
     //ui->affichageResultat->insertPlainText("-");
     afficherMembre();
@@ -71,7 +71,7 @@ void GUICalulatrice::on_bouton_multiplication_clicked()
     enregistrerNombre();
 
     // Enregistrer la prochaine operation
-    oper_ = Membre::multiplication;
+    oper_ = Membre::operation_multiplication;
 
     //ui->affichageResultat->insertPlainText("*");
     afficherMembre();
@@ -83,7 +83,7 @@ void GUICalulatrice::on_bouton_division_clicked()
     enregistrerNombre();
 
     // Enregistrer la prochaine operation
-    oper_ = Membre::division;
+    oper_ = Membre::operation_division;
 
     //ui->affichageResultat->insertPlainText("/");
     afficherMembre();
@@ -91,20 +91,37 @@ void GUICalulatrice::on_bouton_division_clicked()
 
 void GUICalulatrice::on_bouton_parenthese_ouvrante_clicked()
 {
+    // Enregistrer parenthese ouvrante
+    membre_.ouvrirParenthese(oper_);
+
     // Reinitialise la saisie des decimales et du nombre
+    oper_ = Membre::operation_Aucune;
+    saisieNumerateur_ = 0;
+    saisieDenominateur_ = 1;
     saisieDecimales_ = false;
     saisieVide_ = true;
 
-    ui->affichageResultat->setText("parenthese ouvrante");
+    //ui->affichageResultat->insertPlainText("(");
+    afficherMembre();
 }
 
 void GUICalulatrice::on_bouton_parenthese_fermante_clicked()
 {
+    // Enregistrer la saisie realisee dans membre_
+    enregistrerNombre();
+
+    // Enregistrer parenthese ouvrante
+    membre_.fermerParenthese();
+
     // Reinitialise la saisie des decimales et du nombre
+    oper_ = Membre::operation_Aucune;
+    saisieNumerateur_ = 0;
+    saisieDenominateur_ = 1;
     saisieDecimales_ = false;
     saisieVide_ = true;
 
-    ui->affichageResultat->setText("parenthese fermante");
+    //ui->affichageResultat->insertPlainText(")");
+    afficherMembre();
 }
 
 
@@ -113,12 +130,12 @@ void GUICalulatrice::on_bouton_parenthese_fermante_clicked()
 //
 void GUICalulatrice::on_bouton_resultat_clicked()
 {
-    if (Membre::aucune != oper_)
+    if (Membre::operation_Aucune != oper_)
     {
         // Enregistrer la saisie realisee dans membre_
         enregistrerNombre();
         // Enregistrer la prochaine operation
-        oper_ = Membre::aucune;
+        oper_ = Membre::operation_Aucune;
 
         // Afficher l'operation complete a resoudre
         std::cout << membre_ << std::endl;
@@ -150,7 +167,7 @@ void GUICalulatrice::on_bouton_effacer_clicked()
     ui->affichageResultat->clear();
 
     membre_.vider();
-    oper_ = Membre::aucune;
+    oper_ = Membre::operation_Aucune;
     saisieNumerateur_ = 0;
     saisieDenominateur_ = 1;
     saisieDecimales_ = false;
@@ -177,32 +194,31 @@ void GUICalulatrice::enregistrerNombre()
 {
     if( 0!=saisieNumerateur_ || !saisieVide_)
     {
-        // Reinitialise la saisie des decimales et du nombre
-        saisieDecimales_ = false;
-        saisieVide_ = true;
-
         // Appliquer l'attribut "oper" comme operation sur le membre
-        // Si "oper==aucune", initialiser le membre avec la saisie
+        // Si "oper==operation_Aucune", initialiser le membre avec la saisie
         switch (oper_)
         {
-        case Membre::aucune:
+        case Membre::operation_Aucune:
             membre_ = ZFraction(saisieNumerateur_, saisieDenominateur_);
             break;
-        case Membre::addition:
+        case Membre::operation_addition:
             membre_ += ZFraction(saisieNumerateur_, saisieDenominateur_);
             break;
-        case Membre::soustraction:
+        case Membre::operation_soustraction:
             membre_ -= ZFraction(saisieNumerateur_, saisieDenominateur_);
             break;
-        case Membre::multiplication:
+        case Membre::operation_multiplication:
             membre_ *= ZFraction(saisieNumerateur_, saisieDenominateur_);
             break;
-        case Membre::division:
+        case Membre::operation_division:
             membre_ /= ZFraction(saisieNumerateur_, saisieDenominateur_);
             break;
             //default:
             //    break;
         }
+        // Reinitialise la saisie des decimales et du nombre
+        saisieDecimales_ = false;
+        saisieVide_ = true;
         saisieNumerateur_ = 0;
         saisieDenominateur_ = 1;
     }

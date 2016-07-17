@@ -6,7 +6,8 @@
 class Membre
 {
 public:
-    enum operation { aucune, addition, soustraction, multiplication, division };
+    enum operation { operation_Aucune, operation_addition, operation_soustraction, operation_multiplication, operation_division };
+    enum parenthese { parenthese_Aucune, parenthese_ouverte, parenthese_fermee };
 
     Membre();
     Membre(int);
@@ -18,7 +19,7 @@ public:
     Membre(int, operation, int);
     // Surcharger la copie (pour gerer les pointeurs)
     Membre(Membre const &);					// Constructeur de copie
-    Membre& operator=(Membre const &);		// L'opérateur d'affectation
+    Membre& operator=(Membre const &);		// L'opÃ©rateur d'affectation
     ~Membre();
     void vider();
 
@@ -49,8 +50,8 @@ public:
     bool isComplex() const;
     // Appelle m_membre1/2->simplifier() et si m_membre1/2->isSimple() sont vrais alors enregistre m_nombre=m_operation->getResultat() libere m_operation/m_membre1/m_membre2.
     bool simplifier();
-    void proteger();
-    void deproteger();
+    void ouvrirParenthese(operation =operation_Aucune);
+    void fermerParenthese();
     void setAfficherFraction(bool =true);
     bool getAfficherFraction(void) const;
 
@@ -58,7 +59,7 @@ public:
     // Surcharger les operation += -= *= /=
 
 protected:
-    bool parenthese_;
+    parenthese parenthese_;
     bool afficherFraction_;
     Membre *membre1_;
     operation operation_;
