@@ -9,7 +9,7 @@ GUICalulatrice::GUICalulatrice(QWidget *parent) :
     saisieDenominateur_(1),
     saisieDecimales_(false),
     saisieVide_(true),
-    plainText_(false),
+    plainText_(true),
     ui(new Ui::GUICalulatrice)
 {
     ui->setupUi(this);

@@ -317,7 +317,16 @@ ZFraction Membre::getResultat() const
 
 void Membre::afficher(std::ostream &out) const
 {
-    if (isSimple())
+    if(parenthese_ != parenthese_Aucune)
+    {
+        out << "(";
+    }
+
+    if (isEmpty())
+    {
+        out << " ";
+    }
+    else if (isSimple())
     {
         //out << m_nombre->getNombre();
         out << *nombre_;
@@ -336,32 +345,39 @@ void Membre::afficher(std::ostream &out) const
     }
     else if (isComplex())
     {
-        if(parenthese_ != parenthese_Aucune)
-        {
-            out << "(";
-        }
         out << *membre1_;
 
         afficherOperation(out);
 
         out << *membre2_ ;
-        if(parenthese_ == parenthese_fermee)
-        {
-            out << ")";
-        }
     }
     else
     {
         // Erreur
         out << "Erreur : Membre vide";
     }
+
+    if(parenthese_ == parenthese_fermee)
+    {
+        out << ")";
+    }
+
     out << flush;
 }
 
 std::string Membre::afficherPlainText(void) const
 {
     std::string out;
-    if (isSimple())
+    if(parenthese_ != parenthese_Aucune)
+    {
+        out += "(";
+    }
+
+    if (isEmpty())
+    {
+        out += " ";
+    }
+    else if (isSimple())
     {
         //out << m_nombre->getNombre();
         out += nombre_->afficherPlainText();
@@ -380,25 +396,23 @@ std::string Membre::afficherPlainText(void) const
     }
     else if (isComplex())
     {
-        if(parenthese_ != parenthese_Aucune)
-        {
-            out += "(";
-        }
         out += membre1_->afficherPlainText();
 
         out += afficherOperationPlainText();
 
         out += membre2_->afficherPlainText();
-        if(parenthese_ == parenthese_fermee)
-        {
-            out += ")";
-        }
     }
     else
     {
         // Erreur
         out += "Erreur : Membre vide";
     }
+
+    if(parenthese_ == parenthese_fermee)
+    {
+        out += ")";
+    }
+
     return out;
 }
 
