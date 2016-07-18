@@ -714,10 +714,180 @@ bool Membre::simplifier()
 
 void Membre::ouvrirParenthese(operation oper)
 {
-    oper = operation_addition;
+    // Positionner les parentheses "ouvrantes" (parenthese_ouverte)
+
+    if (isEmpty())
+    {
+        ouvrirParenthese_empty(oper);
+    }
+    else if (isSimple())
+    {
+        ouvrirParenthese_simple(oper);
+    }
+    else if (isHalfComplex())
+    {
+        ouvrirParenthese_halfComplex(oper);
+    }
+    else if (isComplex())
+    {
+        ouvrirParenthese_complex(oper);
+    }
+}
+
+void Membre::ouvrirParenthese_empty(operation oper)
+{
+    // Positionner les parentheses "ouvrantes" (parenthese_ouverte)
+
+    // isEmpty() avec operation => O_o => Ignorer ce cas
+    if (isEmpty() && oper == operation_Aucune)
+    {
+        // Le membre est vide et aucune operation en cours
+        switch (parenthese_) {
+        case parenthese_Aucune:
+            parenthese_ = parenthese_ouverte;
+            break;
+        case parenthese_fermee:
+            // isEmpty() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
+            break;
+        case parenthese_ouverte:
+            // Deja ! Allouer un nouveau membre pour les nouvelles parentheses.
+            membre1_ = new Membre();
+            membre1_->parenthese_ = parenthese_ouverte;
+            break;
+        }
+    }
+}
+
+void Membre::ouvrirParenthese_simple(operation oper)
+{
+    // Positionner les parentheses "ouvrantes" (parenthese_ouverte)
+
+    // isEmpty() avec operation => O_o => Ignorer ce cas
+    // isSimple() sans operation => Probleme !
+    // Une parenthese ouvrante suit TOUJOURS une operation (ou une parenthese).
+    // SI le membre est simple sans operation ALORS la parenthese ouvrante suit un nombre ! :O
+    // => Ignorer ce cas
+    if (isSimple() && oper != operation_Aucune)
+    {
+        // Le membre est simple avec une operation en cours
+        // Le membre est simple ==> il devient complexe
+        switch (parenthese_) {
+        case parenthese_Aucune:
+            //parenthese_ = parenthese_Aucune;
+            // Parenthese ouvrante sur membre2_
+            membre1_ = new Membre(*nombre_);
+            delete nombre_; nombre_ = nullptr;
+            operation_ = oper;
+            membre2_ = new Membre();
+            membre2_->parenthese_ = parenthese_ouverte;
+            break;
+        case parenthese_fermee:
+            // isSimple() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
+            break;
+        case parenthese_ouverte:
+            parenthese_ = parenthese_Aucune;
+            // Parenthese ouvrante sur membre1_ et ouvrante sur membre2_
+            membre1_ = new Membre(*nombre_);
+            membre1_->parenthese_ = parenthese_ouverte;
+            delete nombre_; nombre_ = nullptr;
+            operation_ = oper;
+            membre2_ = new Membre();
+            membre2_->parenthese_ = parenthese_ouverte;
+            break;
+        }
+    }
+}
+
+void Membre::ouvrirParenthese_halfComplex(operation oper)
+{
+    // Positionner les parentheses "ouvrantes" (parenthese_ouverte)
+
+    // isHalfComplex() sans operation == isSimple() sans operation => Ignorer ce cas
+    if (isHalfComplex() && (
+                 (oper != operation_Aucune && operation_ == operation_Aucune)
+                 || (oper == operation_Aucune && operation_ != operation_Aucune) ) )
+    {
+        // Le membre est semi-complexe ==> l'autre membre ouvre ses parentheses
+        if (nullptr == membre1_)
+        {
+            // Nouveau membre toujours dans "membre2_" => copie membre2_ dans membre1_.
+            membre1_ = membre2_;
+            membre2_ = nullptr;
+        }
+
+        switch (parenthese_) {
+        case parenthese_Aucune:
+        case parenthese_ouverte:
+            if(oper != operation_Aucune)
+            {
+                operation_ = oper;
+            }
+            // membre2_ est alloue avec des parentheses ouvrantes
+            membre2_ = new Membre();
+            membre2_->parenthese_ = parenthese_ouverte;
+            break;
+        case parenthese_fermee:
+            // isHalfComplex() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
+            break;
+        }
+    }
+}
+
+void Membre::ouvrirParenthese_complex(operation oper)
+{
+    // Positionner les parentheses "ouvrantes" (parenthese_ouverte)
+
+    // isComplex() sans operation => Probleme !
+    if (isComplex() && oper != operation_Aucune)
+    {
+        // Le membre est complexe ==> Creer un nouveau membre pour ouvrir les parentheses
+        Membre *copie = new Membre(*this);
+        vider();
+        membre1_ = copie;
+        membre2_ = new Membre();
+        membre2_->parenthese_ = parenthese_ouverte;
+        operation_ = oper;
+    }
 }
 
 void Membre::fermerParenthese()
+{
+    // Positionner les parentheses "fermantes" (parenthese_fermee)
+
+    if (isEmpty())
+    {
+        fermerParenthese_empty();
+    }
+    else if (isSimple())
+    {
+        fermerParenthese_simple();
+    }
+    else if (isHalfComplex())
+    {
+        fermerParenthese_halfComplex();
+    }
+    else if (isComplex())
+    {
+        fermerParenthese_complex();
+    }
+}
+
+void Membre::fermerParenthese_empty()
+{
+
+}
+
+void Membre::fermerParenthese_simple()
+{
+
+}
+
+void Membre::fermerParenthese_halfComplex()
+{
+
+}
+
+void Membre::fermerParenthese_complex()
 {
 
 }

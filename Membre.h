@@ -23,17 +23,16 @@ public:
     ~Membre();
     void vider();
 
-
-    void operator_simple(const Membre& a, const operation oper);
-    void operator_halfComplex(const Membre& a, const operation oper);
-    void operator_complex(const Membre& a, const operation oper);
     Membre& operator+=(const Membre& a);
     Membre& operator-=(const Membre& a);
     Membre& operator/=(const Membre& a);
     Membre& operator*=(const Membre& a);
+private:
+    void operator_simple(const Membre& a, const operation oper);
+    void operator_halfComplex(const Membre& a, const operation oper);
+    void operator_complex(const Membre& a, const operation oper);
 
 public:
-
     ZFraction getResultat() const;
     void afficher(std::ostream &) const;
     std::string afficherPlainText(void) const;
@@ -57,6 +56,17 @@ public:
 
     // Surcharger les operation +-*/
     // Surcharger les operation += -= *= /=
+
+private:
+    void ouvrirParenthese_empty(operation);
+    void ouvrirParenthese_simple(operation);
+    void ouvrirParenthese_halfComplex(operation);
+    void ouvrirParenthese_complex(operation);
+    void fermerParenthese_empty();
+    void fermerParenthese_simple();
+    void fermerParenthese_halfComplex();
+    void fermerParenthese_complex();
+
 
 protected:
     parenthese parenthese_;
