@@ -766,7 +766,7 @@ void Membre::ouvrirParenthese_empty(operation oper)
         case parenthese_ouverte:
             // Deja ! Allouer un nouveau membre pour les nouvelles parentheses.
             membre1_ = new Membre();
-            membre1_->parenthese_ = parenthese_ouverte;
+            membre1_->ouvrirParenthese(oper);
             break;
         }
     }
@@ -793,7 +793,7 @@ void Membre::ouvrirParenthese_simple(operation oper)
             delete nombre_; nombre_ = nullptr;
             operation_ = oper;
             membre2_ = new Membre();
-            membre2_->parenthese_ = parenthese_ouverte;
+            membre2_->ouvrirParenthese(operation_Aucune);
             break;
         case parenthese_fermee:
             // isSimple() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
@@ -806,7 +806,7 @@ void Membre::ouvrirParenthese_simple(operation oper)
             delete nombre_; nombre_ = nullptr;
             operation_ = oper;
             membre2_ = new Membre();
-            membre2_->parenthese_ = parenthese_ouverte;
+            membre2_->ouvrirParenthese(operation_Aucune);
             break;
         }
     }
@@ -816,10 +816,7 @@ void Membre::ouvrirParenthese_halfComplex(operation oper)
 {
     // Positionner les parentheses "ouvrantes" (parenthese_ouverte)
 
-    // isHalfComplex() sans operation == isSimple() sans operation => Ignorer ce cas
-    if (isHalfComplex() && (
-                 (oper != operation_Aucune && operation_ == operation_Aucune)
-                 || (oper == operation_Aucune && operation_ != operation_Aucune) ) )
+    if (isHalfComplex())
     {
         // Le membre est semi-complexe ==> l'autre membre ouvre ses parentheses
         if (nullptr == membre1_)
@@ -829,20 +826,29 @@ void Membre::ouvrirParenthese_halfComplex(operation oper)
             membre2_ = nullptr;
         }
 
-        switch (parenthese_) {
-        case parenthese_Aucune:
-        case parenthese_ouverte:
-            if(oper != operation_Aucune)
-            {
-                operation_ = oper;
+        if( (oper != operation_Aucune && operation_ == operation_Aucune)
+                || (oper == operation_Aucune && operation_ != operation_Aucune) )
+        {
+            switch (parenthese_) {
+            case parenthese_Aucune:
+            case parenthese_ouverte:
+                if(oper != operation_Aucune)
+                {
+                    operation_ = oper;
+                }
+                // membre2_ est alloue avec des parentheses ouvrantes
+                membre2_ = new Membre();
+                membre2_->ouvrirParenthese(operation_Aucune);
+                break;
+            case parenthese_fermee:
+                // isHalfComplex() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
+                break;
             }
-            // membre2_ est alloue avec des parentheses ouvrantes
-            membre2_ = new Membre();
-            membre2_->parenthese_ = parenthese_ouverte;
-            break;
-        case parenthese_fermee:
-            // isHalfComplex() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
-            break;
+        }
+        // isHalfComplex() sans operation avec parenthese ouverte => parentheses imbriquees
+        else if(oper == operation_Aucune && operation_ == operation_Aucune && parenthese_ == parenthese_ouverte)
+        {
+            membre1_->ouvrirParenthese(oper);
         }
     }
 }
@@ -851,16 +857,23 @@ void Membre::ouvrirParenthese_complex(operation oper)
 {
     // Positionner les parentheses "ouvrantes" (parenthese_ouverte)
 
-    // isComplex() sans operation => Probleme !
-    if (isComplex() && oper != operation_Aucune)
+    if (isComplex())
     {
-        // Le membre est complexe ==> Creer un nouveau membre pour ouvrir les parentheses
-        Membre *copie = new Membre(*this);
-        vider();
-        membre1_ = copie;
-        membre2_ = new Membre();
-        membre2_->parenthese_ = parenthese_ouverte;
-        operation_ = oper;
+        if (oper != operation_Aucune)
+        {
+            // Le membre est complexe ==> Creer un nouveau membre pour ouvrir les parentheses
+            Membre *copie = new Membre(*this);
+            vider();
+            membre1_ = copie;
+            operation_ = oper;
+            membre2_ = new Membre();
+            membre2_->ouvrirParenthese(operation_Aucune);
+        }
+        // isComplex() sans operation => parentheses imbriquees
+        else
+        {
+            membre2_->ouvrirParenthese(oper);
+        }
     }
 }
 
