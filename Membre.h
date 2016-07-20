@@ -50,7 +50,7 @@ public:
     // Appelle m_membre1/2->simplifier() et si m_membre1/2->isSimple() sont vrais alors enregistre m_nombre=m_operation->getResultat() libere m_operation/m_membre1/m_membre2.
     bool simplifier();
     void ouvrirParenthese(operation =operation_Aucune);
-    void fermerParenthese();
+    bool fermerParenthese();
     void setAfficherFraction(bool =true);
     bool getAfficherFraction(void) const;
 
@@ -62,10 +62,10 @@ private:
     void ouvrirParenthese_simple(operation);
     void ouvrirParenthese_halfComplex(operation);
     void ouvrirParenthese_complex(operation);
-    void fermerParenthese_empty();
-    void fermerParenthese_simple();
-    void fermerParenthese_halfComplex();
-    void fermerParenthese_complex();
+    bool fermerParenthese_empty();
+    bool fermerParenthese_simple();
+    bool fermerParenthese_halfComplex();
+    bool fermerParenthese_complex();
 
 
 protected:

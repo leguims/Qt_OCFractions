@@ -786,23 +786,15 @@ void Membre::ouvrirParenthese_simple(operation oper)
         // Le membre est simple avec une operation en cours
         // Le membre est simple ==> il devient complexe
         switch (parenthese_) {
-        case parenthese_Aucune:
-            //parenthese_ = parenthese_Aucune;
-            // Parenthese ouvrante sur membre2_
-            membre1_ = new Membre(*nombre_);
-            delete nombre_; nombre_ = nullptr;
-            operation_ = oper;
-            membre2_ = new Membre();
-            membre2_->ouvrirParenthese(operation_Aucune);
-            break;
         case parenthese_fermee:
             // isSimple() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
             break;
+        case parenthese_Aucune:
         case parenthese_ouverte:
-            parenthese_ = parenthese_Aucune;
-            // Parenthese ouvrante sur membre1_ et ouvrante sur membre2_
+            // Copie Parenthese sur membre1_ et ouvrante sur membre2_
             membre1_ = new Membre(*nombre_);
-            membre1_->parenthese_ = parenthese_ouverte;
+            membre1_->parenthese_ = parenthese_;
+            parenthese_ = parenthese_Aucune;
             delete nombre_; nombre_ = nullptr;
             operation_ = oper;
             membre2_ = new Membre();
@@ -877,46 +869,141 @@ void Membre::ouvrirParenthese_complex(operation oper)
     }
 }
 
-void Membre::fermerParenthese()
+bool Membre::fermerParenthese()
 {
     // Positionner les parentheses "fermantes" (parenthese_fermee)
 
+    // Indique si la Fermeture de la Parenthese est Realisee
+    bool fpr(false);
+
     if (isEmpty())
     {
-        fermerParenthese_empty();
+        fpr = fermerParenthese_empty();
     }
     else if (isSimple())
     {
-        fermerParenthese_simple();
+        fpr = fermerParenthese_simple();
     }
     else if (isHalfComplex())
     {
-        fermerParenthese_halfComplex();
+        fpr = fermerParenthese_halfComplex();
     }
     else if (isComplex())
     {
-        fermerParenthese_complex();
+        fpr = fermerParenthese_complex();
     }
+    return fpr;
 }
 
-void Membre::fermerParenthese_empty()
+bool Membre::fermerParenthese_empty()
 {
+    // Positionner les parentheses "fermee" (parenthese_fermee)
 
+    // Indique si la Fermeture de la Parenthese est Realisee
+    bool fpr(false);
+
+    // isEmpty() avec operation => O_o => Ignorer ce cas
+    if (isEmpty())
+    {
+        // Le membre est vide ==> Aucune interet d'avoir des parentheses !
+        switch (parenthese_) {
+        case parenthese_Aucune:
+        case parenthese_fermee:
+            // isEmpty() et Fermee ?! O_o => des parentheses inutiles ! Supprimer les parentheses.
+            break;
+        case parenthese_ouverte:
+            // isEmpty() et Ouverte ?! O_o => des parentheses inutiles ! Supprimer les parentheses.
+            fpr = true;
+            break;
+        }
+        parenthese_ = parenthese_Aucune;
+        // TODO : Il faudrait meme libérer le membre s'il est chainé !
+    }
+    return fpr;
 }
 
-void Membre::fermerParenthese_simple()
+bool Membre::fermerParenthese_simple()
 {
+    // Positionner les parentheses "fermantes" (parenthese_fermee)
 
+    // Indique si la Fermeture de la Parenthese est Realisee
+    bool fpr(false);
+
+    if (isSimple())
+    {
+        // Le membre est simple ==> Aucune interet d'avoir des parentheses !
+        switch (parenthese_) {
+        case parenthese_Aucune:
+        case parenthese_fermee:
+            break;
+        case parenthese_ouverte:
+            fpr = true;
+            break;
+        }
+        parenthese_ = parenthese_Aucune;
+    }
+    return fpr;
 }
 
-void Membre::fermerParenthese_halfComplex()
+bool Membre::fermerParenthese_halfComplex()
 {
+    // Positionner les parentheses "fermantes" (parenthese_fermee)
 
+    // Indique si la Fermeture de la Parenthese est Realisee
+    bool fpr(false);
+
+    if (isHalfComplex())
+    {
+        if (nullptr == membre1_)
+        {
+            // Nouveau membre toujours dans "membre2_" => copie membre2_ dans membre1_.
+            membre1_ = membre2_;
+            membre2_ = nullptr;
+        }
+
+        // Le membre est semi-complexe ==> Fermer les parentheses les plus imbriquees en priorite.
+        if (membre1_->fermerParenthese())
+        {
+            fpr = true;
+            if(membre1_->isEmpty() && membre1_->parenthese_ == parenthese_Aucune)
+            {
+                // Liberer tous les membres vides sans parentheses
+                delete membre1_; membre1_ = nullptr;
+            }
+        }
+        // Pas de parenthese imbriquee => pas de fermeture de parenthese sur un membre semi-complexe
+    }
+    return fpr;
 }
 
-void Membre::fermerParenthese_complex()
+bool Membre::fermerParenthese_complex()
 {
+    // Positionner les parentheses "fermantes" (parenthese_fermee)
 
+    // Indique si la Fermeture de la Parenthese est Realisee
+    bool fpr(false);
+
+    if (isComplex())
+    {
+        // Le membre est complexe ==> Fermer les parentheses les plus imbriquees en priorite.
+        if (membre2_->fermerParenthese())
+        {
+            fpr = true;
+            if(membre2_->isEmpty() && membre2_->parenthese_ == parenthese_Aucune)
+            {
+                // Liberer tous les membres vides sans parentheses
+                delete membre2_; membre2_ = nullptr;
+            }
+        }
+        // Pas de parenthese imbriquee => verifier la parenthese courante
+        else if (parenthese_ == parenthese_ouverte)
+        {
+            // Fermer la parenthese locale
+            parenthese_ = parenthese_fermee;
+            fpr = true;
+        }
+    }
+    return fpr;
 }
 
 void Membre::setAfficherFraction(bool cmd)
