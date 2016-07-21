@@ -103,20 +103,85 @@ void Membre::vider()
     delete nombre_; nombre_ = nullptr;
 }
 
-void Membre::operator_simple(const Membre & a, const operation oper)
+bool Membre::operator_generic(const Membre & a, const operation oper, const bool enreg)
 {
+    // Indique si le Membre est ENRegistre
+    bool menr(false);
+
+    if (isEmpty())
+    {
+        // Le membre est vide ==> il devient simple
+        menr = operator_empty(a, oper);
+    }
+    else if (isSimple())
+    {
+        // Le membre est simple ==> il devient complexe
+        menr = operator_simple(a, oper);
+    }
+    else if (isHalfComplex())
+    {
+        // Le membre est semi-complexe ==> Remplir l'autre membre
+        menr = operator_halfComplex(a, oper, enreg);
+    }
+    else if (isComplex())
+    {
+        // Le membre est complexe ==> Creer un nouveau membre pour traiter l'operateur
+        menr = operator_complex(a, oper, enreg);
+    }
+
+    return menr;
+}
+
+bool Membre::operator_empty(const Membre & a, const operation oper)
+{
+    // Indique si le Membre est ENRegistre
+    bool menr(false);
+
+    if (isEmpty())
+    {
+        // Le membre est vide ==> il devient simple ou reste vide
+        switch(oper){
+        case operation_multiplication:
+        case operation_division:
+            break;
+        case operation_Aucune:
+        case operation_addition:
+            membre1_ = new Membre(a);
+            menr = true;
+            break;
+        case operation_soustraction:
+            membre1_ = new Membre(-a);
+            menr = true;
+            break;
+        }
+    }
+    return menr;
+}
+
+bool Membre::operator_simple(const Membre & a, const operation oper)
+{
+    // Indique si le Membre est ENRegistre
+    bool menr(false);
+
     if (isSimple())
     {
         // Le membre est simple ==> il devient complexe
-        membre1_ = new Membre(*nombre_);
-        delete nombre_; nombre_ = nullptr;
+        Membre *copie = new Membre(*this);
+        vider();
+        membre1_ = copie;
         operation_ = oper;
         membre2_ = new Membre(a);
+        menr = true;
     }
+    return menr;
 }
 
-void Membre::operator_halfComplex(const Membre & a, const operation oper)
+// Si enreg == true => La methode doit enregistrer l'operation
+bool Membre::operator_halfComplex(const Membre & a, const operation oper, const bool enreg)
 {
+    // Indique si le Membre est ENRegistre
+    bool menr(false);
+
     if (isHalfComplex())
     {
         // Le membre est semi-complexe ==> il devient complexe
@@ -127,183 +192,135 @@ void Membre::operator_halfComplex(const Membre & a, const operation oper)
             membre2_ = nullptr;
         }
 
-        if(membre1_->isSimple())
+        if(parenthese_ == parenthese_fermee && enreg)
         {
-            // membre1_ est simple => Ajout de l'operation sans priorite
-            membre2_ = new Membre(a);
+            // Si les parentheses sont fermees => appliquer l'operation a un nouveau membre
+            // Pas de priorite a gerer
+            Membre *copie = new Membre(*this);
+            vider();
+            membre1_ = copie;
             operation_ = oper;
+            membre2_ = new Membre(a);
+            menr = true;
         }
-        else
+        else if(parenthese_ != parenthese_fermee)
         {
-            // membre1_ n'est pas simple => gerer les priorites
-            switch(oper)
+            // Si les parentheses sont ouvertes ou absentes => Appliquer sur membre1_ puis membre_2
+            // Gerer la priorite de l'operation
+            menr = membre1_->operator_generic(a, oper, false);
+            if(!menr && enreg)
             {
-            case operation_multiplication:
-                // Operation en cours est une operation prioritaire ==> appliquer sur le membre1_
-                *this->membre1_ *= a;
-                break;
-            case operation_division:
-                // Operation en cours est une operation prioritaire ==> appliquer sur le membre1_
-                *this->membre1_ /= a;
-                break;
-            case operation_addition:
-            case operation_soustraction:
-            case operation_Aucune:
-                // L'operation en cours n'est pas prioritaire ==> pas de priorite a gerer
-                // Pas d'operation en cours ==> pas de priorite a gerer
-                // Le membre est semi-complexe ==> il devient complexe
-                membre2_ = new Membre(a);
-                operation_ = oper;
-                break;
+                // membre1_ n'est pas simple => gerer les priorites
+                switch(oper)
+                {
+                case operation_multiplication:
+                case operation_division:
+                    // Operation en cours est une operation prioritaire ==> appliquer sur le membre1_
+                    menr = membre1_->operator_generic(a, oper, true);
+                    break;
+                case operation_addition:
+                case operation_soustraction:
+                    // L'operation en cours n'est pas prioritaire ==> pas de priorite a gerer
+                    // Le membre est semi-complexe ==> il devient complexe
+                    operation_ = oper;
+                    membre2_ = new Membre(a);
+                    menr = true;
+                    break;
+                case operation_Aucune:
+                    // Pas d'operation en cours ==> cas non gere !
+                    break;
+                }
             }
         }
     }
+    return menr;
 }
 
-void Membre::operator_complex(const Membre & a, const operation oper)
+bool Membre::operator_complex(const Membre & a, const operation oper, const bool enreg)
 {
+    // Indique si le Membre est ENRegistre
+    bool menr(false);
+
     if (isComplex())
     {
-        if(parenthese_ == parenthese_fermee)
+        if(parenthese_ == parenthese_fermee && enreg)
         {
-            // Parenthese sur l'operation precedente ==> pas de priorite a gerer
-            // Le membre est complexe ==> Creer un nouveau membre pour traiter l'operateur
+            // Si les parentheses sont fermees => appliquer l'operation a un nouveau membre
+            // Pas de priorite a gerer
             Membre *copie = new Membre(*this);
-            delete membre1_; membre1_ = copie;
-            delete membre2_; membre2_ = nullptr;
+            vider();
+            membre1_ = copie;
             operation_ = oper;
             membre2_ = new Membre(a);
+            menr = true;
         }
         else
         {
-            // Aucune parenthese sur l'operation precedente
-            switch(oper)
+            // Si les parentheses sont ouvertes ou absentes => Appliquer sur membre2_ puis membre_1
+            // Gerer la priorite de l'operation
+            menr = membre2_->operator_generic(a, oper, false);
+            if(!menr)
             {
-            case operation_multiplication:
-                // Operation en cours est une operation prioritaire ==> appliquer sur le membre2_
-                *this->membre2_ *= a;
-                break;
-            case operation_division:
-                // Operation en cours est une operation prioritaire ==> appliquer sur le membre2_
-                *this->membre2_ /= a;
-                break;
-            case operation_addition:
-            case operation_soustraction:
-            case operation_Aucune:
-                // L'operation en cours n'est pas prioritaire ==> pas de priorite a gerer
-                // Pas d'operation en cours ==> pas de priorite a gerer
-                // Le membre est complexe ==> Creer un nouveau membre pour traiter l'operateur
-                Membre *copie = new Membre(*this);
-                delete membre1_; membre1_ = copie;
-                delete membre2_; membre2_ = nullptr;
-                operation_ = oper;
-                membre2_ = new Membre(a);
-                break;
+                menr = membre1_->operator_generic(a, oper, false);
+            }
+
+            if(!menr && enreg)
+            {
+                // Aucune parenthese sur l'operation precedente
+                switch(oper)
+                {
+                case operation_multiplication:
+                case operation_division:
+                    // Operation en cours est une operation prioritaire ==> appliquer sur le membre2_
+                    menr = membre2_->operator_generic(a, oper, true);
+                    break;
+                case operation_addition:
+                case operation_soustraction:
+                {
+                    // L'operation en cours n'est pas prioritaire ==> pas de priorite a gerer
+                    // Le membre est complexe ==> Creer un nouveau membre pour traiter l'operateur
+                    Membre *copie = new Membre(*this);
+                    vider();
+                    membre1_ = copie;
+                    operation_ = oper;
+                    membre2_ = new Membre(a);
+                    menr = true;
+                    break;
+                }
+                case operation_Aucune:
+                    // Pas d'operation en cours ==> cas non gere !
+                    break;
+                }
             }
         }
     }
+    return menr;
 }
 
 Membre & Membre::operator+=(const Membre & a)
 {
-    if (isEmpty())
-    {
-        // Le membre est vide ==> il devient simple
-        membre1_ = new Membre(a);
-    }
-    else if (isSimple())
-    {
-        // Le membre est simple ==> il devient complexe
-        operator_simple(a, operation_addition);
-    }
-    else if(isHalfComplex())
-    {
-        // Le membre est semi-complexe ==> Remplir l'autre membre (complexe)
-        operator_halfComplex(a, operation_addition);
-    }
-    else if(isComplex())
-    {
-        // Le membre est complexe ==> Creer un nouveau membre pour traiter l'operateur
-        operator_complex(a, operation_addition);
-    }
+    operator_generic(a, operation_addition, true);
 
     return *this;
 }
 
 Membre & Membre::operator-=(const Membre & a)
 {
-    if (isEmpty())
-    {
-        // Le membre est vide ==> il devient simple
-        membre1_ = new Membre(-a);
-    }
-    else if (isSimple())
-    {
-        // Le membre est simple ==> il devient complexe
-        operator_simple(a, operation_soustraction);
-    }
-    else if (isHalfComplex())
-    {
-        // Le membre est semi-complexe ==> Remplir l'autre membre
-        operator_halfComplex(a, operation_soustraction);
-    }
-    else if (isComplex())
-    {
-        // Le membre est complexe ==> Creer un nouveau membre pour traiter l'operateur
-        operator_complex(a, operation_soustraction);
-    }
+    operator_generic(a, operation_soustraction, true);
 
     return *this;
 }
 
 Membre & Membre::operator/=(const Membre & a)
 {
-    // Cas "if (isEmpty())" ignoré
-
-    if (isSimple())
-    {
-        // Le membre est simple ==> il devient complexe
-        operator_simple(a, operation_division);
-    }
-    else if (isHalfComplex())
-    {
-        // Pour la division, veiller à ce que membre1_ soit occupé
-        if (nullptr == membre1_)
-        {
-            membre1_ = membre2_;
-            membre2_ = nullptr;
-        }
-        // Le membre est semi-complexe ==> Remplir l'autre membre
-        operator_halfComplex(a, operation_division);
-    }
-    else if (isComplex())
-    {
-        // Le membre est complexe ==> Creer un nouveau membre pour traiter l'operateur
-        operator_complex(a, operation_division);
-    }
+    operator_generic(a, operation_division, true);
 
     return *this;
 }
 
 Membre & Membre::operator*=(const Membre & a)
 {
-    // Cas "if (isEmpty())" ignoré
-
-    if (isSimple())
-    {
-        // Le membre est simple ==> il devient complexe
-        operator_simple(a, operation_multiplication);
-    }
-    else if (isHalfComplex())
-    {
-        // Le membre est semi-complexe ==> Remplir l'autre membre
-        operator_halfComplex(a, operation_multiplication);
-    }
-    else if (isComplex())
-    {
-        // Le membre est complexe ==> Creer un nouveau membre pour traiter l'operateur
-        operator_complex(a, operation_multiplication);
-    }
+    operator_generic(a, operation_multiplication, true);
 
     return *this;
 }

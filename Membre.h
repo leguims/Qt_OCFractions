@@ -28,9 +28,11 @@ public:
     Membre& operator/=(const Membre& a);
     Membre& operator*=(const Membre& a);
 private:
-    void operator_simple(const Membre& a, const operation oper);
-    void operator_halfComplex(const Membre& a, const operation oper);
-    void operator_complex(const Membre& a, const operation oper);
+    bool operator_generic(const Membre& a, const operation oper, const bool =false);
+    bool operator_empty(const Membre& a, const operation oper);
+    bool operator_simple(const Membre& a, const operation oper);
+    bool operator_halfComplex(const Membre& a, const operation oper, const bool =false);
+    bool operator_complex(const Membre& a, const operation oper, const bool =false);
 
 public:
     ZFraction getResultat() const;
