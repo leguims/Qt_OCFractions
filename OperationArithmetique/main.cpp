@@ -15,6 +15,9 @@ void test_constructeurOperator(void);
 void test_afficherPlainText(void);
 void test_afficherHTML(void);
 void test_saisieCalculatrice_PlainText_01(void);
+void test_saisieCalculatrice_PlainText_02(void);
+void test_saisieCalculatrice_PlainText_03(void);
+void test_saisieCalculatrice_PlainText_04(void);
 
 void main()
 {
@@ -37,6 +40,9 @@ void main()
 	test_afficherPlainText();
 	//test_afficherHTML();
 	test_saisieCalculatrice_PlainText_01();
+	test_saisieCalculatrice_PlainText_02();
+	test_saisieCalculatrice_PlainText_03();
+	test_saisieCalculatrice_PlainText_04();
 }
 
 void test_constructeurCopie(void)
@@ -177,11 +183,12 @@ void test_setAfficherFraction(void)
 	m9 -= ZFraction(9, 3);
 	m9 *= ZFraction(4, 2);
 	m9.setAfficherFraction();
-	cout << "m9 = " << endl;
+	cout << "m9 = 1 + 1/3 /4 - 9/3 *4/2" << endl;
 	do
 	{
 		cout << m9 << endl;
 	} while (m9.simplifier());
+	cout << "Correction : m9 = -59/12 ==> !! BUG !!" << endl;
 
 	cout << endl;
 }
@@ -280,6 +287,102 @@ void test_saisieCalculatrice_PlainText_01(void)
 	calcul.on_bouton_resultat_clicked();
 	calcul.on_bouton_fraction_clicked();
 	calcul.on_bouton_resultat_clicked();
+}
+
+void test_saisieCalculatrice_PlainText_02(void)
+{
+	cout << endl << endl << "### test_saisieCalculatrice_PlainText_02 : 1+2/3*4 = = =" << endl;
+
+	GUICalulatrice	calcul;
+
+	calcul.plainText(true);
+
+	calcul.on_bouton_chiffre_1_clicked();
+	calcul.on_bouton_addition_clicked();
+
+	calcul.on_bouton_chiffre_2_clicked();
+	calcul.on_bouton_division_clicked();
+
+	calcul.on_bouton_chiffre_3_clicked();
+	calcul.on_bouton_multiplication_clicked();
+
+	calcul.on_bouton_chiffre_4_clicked();
+
+
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	cout << "Correction : 11/3 ==> !! BUG !!" << endl;
+}
+
+void test_saisieCalculatrice_PlainText_03(void)
+{
+	cout << endl << endl << "### test_saisieCalculatrice_PlainText_03 : 1+(2/3)*4 = = =" << endl;
+
+	GUICalulatrice	calcul;
+
+	calcul.plainText(true);
+
+	calcul.on_bouton_chiffre_1_clicked();
+	calcul.on_bouton_addition_clicked();
+
+	calcul.on_bouton_parenthese_ouvrante_clicked();
+	calcul.on_bouton_chiffre_2_clicked();
+	calcul.on_bouton_division_clicked();
+
+	calcul.on_bouton_chiffre_3_clicked();
+	calcul.on_bouton_parenthese_fermante_clicked();
+
+	calcul.on_bouton_multiplication_clicked();
+	calcul.on_bouton_chiffre_4_clicked();
+
+
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	cout << "Correction : 11/3 ==> !! BUG !!" << endl;
+}
+
+void test_saisieCalculatrice_PlainText_04(void)
+{
+	cout << endl << endl << "### test_saisieCalculatrice_PlainText_04 : ( (1+2)*3 -4*5*6 ) *7 = = = = = = = =" << endl;
+
+	GUICalulatrice	calcul;
+
+	calcul.plainText(true);
+
+	calcul.on_bouton_parenthese_ouvrante_clicked();
+
+	calcul.on_bouton_parenthese_ouvrante_clicked();
+	calcul.on_bouton_chiffre_1_clicked();
+	calcul.on_bouton_addition_clicked();
+	calcul.on_bouton_chiffre_2_clicked();
+	calcul.on_bouton_parenthese_fermante_clicked();
+
+	calcul.on_bouton_multiplication_clicked();
+	calcul.on_bouton_chiffre_3_clicked();
+
+	calcul.on_bouton_soustraction_clicked();
+	calcul.on_bouton_chiffre_4_clicked();
+	calcul.on_bouton_multiplication_clicked();
+	calcul.on_bouton_chiffre_5_clicked();
+	calcul.on_bouton_multiplication_clicked();
+	calcul.on_bouton_chiffre_6_clicked();
+	calcul.on_bouton_parenthese_fermante_clicked();
+
+	calcul.on_bouton_multiplication_clicked();
+	calcul.on_bouton_chiffre_7_clicked();
+
+
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	cout << "Correction : 777 ==> !! BUG !!" << endl;
 }
 
 
