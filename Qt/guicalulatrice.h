@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QString>
-#include "Membre.h"
+#include "../Commun/Membre.h"
 
 namespace Ui {
 class GUICalulatrice;
@@ -52,6 +52,7 @@ private:
 public:
     explicit GUICalulatrice(QWidget *parent = 0);
     ~GUICalulatrice();
+    void plainText(bool);
 
 private:
     Membre	membre_;

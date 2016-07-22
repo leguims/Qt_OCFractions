@@ -366,3 +366,8 @@ GUICalulatrice::~GUICalulatrice()
 {
     delete ui;
 }
+
+void GUICalulatrice::plainText(bool pt)
+{
+    plainText_ = pt;
+}

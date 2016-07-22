@@ -285,3 +285,8 @@ void GUICalulatrice::on_bouton_chiffre_0_clicked()
 GUICalulatrice::~GUICalulatrice()
 {
 }
+
+void GUICalulatrice::plainText(bool pt)
+{
+	plainText_ = pt;
+}

@@ -104,7 +104,6 @@ std::string ZFraction::afficherHTML(void) const
 	{
 		out += std::to_string(getDouble());
 	}
-    cout << out << endl;
     return out;
 }
 

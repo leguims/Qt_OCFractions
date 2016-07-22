@@ -44,6 +44,7 @@ private:
 public:
     GUICalulatrice();
     ~GUICalulatrice();
+	void plainText(bool);
 
 private:
 	Membre	membre_;

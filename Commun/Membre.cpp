@@ -532,7 +532,6 @@ std::string Membre::afficherHTML(void) const
         // Erreur
         out += "Erreur : Membre vide";
     }
-    cout << out << endl;
     return out;
 }
 
