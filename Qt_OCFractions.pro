@@ -12,15 +12,15 @@ TARGET = Qt_OCFractions
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-    guicalulatrice.cpp \
-    ZFraction.cpp \
-    Membre.cpp
+SOURCES += Qt\main.cpp\
+    Qt\guicalulatrice.cpp \
+    Commun\ZFraction.cpp \
+    Commun\Membre.cpp
 
 HEADERS  += \
-    guicalulatrice.h \
-    ZFraction.h \
-    Membre.h
+    Qt\guicalulatrice.h \
+    Commun\ZFraction.h \
+    Commun\Membre.h
 
 FORMS    += \
-    guicalulatrice.ui
+    Qt\guicalulatrice.ui
