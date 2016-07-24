@@ -9,7 +9,7 @@ GUICalulatrice::GUICalulatrice(QWidget *parent) :
     saisieDenominateur_(1),
     saisieDecimales_(false),
     saisieVide_(true),
-    plainText_(true),
+    plainText_(false),
     ui(new Ui::GUICalulatrice)
 {
     ui->setupUi(this);
@@ -199,7 +199,15 @@ void GUICalulatrice::enregistrerNombre()
         switch (oper_)
         {
         case Membre::operation_Aucune:
-            membre_ = ZFraction(saisieNumerateur_, saisieDenominateur_);
+            if (membre_.isEmpty())
+            {
+                membre_ = ZFraction(saisieNumerateur_, saisieDenominateur_);
+            }
+            else
+            {
+                // 1er nombre d'une parenthese
+                membre_.operator_aucuneOperation( ZFraction(saisieNumerateur_, saisieDenominateur_) );
+            }
             break;
         case Membre::operation_addition:
             membre_ += ZFraction(saisieNumerateur_, saisieDenominateur_);

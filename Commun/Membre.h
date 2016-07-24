@@ -29,7 +29,7 @@ public:
     Membre& operator*=(const Membre& a);
 private:
     bool operator_generic(const Membre& a, const operation oper, const bool =false);
-    bool operator_empty(const Membre& a, const operation oper);
+    bool operator_valueless(const Membre& a, const operation oper);
     bool operator_simple(const Membre& a, const operation oper);
     bool operator_halfComplex(const Membre& a, const operation oper, const bool =false);
     bool operator_complex(const Membre& a, const operation oper, const bool =false);
@@ -46,12 +46,14 @@ public:
     static std::string afficherOperationHTML(operation);
     // Retourne vrai si le membre ne contient pas d'operation, mais seulement un nombre.
     bool isEmpty() const;
+    bool isValueless() const;
     bool isSimple() const;
     bool isHalfComplex() const;
     bool isComplex() const;
     // Appelle m_membre1/2->simplifier() et si m_membre1/2->isSimple() sont vrais alors enregistre m_nombre=m_operation->getResultat() libere m_operation/m_membre1/m_membre2.
     bool simplifier();
     void ouvrirParenthese(operation =operation_Aucune);
+    void operator_aucuneOperation(const Membre&);
     bool fermerParenthese();
     void setAfficherFraction(bool =true);
     bool getAfficherFraction(void) const;
@@ -60,11 +62,11 @@ public:
     // Surcharger les operation += -= *= /=
 
 private:
-    void ouvrirParenthese_empty(operation);
+    void ouvrirParenthese_valueless(operation);
     void ouvrirParenthese_simple(operation);
     void ouvrirParenthese_halfComplex(operation);
     void ouvrirParenthese_complex(operation);
-    bool fermerParenthese_empty();
+    bool fermerParenthese_valueless();
     bool fermerParenthese_simple();
     bool fermerParenthese_halfComplex();
     bool fermerParenthese_complex();

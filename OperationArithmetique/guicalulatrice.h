@@ -45,9 +45,9 @@ public:
     GUICalulatrice();
     ~GUICalulatrice();
 	void plainText(bool);
+	Membre	membre_; // Public for debug only
 
 private:
-	Membre	membre_;
 	Membre::operation oper_;
 	int		saisieNumerateur_;
 	int		saisieDenominateur_;

@@ -1,7 +1,14 @@
 #include "guicalulatrice.h"
 #include <iostream>
 
-GUICalulatrice::GUICalulatrice() : membre_(), oper_(Membre::operation_Aucune), saisieNumerateur_(0), saisieDecimales_(false), saisieDenominateur_(1)
+GUICalulatrice::GUICalulatrice() :
+	membre_(),
+	oper_(Membre::operation_Aucune),
+	saisieNumerateur_(0),
+	saisieDenominateur_(1),
+	saisieDecimales_(false),
+	saisieVide_(true),
+	plainText_(true)
 {
 }
 
@@ -159,7 +166,15 @@ void GUICalulatrice::enregistrerNombre()
 		switch (oper_)
 		{
 		case Membre::operation_Aucune:
-			membre_ = ZFraction(saisieNumerateur_, saisieDenominateur_);
+			if (membre_.isEmpty())
+			{
+				membre_ = ZFraction(saisieNumerateur_, saisieDenominateur_);
+			}
+			else
+			{
+				// 1er nombre d'une parenthese
+				membre_.operator_aucuneOperation( ZFraction(saisieNumerateur_, saisieDenominateur_) );
+			}
 			break;
 		case Membre::operation_addition:
 			membre_ += ZFraction(saisieNumerateur_, saisieDenominateur_);
