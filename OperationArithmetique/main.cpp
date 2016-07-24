@@ -18,6 +18,7 @@ void test_saisieCalculatrice_PlainText_01(void);
 void test_saisieCalculatrice_PlainText_02(void);
 void test_saisieCalculatrice_PlainText_03(void);
 void test_saisieCalculatrice_PlainText_04(void);
+void test_saisieCalculatrice_PlainText_05(void);
 
 void main()
 {
@@ -34,6 +35,7 @@ void main()
 	test_saisieCalculatrice_PlainText_02();
 	test_saisieCalculatrice_PlainText_03();
 	test_saisieCalculatrice_PlainText_04();
+	test_saisieCalculatrice_PlainText_05();
 }
 
 void test_constructeurCopie(void)
@@ -452,6 +454,51 @@ void test_saisieCalculatrice_PlainText_04(void)
 	calcul.on_bouton_resultat_clicked();
 
 	ZFraction correction( ((1 + 2) * 3 - 4 * 5 * 6) * 7 );
+	if (calcul.membre_.getResultat() != correction)
+	{
+		cout << "!! BUG !! ==> Correction : " << correction << endl;
+	}
+}
+
+void test_saisieCalculatrice_PlainText_05(void)
+{
+	cout << endl << endl << "### test_saisieCalculatrice_PlainText_05 : ( ( (1+2)-5 ) -4 ) *7 = = = = = = = =" << endl;
+
+	GUICalulatrice	calcul;
+
+	calcul.plainText(true);
+
+	calcul.on_bouton_parenthese_ouvrante_clicked();
+	calcul.on_bouton_parenthese_ouvrante_clicked();
+
+	calcul.on_bouton_parenthese_ouvrante_clicked();
+	calcul.on_bouton_chiffre_1_clicked();
+	calcul.on_bouton_addition_clicked();
+	calcul.on_bouton_chiffre_2_clicked();
+	calcul.on_bouton_parenthese_fermante_clicked();
+
+	calcul.on_bouton_soustraction_clicked();
+	calcul.on_bouton_chiffre_5_clicked();
+	calcul.on_bouton_parenthese_fermante_clicked();
+
+	calcul.on_bouton_soustraction_clicked();
+	calcul.on_bouton_chiffre_4_clicked();
+	calcul.on_bouton_parenthese_fermante_clicked();
+
+	calcul.on_bouton_division_clicked();
+	calcul.on_bouton_chiffre_7_clicked();
+
+
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+	calcul.on_bouton_resultat_clicked();
+
+	ZFraction correction((((1 + 2) - 5) - 4)); correction /= 7;
 	if (calcul.membre_.getResultat() != correction)
 	{
 		cout << "!! BUG !! ==> Correction : " << correction << endl;

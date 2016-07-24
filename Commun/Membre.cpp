@@ -462,23 +462,66 @@ std::string Membre::afficherHTML(void) const
 
     if (isEmpty() || isValueless())
     {
-        out += " ";
+        switch (parenthese_)
+        {
+        case parenthese_Aucune:
+            out += " ";
+            break;
+        case parenthese_ouverte:
+            out += "( ";
+            break;
+        case parenthese_fermee:
+            out += "( )";
+            break;
+        }
     }
     else if (isSimple())
     {
-        //out << m_nombre->getNombre();
-        out += nombre_->afficherHTML();
+        switch (parenthese_)
+        {
+        case parenthese_Aucune:
+            out += nombre_->afficherHTML();
+            break;
+        case parenthese_ouverte:
+            out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
+                    + nombre_->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
+            break;
+        case parenthese_fermee:
+            out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
+                    + nombre_->afficherHTML() + "</td><td>)</td>"
+                    + "   </tr>"
+                    + "</table>";
+            break;
+        }
     }
     else if (isHalfComplex())
     {
-        if (nullptr != membre1_)
-        {
-            out += membre1_->afficherHTML();
-        }
+        Membre *m = nullptr;
+        if (nullptr != membre1_)    { m = membre1_; }
+        if (nullptr != membre2_)    { m = membre2_; }
 
-        if (nullptr != membre2_)
+        if(nullptr != m)
         {
-            out += membre2_->afficherHTML();
+            switch (parenthese_)
+            {
+            case parenthese_Aucune:
+                out += m->afficherHTML();
+                break;
+            case parenthese_ouverte:
+                out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
+                        + m->afficherHTML() + "</td>"
+                        + "   </tr>"
+                        + "</table>";
+                break;
+            case parenthese_fermee:
+                out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
+                        + m->afficherHTML() + "</td><td>)</td>"
+                        + "   </tr>"
+                        + "</table>";
+                break;
+            }
         }
     }
     else if (isComplex())
