@@ -19,6 +19,9 @@ void test_saisieCalculatrice_PlainText_02(void);
 void test_saisieCalculatrice_PlainText_03(void);
 void test_saisieCalculatrice_PlainText_04(void);
 void test_saisieCalculatrice_PlainText_05(void);
+void test_saisieCalculatrice_PlainText_06(void);
+
+static int nbBug = 0;
 
 void main()
 {
@@ -35,7 +38,10 @@ void main()
 	test_saisieCalculatrice_PlainText_02();
 	test_saisieCalculatrice_PlainText_03();
 	test_saisieCalculatrice_PlainText_04();
-	test_saisieCalculatrice_PlainText_05();
+    test_saisieCalculatrice_PlainText_05();
+    test_saisieCalculatrice_PlainText_06();
+
+    cout << endl << endl << "**** Nombre total de bugs : " << nbBug << endl;
 }
 
 void test_constructeurCopie(void)
@@ -133,7 +139,7 @@ void test_setAfficherFraction(void)
 	} while (m4.simplifier());
 	if (m4.getResultat() != ZFraction(2))
 	{
-		cout << "!! BUG !! ==> Correction : m4 = 2" << endl;
+        cout << "!! BUG !! ==> Correction : m4 = 2" << endl; nbBug++;
 	}
 
 	cout << endl;
@@ -146,7 +152,7 @@ void test_setAfficherFraction(void)
 	} while (m5.simplifier());
 	if (m5.getResultat() != ZFraction(2))
 	{
-		cout << "!! BUG !! ==> Correction : m5 = 2" << endl;
+		cout << "!! BUG !! ==> Correction : m5 = 2" << endl; nbBug++;
 	}
 
 	cout << endl;
@@ -159,7 +165,7 @@ void test_setAfficherFraction(void)
 	} while (m6.simplifier());
 	if (m6.getResultat() != ZFraction(2))
 	{
-		cout << "!! BUG !! ==> Correction : m6 = 2" << endl;
+		cout << "!! BUG !! ==> Correction : m6 = 2" << endl; nbBug++;
 	}
 
 	cout << endl;
@@ -172,7 +178,7 @@ void test_setAfficherFraction(void)
 	} while (m7.simplifier());
 	if (m7.getResultat() != ZFraction(3))
 	{
-		cout << "!! BUG !! ==> Correction : m7 = 3" << endl;
+		cout << "!! BUG !! ==> Correction : m7 = 3" << endl; nbBug++;
 	}
 
 	cout << endl;
@@ -185,7 +191,7 @@ void test_setAfficherFraction(void)
 	} while (m8.simplifier());
 	if (m8.getResultat() != ZFraction(7, 6))
 	{
-		cout << "!! BUG !! ==> Correction : m8 = 7/6" << endl;
+		cout << "!! BUG !! ==> Correction : m8 = 7/6" << endl; nbBug++;
 	}
 
 	cout << endl;
@@ -203,7 +209,7 @@ void test_setAfficherFraction(void)
 	} while (m9.simplifier());
 	if (m9.getResultat() != ZFraction(-35, 12))
 	{
-		cout << "!! BUG !! ==> Correction : m9 = -35/12" << endl;
+		cout << "!! BUG !! ==> Correction : m9 = -35/12" << endl; nbBug++;
 	}
 
 	cout << endl;
@@ -225,7 +231,7 @@ void test_constructeurOperator(void)
 	correction = ZFraction(5, 3);
 	if (m20.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 
 	Membre m21(m1 - m2);
@@ -235,7 +241,7 @@ void test_constructeurOperator(void)
 	correction = ZFraction(1, 3);
 	if (m21.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 
 	Membre m22(m1 / m2);
@@ -245,7 +251,7 @@ void test_constructeurOperator(void)
 	correction = ZFraction(3, 2);
 	if (m22.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 
 	Membre m23(m1 * m2 * 7);
@@ -258,7 +264,7 @@ void test_constructeurOperator(void)
 	correction = ZFraction(14, 3);
 	if (m23.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 
 }
@@ -282,7 +288,7 @@ void test_afficherPlainText(void)
 	ZFraction correction(14, 3);
 	if (m24.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 }
 
@@ -306,7 +312,7 @@ void test_afficherHTML(void)
 	ZFraction correction(14, 3);
 	if (m24.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 }
 
@@ -341,7 +347,7 @@ void test_saisieCalculatrice_PlainText_01(void)
 	ZFraction correction(98.9876); correction += 666;
 	if (calcul.membre_.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 }
 
@@ -374,7 +380,7 @@ void test_saisieCalculatrice_PlainText_02(void)
 	ZFraction correction(11, 3);
 	if (calcul.membre_.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 }
 
@@ -409,7 +415,7 @@ void test_saisieCalculatrice_PlainText_03(void)
 	ZFraction correction(11, 3);
 	if (calcul.membre_.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 }
 
@@ -456,7 +462,7 @@ void test_saisieCalculatrice_PlainText_04(void)
 	ZFraction correction( ((1 + 2) * 3 - 4 * 5 * 6) * 7 );
 	if (calcul.membre_.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
 }
 
@@ -501,8 +507,87 @@ void test_saisieCalculatrice_PlainText_05(void)
 	ZFraction correction((((1 + 2) - 5) - 4)); correction /= 7;
 	if (calcul.membre_.getResultat() != correction)
 	{
-		cout << "!! BUG !! ==> Correction : " << correction << endl;
+		cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
 	}
+}
+
+void test_saisieCalculatrice_PlainText_06(void)
+{
+    cout << endl << endl << "### test_saisieCalculatrice_PlainText_05 : 1+1+1+1+1+ 1+1+1+1+1+ 1+1+1+1+1 ===== ===== ===== ===" << endl;
+
+    GUICalulatrice	calcul;
+
+    calcul.plainText(true);
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+    calcul.on_bouton_addition_clicked();
+
+    calcul.on_bouton_chiffre_1_clicked();
+
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+    calcul.on_bouton_resultat_clicked();
+
+    calcul.on_bouton_resultat_clicked();
+
+    ZFraction correction(15);
+    if (calcul.membre_.getResultat() != correction)
+    {
+        cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
+    }
 }
 
 

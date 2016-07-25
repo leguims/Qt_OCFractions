@@ -13,6 +13,14 @@ GUICalulatrice::GUICalulatrice(QWidget *parent) :
     ui(new Ui::GUICalulatrice)
 {
     ui->setupUi(this);
+
+//    ui->bouton_chiffre_5->setShortcut(QKeySequence( Qt::Key_5 ));
+//    ui->bouton_parenthese_ouvrante->setShortcut(QKeySequence( Qt::Key_BracketLeft ));
+//    ui->bouton_parenthese_fermante->setShortcut(QKeySequence( Qt::Key_BracketRight ));
+//    ui->bouton_chiffre_6->setShortcut(QKeySequence( Qt::Key_6 ));
+//    ui->bouton_soustraction->setShortcut(QKeySequence( Qt::Key_Minus ));
+//    ui->bouton_addition->setShortcut(QKeySequence( Qt::Key_Plus ));
+//    ui->bouton_resultat->setShortcut(QKeySequence( Qt::Key_Equal ));
 }
 
 //
