@@ -1,17 +1,20 @@
 #include "ZFraction.h"
 #include <algorithm>
 #include <cmath>
+#include <exception>
 
 using namespace std;
 
 ZFraction::ZFraction(int numerateur, int denominateur) : numerateur_(numerateur), denominateur_(denominateur)
 {
+    verifierDenominateur();
     simplifier();
 }
 
 
 ZFraction::ZFraction(long int numerateur, long int denominateur) : numerateur_(numerateur), denominateur_(denominateur)
 {
+    verifierDenominateur();
     simplifier();
 }
 
@@ -30,6 +33,7 @@ ZFraction::ZFraction(double numerateur)
     }
     numerateur_ = static_cast<long int>(numerateur);
 
+    verifierDenominateur();
     simplifier();
 }
 
@@ -167,6 +171,7 @@ ZFraction& ZFraction::operator/=(const ZFraction& a)
 {
     numerateur_ *= a.denominateur_;
     denominateur_ *= a.numerateur_;
+    verifierDenominateur();
     simplifier();
     return *this;
 }
@@ -203,6 +208,7 @@ ZFraction& ZFraction::operator/=(const long int& numerateur)
 {
     numerateur_ *= 1;
     denominateur_ *= numerateur;
+    verifierDenominateur();
     simplifier();
     return *this;
 }
@@ -238,6 +244,15 @@ void ZFraction::simplifier()
     {
         numerateur_ *= -1;
         denominateur_ *= -1;
+    }
+}
+
+void ZFraction::verifierDenominateur() const
+{
+    if (denominateur_ == 0)
+    {
+        // division par zero !
+        throw std::domain_error("Division par zero (" + std::to_string(numerateur_) + "/" + std::to_string(denominateur_) + ")");
     }
 }
 

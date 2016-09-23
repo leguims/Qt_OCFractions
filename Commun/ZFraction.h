@@ -29,11 +29,13 @@ public:
     ZFraction& operator/=(const long int& a);
     ZFraction& operator*=(const long int& a);
 private:
-    bool afficherFraction_ = true;
-    long int numerateur_ = 0;
-    long int denominateur_ = 1;
+    //Type d'affichage : fraction(true) ou reel(false)
+    bool afficherFraction_ = true;  
+    long int numerateur_ = 0;   //Numerateur
+    long int denominateur_ = 1; //Denominateur
 private:
     void simplifier();
+    void verifierDenominateur() const;
 };
 
 std::ostream& operator<<(std::ostream& , ZFraction const& );

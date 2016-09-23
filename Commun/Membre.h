@@ -6,7 +6,9 @@
 class Membre
 {
 public:
+    // Operation : Aucune, addition, soustration, multiplication ou division
     enum operation { operation_Aucune, operation_addition, operation_soustraction, operation_multiplication, operation_division };
+    // Parenthese : Aucune, ouverte (ouvrante seulement) ou fermee (ouvrante et fermante)
     enum parenthese { parenthese_Aucune, parenthese_ouverte, parenthese_fermee };
 
     Membre();
@@ -72,12 +74,13 @@ private:
 
 
 protected:
-    parenthese parenthese_ = parenthese_Aucune;
+    parenthese parenthese_ = parenthese_Aucune; // Etat des parentheses
+    //Type d'affichage : fraction(true) ou reel(false)
     bool afficherFraction_ = true;
-    Membre *membre1_ = nullptr;
-    operation operation_ = operation_Aucune;
-    Membre *membre2_ = nullptr;
-    ZFraction *nombre_ = nullptr;
+    Membre *membre1_ = nullptr; //Pointeur sur le 1er membre de l'operation
+    operation operation_ = operation_Aucune; // Operation du membre
+    Membre *membre2_ = nullptr; //Pointeur sur le 2ond membre de l'operation
+    ZFraction *nombre_ = nullptr; // Pointeur sur le nombre
 };
 
 std::ostream& operator<<(std::ostream&, Membre const&);

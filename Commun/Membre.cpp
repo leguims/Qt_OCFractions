@@ -18,12 +18,12 @@ Membre::Membre(double d)
 }
 
 Membre::Membre(ZFraction n)
-    : parenthese_(parenthese_Aucune), afficherFraction_(true), membre1_(nullptr), operation_(operation_Aucune), membre2_(nullptr), nombre_(new ZFraction(n))
+    : nombre_(new ZFraction(n))
 {
 }
 
 Membre::Membre(Membre m1, operation oper, Membre m2)
-    : parenthese_(parenthese_Aucune), afficherFraction_(true), membre1_(new Membre(m1)), operation_(oper), membre2_(new Membre(m2)), nombre_(nullptr)
+    : membre1_(new Membre(m1)), operation_(oper), membre2_(new Membre(m2))
 {
 }
 
@@ -31,7 +31,7 @@ Membre::Membre(int i1, operation oper, int i2) : Membre(i1, 1, oper, i2, 1)
 {
 }
 
-Membre::Membre(int n1, int d1, operation oper, int n2, int d2) : parenthese_(parenthese_Aucune), afficherFraction_(true), membre1_(new Membre(n1, d1)), operation_(oper), membre2_(new Membre(n2, d2)), nombre_(nullptr)
+Membre::Membre(int n1, int d1, operation oper, int n2, int d2) : membre1_(new Membre(n1, d1)), operation_(oper), membre2_(new Membre(n2, d2))
 {
 }
 
