@@ -10,8 +10,7 @@ public:
     enum parenthese { parenthese_Aucune, parenthese_ouverte, parenthese_fermee };
 
     Membre();
-    Membre(int);
-    Membre(int, int);
+    Membre(int, int = 1);
     Membre(double);
     Membre(ZFraction);
     Membre(Membre, operation, Membre);
@@ -73,12 +72,12 @@ private:
 
 
 protected:
-    parenthese parenthese_;
-    bool afficherFraction_;
-    Membre *membre1_;
-    operation operation_;
-    Membre *membre2_;
-    ZFraction *nombre_;
+    parenthese parenthese_ = parenthese_Aucune;
+    bool afficherFraction_ = true;
+    Membre *membre1_ = nullptr;
+    operation operation_ = operation_Aucune;
+    Membre *membre2_ = nullptr;
+    ZFraction *nombre_ = nullptr;
 };
 
 std::ostream& operator<<(std::ostream&, Membre const&);

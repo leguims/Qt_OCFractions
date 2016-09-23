@@ -29,9 +29,9 @@ public:
     ZFraction& operator/=(const long int& a);
     ZFraction& operator*=(const long int& a);
 private:
-    bool afficherFraction_;
-    long int numerateur_;
-    long int denominateur_;
+    bool afficherFraction_ = true;
+    long int numerateur_ = 0;
+    long int denominateur_ = 1;
 private:
     void simplifier();
 };

@@ -2,13 +2,7 @@
 #include <iostream>
 
 GUICalulatrice::GUICalulatrice() :
-	membre_(),
-	oper_(Membre::operation_Aucune),
-	saisieNumerateur_(0),
-	saisieDenominateur_(1),
-	saisieDecimales_(false),
-	saisieVide_(true),
-	plainText_(true)
+	membre_()
 {
 }
 

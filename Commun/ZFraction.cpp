@@ -4,19 +4,19 @@
 
 using namespace std;
 
-ZFraction::ZFraction(int numerateur, int denominateur) : afficherFraction_(true), numerateur_(numerateur), denominateur_(denominateur)
+ZFraction::ZFraction(int numerateur, int denominateur) : numerateur_(numerateur), denominateur_(denominateur)
 {
     simplifier();
 }
 
 
-ZFraction::ZFraction(long int numerateur, long int denominateur) : afficherFraction_(true), numerateur_(numerateur), denominateur_(denominateur)
+ZFraction::ZFraction(long int numerateur, long int denominateur) : numerateur_(numerateur), denominateur_(denominateur)
 {
     simplifier();
 }
 
 
-ZFraction::ZFraction(double numerateur): afficherFraction_(true), denominateur_(1)
+ZFraction::ZFraction(double numerateur)
 {
     long int	entier(0);
 

@@ -3,15 +3,9 @@
 using namespace std;
 
 Membre::Membre()
-    : parenthese_(parenthese_Aucune), afficherFraction_(true), membre1_(nullptr), operation_(operation_Aucune), membre2_(nullptr), nombre_(nullptr)
 {
 }
 
-
-Membre::Membre(int i)
-    : Membre(i, 1)
-{
-}
 
 Membre::Membre(int n, int d)
     : Membre(ZFraction(n, d))
