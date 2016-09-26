@@ -30,9 +30,9 @@ public:
     ZFraction& operator*=(const long int& a);
 private:
     //Type d'affichage : fraction(true) ou reel(false)
-    bool afficherFraction_ = true;  
-    long int numerateur_ = 0;   //Numerateur
-    long int denominateur_ = 1; //Denominateur
+    bool _afficherFraction = true;  
+    long int _numerateur = 0;   //Numerateur
+    long int _denominateur = 1; //Denominateur
 private:
     void simplifier();
     void verifierDenominateur() const;

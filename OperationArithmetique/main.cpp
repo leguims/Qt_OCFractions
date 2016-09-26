@@ -28,7 +28,7 @@ void main()
 {
     try
     {
-        test_divisionZero();
+        // genere dans ZFractionTests : test_divisionZero();
         test_constructeurCopie();
         //test_isSimple();
         //test_simplifier();
@@ -53,41 +53,42 @@ void main()
     }
 }
 
+// genere dans ZFractionTests :
 void test_divisionZero(void)
 {
-    cout << endl << endl << "### test_divisionZero :" << endl;
-    try
-    {
-        cout << "ZFraction a(5, 0);..." << endl;
-        ZFraction a(5, 0);
-    }
-    catch (exception const& e) //On rattrape les exceptions standard de tous types
-    {
-        cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
-    }
+    //cout << endl << endl << "### test_divisionZero :" << endl;
+    //try
+    //{
+    //    cout << "ZFraction a(5, 0);..." << endl;
+    //    ZFraction a(5, 0);
+    //}
+    //catch (exception const& e) //On rattrape les exceptions standard de tous types
+    //{
+    //    cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
+    //}
 
-    try
-    {
-        cout << "a=4/1 ; b=0/3 ; c=a/b ..." << endl;
-        ZFraction a(4,1), b(0,3), c;
-        c = a / b;
-    }
-    catch (exception const& e) //On rattrape les exceptions standard de tous types
-    {
-        cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
-    }
+    //try
+    //{
+    //    cout << "a=4/1 ; b=0/3 ; c=a/b ..." << endl;
+    //    ZFraction a(4,1), b(0,3), c;
+    //    c = a / b;
+    //}
+    //catch (exception const& e) //On rattrape les exceptions standard de tous types
+    //{
+    //    cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
+    //}
 
-    try
-    {
-        cout << "a=3/7 ; b=0 ; c=a/b ..." << endl;
-        ZFraction a(3,7), c;
-        int b(0);
-        c = a / b;
-    }
-    catch (exception const& e) //On rattrape les exceptions standard de tous types
-    {
-        cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
-    }
+    //try
+    //{
+    //    cout << "a=3/7 ; b=0 ; c=a/b ..." << endl;
+    //    ZFraction a(3,7), c;
+    //    int b(0);
+    //    c = a / b;
+    //}
+    //catch (exception const& e) //On rattrape les exceptions standard de tous types
+    //{
+    //    cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
+    //}
 }
 
 void test_constructeurCopie(void)

@@ -82,5 +82,93 @@ namespace ZFractionTests
                 Assert::Fail(message, LINE_INFO());
             }
         }
+
+        TEST_METHOD(ZFraction_conversionNumerateurReel1)
+        {
+            Logger::WriteMessage("ZFraction_conversionNumerateurReel1\n");
+            wchar_t message[200];
+            try
+            {
+                Logger::WriteMessage("\ta=1.05 ...\n");
+                ZFraction a(1.05);
+            }
+            catch (std::domain_error ex)
+            {
+                Logger::WriteMessage("\tException inattendue !\n");
+                _swprintf(message, L"Exception inattendue !");
+                Assert::Fail(message, LINE_INFO());
+            }
+            catch (...)
+            {
+                _swprintf(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(ZFraction_conversionNumerateurReel2)
+        {
+            Logger::WriteMessage("ZFraction_conversionNumerateurReel2\n");
+            wchar_t message[200];
+            try
+            {
+                Logger::WriteMessage("\ta=0.0005 ...\n");
+                ZFraction a(0.0005);
+            }
+            catch (std::domain_error ex)
+            {
+                Logger::WriteMessage("\tException inattendue !\n");
+                _swprintf(message, L"Exception inattendue !");
+                Assert::Fail(message, LINE_INFO());
+            }
+            catch (...)
+            {
+                _swprintf(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(ZFraction_conversionNumerateurReel3)
+        {
+            Logger::WriteMessage("ZFraction_conversionNumerateurReel3\n");
+            wchar_t message[200];
+            try
+            {
+                Logger::WriteMessage("\ta=0.00000005 ...\n");
+                ZFraction a(0.00000005);
+                _swprintf(message, L"Pas d'exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+            catch (std::domain_error ex)
+            {
+                Logger::WriteMessage("\tException attendue => OK !\n");
+            }
+            catch (...)
+            {
+                _swprintf(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(ZFraction_conversionNumerateurReel4)
+        {
+            Logger::WriteMessage("ZFraction_conversionNumerateurReel4\n");
+            wchar_t message[200];
+            try
+            {
+                Logger::WriteMessage("\ta=123456.0000005 ...\n");
+                ZFraction a(123456.0000005);
+                _swprintf(message, L"Pas d'exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+            catch (std::domain_error ex)
+            {
+                Logger::WriteMessage("\tException attendue => OK !\n");
+            }
+            catch (...)
+            {
+                _swprintf(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
     };
 }

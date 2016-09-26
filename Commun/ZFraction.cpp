@@ -5,14 +5,14 @@
 
 using namespace std;
 
-ZFraction::ZFraction(int numerateur, int denominateur) : numerateur_(numerateur), denominateur_(denominateur)
+ZFraction::ZFraction(int numerateur, int denominateur) : _numerateur(numerateur), _denominateur(denominateur)
 {
     verifierDenominateur();
     simplifier();
 }
 
 
-ZFraction::ZFraction(long int numerateur, long int denominateur) : numerateur_(numerateur), denominateur_(denominateur)
+ZFraction::ZFraction(long int numerateur, long int denominateur) : _numerateur(numerateur), _denominateur(denominateur)
 {
     verifierDenominateur();
     simplifier();
@@ -21,6 +21,7 @@ ZFraction::ZFraction(long int numerateur, long int denominateur) : numerateur_(n
 
 ZFraction::ZFraction(double numerateur)
 {
+    double	    sauvegarde(numerateur);
     long int	entier(0);
 
     // elimine les decimales de 'numerateur'
@@ -28,17 +29,23 @@ ZFraction::ZFraction(double numerateur)
     while (entier != numerateur)
     {
         numerateur *= 10;
-        denominateur_ *= 10;
+        _denominateur *= 10;
         entier = static_cast<long int>(numerateur);
+
+        if (sauvegarde != numerateur/_denominateur)
+        {
+            // numerateur reel perdu !
+            throw std::domain_error("Numerateur reel (" + std::to_string(sauvegarde) + ") impossible a convertir en fraction");
+        }
     }
-    numerateur_ = static_cast<long int>(numerateur);
+    _numerateur = static_cast<long int>(numerateur);
 
     verifierDenominateur();
     simplifier();
 }
 
 
-ZFraction::ZFraction(ZFraction const& a) : afficherFraction_(true), numerateur_(a.numerateur_), denominateur_(a.denominateur_)
+ZFraction::ZFraction(ZFraction const& a) : _afficherFraction(true), _numerateur(a._numerateur), _denominateur(a._denominateur)
 {
     simplifier();
 }
@@ -51,12 +58,12 @@ ZFraction::~ZFraction()
 
 void ZFraction::afficher(ostream &out) const
 {
-    if (afficherFraction_)
+    if (_afficherFraction)
     {
-        out << numerateur_;
-        if (denominateur_ != 1)
+        out << _numerateur;
+        if (_denominateur != 1)
         {
-            out << "/" << denominateur_;
+            out << "/" << _denominateur;
         }
     }
     else
@@ -68,12 +75,12 @@ void ZFraction::afficher(ostream &out) const
 std::string ZFraction::afficherPlainText(void) const
 {
     std::string out;
-    if (afficherFraction_)
+    if (_afficherFraction)
     {
-        out += std::to_string(numerateur_);
-        if (denominateur_ != 1)
+        out += std::to_string(_numerateur);
+        if (_denominateur != 1)
         {
-            out += "/" + std::to_string(denominateur_);
+            out += "/" + std::to_string(_denominateur);
         }
     }
     else
@@ -86,22 +93,22 @@ std::string ZFraction::afficherPlainText(void) const
 std::string ZFraction::afficherHTML(void) const
 {
     std::string out;
-    if (afficherFraction_)
+    if (_afficherFraction)
     {
-        if (denominateur_ != 1)
+        if (_denominateur != 1)
         {
             out += "\n<table style=\"border-collapse:collapse;\">   <tr>      <td style=\"text-align:center;vertical-align:middle;\">"
-                    + std::to_string(numerateur_)
+                    + std::to_string(_numerateur)
                     + "<hr /></td>"     // Barre de fraction
                     + "   </tr>"
                     + "   <tr>"
-                    + "      <td style=\"text-align:center;vertical-align:middle;\">"+ std::to_string(denominateur_) +"</td>"
+                    + "      <td style=\"text-align:center;vertical-align:middle;\">"+ std::to_string(_denominateur) +"</td>"
                     + "   </tr>"
                     + "</table>";
         }
         else
         {
-            out += std::to_string(numerateur_);
+            out += std::to_string(_numerateur);
         }
     }
     else
@@ -113,46 +120,46 @@ std::string ZFraction::afficherHTML(void) const
 
 long int ZFraction::getNumerateur(void) const
 {
-    return numerateur_;
+    return _numerateur;
 }
 
 long int ZFraction::getDenominateur(void) const
 {
-    return denominateur_;
+    return _denominateur;
 }
 
 double ZFraction::getDouble(void) const
 {
-    return 1.0*numerateur_/ denominateur_;
+    return 1.0*_numerateur/ _denominateur;
 }
 
 void ZFraction::setAfficherFraction(bool cmd)
 {
-    afficherFraction_ = cmd;
+    _afficherFraction = cmd;
 }
 
 bool ZFraction::getAfficherFraction(void) const
 {
-    return afficherFraction_;
+    return _afficherFraction;
 }
 
 
 bool ZFraction::estEgal(ZFraction a) const
 {
-    return ((numerateur_==a.numerateur_) && (denominateur_==a.denominateur_));
+    return ((_numerateur==a._numerateur) && (_denominateur==a._denominateur));
 }
 
 
 bool ZFraction::estSuperieur(ZFraction a) const
 {
-    return ( ( static_cast<double>(numerateur_)/denominateur_) > (static_cast<double>(a.numerateur_)/a.denominateur_) );
+    return ( ( static_cast<double>(_numerateur)/_denominateur) > (static_cast<double>(a._numerateur)/a._denominateur) );
 }
 
 
 ZFraction& ZFraction::operator+=(const ZFraction& a)
 {
-    numerateur_ = numerateur_ * a.denominateur_ + a.numerateur_ * denominateur_;
-    denominateur_ *= a.denominateur_;
+    _numerateur = _numerateur * a._denominateur + a._numerateur * _denominateur;
+    _denominateur *= a._denominateur;
     simplifier();
     return *this;
 }
@@ -160,8 +167,8 @@ ZFraction& ZFraction::operator+=(const ZFraction& a)
 
 ZFraction& ZFraction::operator-=(const ZFraction& a)
 {
-    numerateur_ = numerateur_ * a.denominateur_ - a.numerateur_ * denominateur_;
-    denominateur_ *= a.denominateur_;
+    _numerateur = _numerateur * a._denominateur - a._numerateur * _denominateur;
+    _denominateur *= a._denominateur;
     simplifier();
     return *this;
 }
@@ -169,8 +176,8 @@ ZFraction& ZFraction::operator-=(const ZFraction& a)
 
 ZFraction& ZFraction::operator/=(const ZFraction& a)
 {
-    numerateur_ *= a.denominateur_;
-    denominateur_ *= a.numerateur_;
+    _numerateur *= a._denominateur;
+    _denominateur *= a._numerateur;
     verifierDenominateur();
     simplifier();
     return *this;
@@ -179,8 +186,8 @@ ZFraction& ZFraction::operator/=(const ZFraction& a)
 
 ZFraction& ZFraction::operator*=(const ZFraction& a)
 {
-    numerateur_ *= a.numerateur_;
-    denominateur_ *= a.denominateur_;
+    _numerateur *= a._numerateur;
+    _denominateur *= a._denominateur;
     simplifier();
     return *this;
 }
@@ -188,8 +195,8 @@ ZFraction& ZFraction::operator*=(const ZFraction& a)
 
 ZFraction& ZFraction::operator+=(const long int& numerateur)
 {
-    numerateur_ = numerateur_ * 1 + numerateur * denominateur_;
-    denominateur_ *= 1;
+    _numerateur = _numerateur * 1 + numerateur * _denominateur;
+    _denominateur *= 1;
     simplifier();
     return *this;
 }
@@ -197,8 +204,8 @@ ZFraction& ZFraction::operator+=(const long int& numerateur)
 
 ZFraction& ZFraction::operator-=(const long int& numerateur)
 {
-    numerateur_ = numerateur_ * 1 - numerateur * denominateur_;
-    denominateur_ *= 1;
+    _numerateur = _numerateur * 1 - numerateur * _denominateur;
+    _denominateur *= 1;
     simplifier();
     return *this;
 }
@@ -206,8 +213,8 @@ ZFraction& ZFraction::operator-=(const long int& numerateur)
 
 ZFraction& ZFraction::operator/=(const long int& numerateur)
 {
-    numerateur_ *= 1;
-    denominateur_ *= numerateur;
+    _numerateur *= 1;
+    _denominateur *= numerateur;
     verifierDenominateur();
     simplifier();
     return *this;
@@ -216,8 +223,8 @@ ZFraction& ZFraction::operator/=(const long int& numerateur)
 
 ZFraction& ZFraction::operator*=(const long int& numerateur)
 {
-    numerateur_ *= numerateur;
-    denominateur_ *= 1;
+    _numerateur *= numerateur;
+    _denominateur *= 1;
     simplifier();
     return *this;
 }
@@ -229,30 +236,30 @@ void ZFraction::simplifier()
     // Reduire la fraction au maximum : 2/4 devient 1/2
     // Selectionner le minimum entre numerateur et denominateur
     // Verifier pour toutes les valeurs [2;min(numerateur;denomiteur)] s'il y a un facteur commun
-    for (long int i(2); i <= min( std::abs(numerateur_), std::abs(denominateur_) ); i++)
+    for (long int i(2); i <= min( std::abs(_numerateur), std::abs(_denominateur) ); i++)
     {
-        if ((0 == numerateur_ % i) && (0 == denominateur_ % i))
+        if ((0 == _numerateur % i) && (0 == _denominateur % i))
         {
-            numerateur_ /= i;
-            denominateur_ /= i;
+            _numerateur /= i;
+            _denominateur /= i;
             i = 1;
         }
     }
 
     // Mettre le signe de la fraction au numérateur
-    if ((numerateur_ > 0 && denominateur_ < 0) || (numerateur_<0 && denominateur_<0))
+    if ((_numerateur > 0 && _denominateur < 0) || (_numerateur<0 && _denominateur<0))
     {
-        numerateur_ *= -1;
-        denominateur_ *= -1;
+        _numerateur *= -1;
+        _denominateur *= -1;
     }
 }
 
 void ZFraction::verifierDenominateur() const
 {
-    if (denominateur_ == 0)
+    if (_denominateur == 0)
     {
         // division par zero !
-        throw std::domain_error("Division par zero (" + std::to_string(numerateur_) + "/" + std::to_string(denominateur_) + ")");
+        throw std::domain_error("Division par zero (" + std::to_string(_numerateur) + "/" + std::to_string(_denominateur) + ")");
     }
 }
 
