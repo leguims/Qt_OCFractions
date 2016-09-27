@@ -45,9 +45,8 @@ ZFraction::ZFraction(double numerateur)
 }
 
 
-ZFraction::ZFraction(ZFraction const& a) : _afficherFraction(true), _numerateur(a._numerateur), _denominateur(a._denominateur)
+ZFraction::ZFraction(ZFraction const& a) : _numerateur(a._numerateur), _denominateur(a._denominateur)
 {
-    simplifier();
 }
 
 
@@ -130,105 +129,19 @@ long int ZFraction::getDenominateur(void) const
 
 double ZFraction::getDouble(void) const
 {
-    return 1.0*_numerateur/ _denominateur;
+    return 1.0*_numerateur/_denominateur;
 }
 
 void ZFraction::setAfficherFraction(bool cmd)
 {
-    _afficherFraction = cmd;
+    //_afficherFraction = cmd;
+    cmd == false ? _afficherFraction = false : _afficherFraction = true;
 }
 
 bool ZFraction::getAfficherFraction(void) const
 {
     return _afficherFraction;
 }
-
-
-bool ZFraction::estEgal(ZFraction a) const
-{
-    return ((_numerateur==a._numerateur) && (_denominateur==a._denominateur));
-}
-
-
-bool ZFraction::estSuperieur(ZFraction a) const
-{
-    return ( ( static_cast<double>(_numerateur)/_denominateur) > (static_cast<double>(a._numerateur)/a._denominateur) );
-}
-
-
-ZFraction& ZFraction::operator+=(const ZFraction& a)
-{
-    _numerateur = _numerateur * a._denominateur + a._numerateur * _denominateur;
-    _denominateur *= a._denominateur;
-    simplifier();
-    return *this;
-}
-
-
-ZFraction& ZFraction::operator-=(const ZFraction& a)
-{
-    _numerateur = _numerateur * a._denominateur - a._numerateur * _denominateur;
-    _denominateur *= a._denominateur;
-    simplifier();
-    return *this;
-}
-
-
-ZFraction& ZFraction::operator/=(const ZFraction& a)
-{
-    _numerateur *= a._denominateur;
-    _denominateur *= a._numerateur;
-    verifierDenominateur();
-    simplifier();
-    return *this;
-}
-
-
-ZFraction& ZFraction::operator*=(const ZFraction& a)
-{
-    _numerateur *= a._numerateur;
-    _denominateur *= a._denominateur;
-    simplifier();
-    return *this;
-}
-
-
-ZFraction& ZFraction::operator+=(const long int& numerateur)
-{
-    _numerateur = _numerateur * 1 + numerateur * _denominateur;
-    _denominateur *= 1;
-    simplifier();
-    return *this;
-}
-
-
-ZFraction& ZFraction::operator-=(const long int& numerateur)
-{
-    _numerateur = _numerateur * 1 - numerateur * _denominateur;
-    _denominateur *= 1;
-    simplifier();
-    return *this;
-}
-
-
-ZFraction& ZFraction::operator/=(const long int& numerateur)
-{
-    _numerateur *= 1;
-    _denominateur *= numerateur;
-    verifierDenominateur();
-    simplifier();
-    return *this;
-}
-
-
-ZFraction& ZFraction::operator*=(const long int& numerateur)
-{
-    _numerateur *= numerateur;
-    _denominateur *= 1;
-    simplifier();
-    return *this;
-}
-
 
 
 void ZFraction::simplifier()
@@ -273,111 +186,5 @@ ostream& operator<<(ostream& out, ZFraction const& fraction)
     return out;
 }
 
-ZFraction operator-(ZFraction const& a)
-{
-    ZFraction copie(a);
-    copie *= -1;
-    return copie;
-}
-
-
-ZFraction operator+(ZFraction const& a, ZFraction const& b)
-{
-    ZFraction copie(a);	//On utilise le constructeur de copie de la classe Duree !
-    copie += b;			//On appelle la méthode d'addition qui modifie l'objet 'copie'
-    return copie;		//Et on renvoie le résultat. Ni a ni b n'ont changé.
-}
-
-
-ZFraction operator-(ZFraction const& a, ZFraction const& b)
-{
-    ZFraction copie(a);
-    copie -= b;
-    return copie;
-}
-
-
-ZFraction operator*(ZFraction const& a, ZFraction const& b)
-{
-    ZFraction copie(a);
-    copie *= b;
-    return copie;
-}
-
-
-ZFraction operator/(ZFraction const& a, ZFraction const& b)
-{
-    ZFraction copie(a);
-    copie /= b;
-    return copie;
-}
-
-
-ZFraction operator+(ZFraction const& a, long int const& b)
-{
-    ZFraction copie(a);	//On utilise le constructeur de copie de la classe Duree !
-    copie += b;			//On appelle la méthode d'addition qui modifie l'objet 'copie'
-    return copie;		//Et on renvoie le résultat. Ni a ni b n'ont changé.
-}
-
-
-ZFraction operator-(ZFraction const& a, long int const& b)
-{
-    ZFraction copie(a);
-    copie -= b;
-    return copie;
-}
-
-
-ZFraction operator*(ZFraction const& a, long int const& b)
-{
-    ZFraction copie(a);
-    copie *= b;
-    return copie;
-}
-
-
-ZFraction operator/(ZFraction const& a, long int const& b)
-{
-    ZFraction copie(a);
-    copie /= b;
-    return copie;
-}
-
-
-bool operator==(ZFraction const& a, ZFraction const& b)
-{
-    return a.estEgal(b);
-}
-
-
-bool operator!=(ZFraction const& a, ZFraction const& b)
-{
-    return !a.estEgal(b);
-}
-
-
-bool operator<(ZFraction const& a, ZFraction const& b) // Astuce : a<b <==> b>a
-{
-    return b.estSuperieur(a);
-}
-
-
-bool operator<=(ZFraction const& a, ZFraction const& b) // Astuce : a<=b <==> !(a>b)
-{
-    return !a.estSuperieur(b);
-}
-
-
-bool operator>(ZFraction const& a, ZFraction const& b)
-{
-    return a.estSuperieur(b);
-}
-
-
-bool operator>=(ZFraction const& a, ZFraction const& b) // Astuce : a>=b <==> !(a<b) <==> !(b>a)
-{
-    return !b.estSuperieur(a);
-}
 
 

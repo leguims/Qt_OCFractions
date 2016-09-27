@@ -18,16 +18,101 @@ public:
     double getDouble(void) const;
     void setAfficherFraction(bool);
     bool getAfficherFraction(void) const;
-    bool estEgal(ZFraction a) const;
-    bool estSuperieur(ZFraction a) const;
-    ZFraction& operator+=(const ZFraction& a);
-    ZFraction& operator-=(const ZFraction& a);
-    ZFraction& operator/=(const ZFraction& a);
-    ZFraction& operator*=(const ZFraction& a);
-    ZFraction& operator+=(const long int& a);
-    ZFraction& operator-=(const long int& a);
-    ZFraction& operator/=(const long int& a);
-    ZFraction& operator*=(const long int& a);
+
+    template <typename T = long int>
+    bool estEgal(const T numerateur) const
+    {
+        return ( _numerateur == numerateur*_denominateur );
+    }
+    template <>
+    bool estEgal<ZFraction>(const ZFraction a) const
+    {
+        return (_numerateur*a._denominateur == a._numerateur*_denominateur);
+    }
+
+
+    template <typename T = long int>
+    bool estSuperieur(const T numerateur) const
+    {
+        return ( (static_cast<double>(_numerateur) / _denominateur) > static_cast<double>(numerateur) );
+    }
+    template <>
+    bool estSuperieur<ZFraction>(const ZFraction a) const
+    {
+        return ((static_cast<double>(_numerateur) / _denominateur) > (static_cast<double>(a._numerateur) / a._denominateur));
+    }
+
+
+    template <typename T = long int>
+    ZFraction& operator+=(const T& numerateur)
+    {
+        _numerateur = _numerateur + numerateur * _denominateur;
+        simplifier();
+        return *this;
+    }
+    template <>
+    ZFraction& operator+=<ZFraction>(const ZFraction& a)
+    {
+        _numerateur = _numerateur * a._denominateur + a._numerateur * _denominateur;
+        _denominateur *= a._denominateur;
+        simplifier();
+        return *this;
+    }
+
+
+    template <typename T = long int>
+    ZFraction& operator-=(const T& numerateur)
+    {
+        _numerateur = _numerateur - numerateur * _denominateur;
+        simplifier();
+        return *this;
+    }
+    template <>
+    ZFraction& operator-=<ZFraction>(const ZFraction& a)
+    {
+        _numerateur = _numerateur * a._denominateur - a._numerateur * _denominateur;
+        _denominateur *= a._denominateur;
+        simplifier();
+        return *this;
+    }
+
+
+    template <typename T = long int>
+    ZFraction& operator/=(const T& numerateur)
+    {
+        _denominateur *= numerateur;
+        verifierDenominateur();
+        simplifier();
+        return *this;
+    }
+    template <>
+    ZFraction& operator/=<ZFraction>(const ZFraction& a)
+    {
+        _numerateur *= a._denominateur;
+        _denominateur *= a._numerateur;
+        verifierDenominateur();
+        simplifier();
+        return *this;
+    }
+    
+
+    template <typename T = long int>
+    ZFraction& operator*=(const T& numerateur)
+    {
+        _numerateur *= numerateur;
+        simplifier();
+        return *this;
+    }
+    template <>
+    ZFraction& operator*=<ZFraction>(const ZFraction& a)
+    {
+        _numerateur *= a._numerateur;
+        _denominateur *= a._denominateur;
+        simplifier();
+        return *this;
+    }
+
+
 private:
     //Type d'affichage : fraction(true) ou reel(false)
     bool _afficherFraction = true;  
@@ -38,22 +123,80 @@ private:
     void verifierDenominateur() const;
 };
 
+// OPERATEURS ##########################################################################
 std::ostream& operator<<(std::ostream& , ZFraction const& );
 ZFraction operator-(ZFraction const& a); // opérateur « moins unaire » (exemple : a= -b)
 
-ZFraction operator+(ZFraction const& a, ZFraction const& b);
-ZFraction operator-(ZFraction const& a, ZFraction const& b);
-ZFraction operator/(ZFraction const& a, ZFraction const& b);
-ZFraction operator*(ZFraction const& a, ZFraction const& b);
+template <typename T>
+ZFraction operator+(ZFraction const& a, T const& b)
+{
+    ZFraction copie(a);	//On utilise le constructeur de copie de la classe Duree !
+    copie += b;			//On appelle la méthode d'addition qui modifie l'objet 'copie'
+    return copie;		//Et on renvoie le résultat. Ni a ni b n'ont changé.
+}
 
-ZFraction operator+(ZFraction const& a, long int const& b);
-ZFraction operator-(ZFraction const& a, long int const& b);
-ZFraction operator/(ZFraction const& a, long int const& b);
-ZFraction operator*(ZFraction const& a, long int const& b);
+template <typename T>
+ZFraction operator-(ZFraction const& a, T const& b)
+{
+    ZFraction copie(a);
+    copie -= b;
+    return copie;
+}
 
-bool operator==(ZFraction const& a, ZFraction const& b);
-bool operator!=(ZFraction const& a, ZFraction const& b);
-bool operator<(ZFraction const& a, ZFraction const& b);
-bool operator<=(ZFraction const& a, ZFraction const& b);
-bool operator>(ZFraction const& a, ZFraction const& b);
-bool operator>=(ZFraction const& a, ZFraction const& b);
+template <typename T>
+ZFraction operator/(ZFraction const& a, T const& b)
+{
+    ZFraction copie(a);
+    copie /= b;
+    return copie;
+}
+
+template <typename T>
+ZFraction operator*(ZFraction const& a, T const& b)
+{
+    ZFraction copie(a);
+    copie *= b;
+    return copie;
+}
+
+template <typename T>
+bool operator==(ZFraction const& a, T const& b)
+{
+    return a.estEgal(b);
+}
+
+
+template <typename T>
+bool operator!=(ZFraction const& a, T const& b) // Astuce : a!=b <==> !(a==b)
+{
+    return !a.estEgal(b);
+}
+
+
+template <typename T>
+bool operator<(ZFraction const& a, T const& b) // Astuce : a<b <==> !(a>b || a==b)
+{
+    return !( a.estSuperieur(b) || a.estEgal(b) );
+}
+
+
+template <typename T>
+bool operator<=(ZFraction const& a, T const& b) // Astuce : a<=b <==> !(a>b)
+{
+    return !a.estSuperieur(b);
+}
+
+
+template <typename T>
+bool operator>(ZFraction const& a, T const& b)
+{
+    return a.estSuperieur(b);
+}
+
+
+template <typename T>
+bool operator>=(ZFraction const& a, T const& b) // Astuce : a>=b <==> a>b || a==b
+{
+    return a.estSuperieur(b) || a.estEgal(b);
+}
+

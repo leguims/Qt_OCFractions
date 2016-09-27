@@ -91,6 +91,7 @@ namespace ZFractionTests
             {
                 Logger::WriteMessage("\ta=1.05 ...\n");
                 ZFraction a(1.05);
+                Logger::WriteMessage("\tPas d'exception => OK !\n");
             }
             catch (std::domain_error ex)
             {
@@ -113,6 +114,7 @@ namespace ZFractionTests
             {
                 Logger::WriteMessage("\ta=0.0005 ...\n");
                 ZFraction a(0.0005);
+                Logger::WriteMessage("\tPas d'exception => OK !\n");
             }
             catch (std::domain_error ex)
             {
