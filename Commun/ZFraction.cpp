@@ -180,7 +180,7 @@ void ZFraction::verifierDenominateur() const
 
 // OPERATEURS ##########################################################################
 
-ostream& operator<<(ostream& out, ZFraction const& fraction)
+std::ostream& operator<<(std::ostream& out, ZFraction const& fraction)
 {
     fraction.afficher(out);
     return out;
