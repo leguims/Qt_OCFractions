@@ -186,5 +186,10 @@ std::ostream& operator<<(std::ostream& out, ZFraction const& fraction)
     return out;
 }
 
-
+ZFraction operator-(ZFraction const& a)
+{
+    ZFraction copie(a);
+    copie *= -1;
+    return copie;
+}
 

@@ -349,28 +349,35 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("\t1/5 ; (-1)/5 ; 1/(-5) ; (-1)/(-5) ...");
+                    Logger::WriteMessage("\ta=1/5 ; b=(-1)/5 ; c=1/(-5) ; d=(-1)/(-5) ...");
                     ZFraction a(1, 5);
                     ZFraction b(-1, 5);
                     ZFraction c(1, -5);
                     ZFraction d(-1, -5);
-                    swprintf_s(message, L"La definition du MOINS UNAIRE n'est pas vue des tests");
-                    Assert::Fail(message, LINE_INFO());
-
-                    //Assert::IsTrue((-a)==b);
-
-                    //Assert::AreEqual<ZFraction>(-a, c);
-                    //Assert::AreEqual<ZFraction>(-a, -d);
-                    //Assert::AreEqual<ZFraction>(-b, a);
-                    //Assert::AreEqual<ZFraction>(-b, -c);
-                    //Assert::AreEqual<ZFraction>(-b, d);
-                    //Assert::AreEqual<ZFraction>(-c, a);
-                    //Assert::AreEqual<ZFraction>(-c, -b);
-                    //Assert::AreEqual<ZFraction>(-c, d);
-                    //Assert::AreEqual<ZFraction>(-d, -a);
-                    //Assert::AreEqual<ZFraction>(-d, b);
-                    //Assert::AreEqual<ZFraction>(-d, c);
-                    Logger::WriteMessage(" OK !");
+                    Assert::IsTrue((-a) == b);
+                    Logger::WriteMessage(" (-a) == b ... OK !");
+                    Assert::IsTrue((-a) == c);
+                    Logger::WriteMessage(" (-a) == c ... OK !");
+                    Assert::IsTrue((-a) == -d);
+                    Logger::WriteMessage(" (-a) == -d ... OK !");
+                    Assert::IsTrue((-b) == a);
+                    Logger::WriteMessage(" (-b) == a ... OK !");
+                    Assert::IsTrue((-b) == -c);
+                    Logger::WriteMessage(" (-b) == -c ... OK !");
+                    Assert::IsTrue((-b) == d);
+                    Logger::WriteMessage(" (-b) == d ... OK !");
+                    Assert::IsTrue((-c) == a);
+                    Logger::WriteMessage(" (-c) == a ... OK !");
+                    Assert::IsTrue((-c) == -b);
+                    Logger::WriteMessage(" (-c) == -b ... OK !");
+                    Assert::IsTrue((-c) == d);
+                    Logger::WriteMessage(" (-c) == d ... OK !");
+                    Assert::IsTrue((-d) == -a);
+                    Logger::WriteMessage(" (-d) == -a ... OK !");
+                    Assert::IsTrue((-d) == b);
+                    Logger::WriteMessage(" (-d) == b ... OK !");
+                    Assert::IsTrue((-d) == c);
+                    Logger::WriteMessage(" (-d) == c ... OK !");
                 }
 
                 //{
