@@ -58,6 +58,14 @@ public:
         simplifier();
         return *this;
     }
+    template <>
+    ZFraction& operator+=<double>(const double& numerateur)
+    {
+        ZFraction tmp((1.*_numerateur / _denominateur) + numerateur);
+        _numerateur = tmp.getNumerateur();
+        _denominateur = tmp.getDenominateur();
+        return *this;
+    }
 
 
     template <typename T = long int>
@@ -73,6 +81,14 @@ public:
         _numerateur = _numerateur * a._denominateur - a._numerateur * _denominateur;
         _denominateur *= a._denominateur;
         simplifier();
+        return *this;
+    }
+    template <>
+    ZFraction& operator-=<double>(const double& numerateur)
+    {
+        ZFraction tmp((1.*_numerateur / _denominateur) - numerateur);
+        _numerateur = tmp.getNumerateur();
+        _denominateur = tmp.getDenominateur();
         return *this;
     }
 
@@ -94,7 +110,23 @@ public:
         simplifier();
         return *this;
     }
-    
+    template <>
+    ZFraction& operator/=<double>(const double& numerateur)
+    {
+        if (0. == numerateur)
+        {
+            // division par zero !
+            throw std::domain_error("Division par zero (" + std::to_string(_numerateur) + "/" + std::to_string(numerateur * _denominateur) + ")");
+        }
+        else
+        {
+            ZFraction tmp(_numerateur / (numerateur * _denominateur));
+            _numerateur = tmp.getNumerateur();
+            _denominateur = tmp.getDenominateur();
+        }
+        return *this;
+    }
+
 
     template <typename T = long int>
     ZFraction& operator*=(const T& numerateur)
@@ -109,6 +141,14 @@ public:
         _numerateur *= a._numerateur;
         _denominateur *= a._denominateur;
         simplifier();
+        return *this;
+    }
+    template <>
+    ZFraction& operator*=<double>(const double& numerateur)
+    {
+        ZFraction tmp( (_numerateur * numerateur) / _denominateur);
+        _numerateur = tmp.getNumerateur();
+        _denominateur = tmp.getDenominateur();
         return *this;
     }
 
