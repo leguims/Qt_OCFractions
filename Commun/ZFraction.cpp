@@ -21,27 +21,19 @@ ZFraction::ZFraction(long int numerateur, long int denominateur) : _numerateur(n
 
 ZFraction::ZFraction(double numerateur)
 {
-    double	    sauvegarde(numerateur);
-    long int	entier(0);
+    double pd_ = numerateur - std::floor(numerateur); // Partie decimale
+    const long int precision_ = pow(10, std::floor(std::log10(std::numeric_limits<long int>::max()) - std::log10(numerateur < 1 ? 1 : numerateur))); //Precision
+    //const long int precision_ = 1'000'000'000 / (pow(10, std::ceil(1 + std::log10(std::abs(numerateur))))); //Precision ; C++14 Digital Separator; std::numeric_limits<long int>::max()
+    long int pgcd_ = getPGCD(std::round(pd_ * precision_), precision_);
 
-    // elimine les decimales de 'numerateur'
-    entier = static_cast<long int>(numerateur);
-    while (entier != numerateur)
+    _numerateur = round(pd_ * precision_) / pgcd_ + std::floor(numerateur)*precision_ / pgcd_;
+    _denominateur = precision_ / pgcd_;
+
+    if (std::trunc(numerateur) != std::trunc(_numerateur / _denominateur))
     {
-        numerateur *= 10;
-        _denominateur *= 10;
-        entier = static_cast<long int>(numerateur);
-
-        if (sauvegarde != numerateur/_denominateur)
-        {
-            // numerateur reel perdu !
-            throw std::domain_error("Numerateur reel (" + std::to_string(sauvegarde) + ") impossible a convertir en fraction");
-        }
+        // numerateur reel perdu !
+        throw std::domain_error("Numerateur reel (" + std::to_string(numerateur) + ") impossible a convertir en fraction");
     }
-    _numerateur = static_cast<long int>(numerateur);
-
-    verifierDenominateur();
-    simplifier();
 }
 
 
@@ -144,23 +136,31 @@ bool ZFraction::getAfficherFraction(void) const
 }
 
 
+long int ZFraction::getPGCD(long int a, long int b) const
+{
+    if (a == 0)
+        return b;
+    else if (b == 0)
+        return a;
+
+    if (a < 0)   a = std::abs(a);
+    if (b < 0)   b = std::abs(b);
+
+    if (a < b)
+        return getPGCD(a, b % a);
+    else
+        return getPGCD(b, a % b);
+}
+
 void ZFraction::simplifier()
 {
     // Reduire la fraction au maximum : 2/4 devient 1/2
-    // Selectionner le minimum entre numerateur et denominateur
-    // Verifier pour toutes les valeurs [2;min(numerateur;denomiteur)] s'il y a un facteur commun
-    for (long int i(2); i <= min( std::abs(_numerateur), std::abs(_denominateur) ); i++)
-    {
-        if ((0 == _numerateur % i) && (0 == _denominateur % i))
-        {
-            _numerateur /= i;
-            _denominateur /= i;
-            i = 1;
-        }
-    }
+    long int pgcd_ = getPGCD(_numerateur, _denominateur);
+    _numerateur /= pgcd_;
+    _denominateur /= pgcd_;
 
     // Mettre le signe de la fraction au numérateur
-    if ((_numerateur > 0 && _denominateur < 0) || (_numerateur<0 && _denominateur<0))
+    if ((_numerateur > 0 && _denominateur < 0) || (_numerateur < 0 && _denominateur < 0))
     {
         _numerateur *= -1;
         _denominateur *= -1;

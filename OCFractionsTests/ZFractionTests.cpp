@@ -563,9 +563,132 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("\ta=1/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(1, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    {
+                        ZFraction result(-4, 5);
+                        Assert::IsTrue((a - b) == result);
+                        msg = "\t\t(a - b) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+
+                        Assert::IsTrue((a - c) == result);
+                        msg = "\t\t(a - c) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(-17, 10);
+                        Assert::IsTrue((a - d) == result);
+                        msg = "\t\t(a - d) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(-9, 10);
+                        Assert::IsTrue((a - e) == result);
+                        msg = "\t\t(a - e) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(-7, 10);
+                        Assert::IsTrue((a - f) == result);
+                        msg = "\t\t(a - f) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+                }
+
+                {
+                    Logger::WriteMessage("\ta=10/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(10, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    {
+                        ZFraction result(1, 1);
+                        Assert::IsTrue((a - b) == result);
+                        msg = "\t\t(a - b) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+
+                        Assert::IsTrue((a - c) == result);
+                        msg = "\t\t(a - c) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(1, 10);
+                        Assert::IsTrue((a - d) == result);
+                        msg = "\t\t(a - d) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(9, 10);
+                        Assert::IsTrue((a - e) == result);
+                        msg = "\t\t(a - e) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(11, 10);
+                        Assert::IsTrue((a - f) == result);
+                        msg = "\t\t(a - f) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+                }
+
+                {
+                    Logger::WriteMessage("\ta=1.5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(1.5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    {
+                        ZFraction result(1, 2);
+                        Assert::IsTrue((a - b) == result);
+                        msg = "\t\t(a - b) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+
+                        Assert::IsTrue((a - c) == result);
+                        msg = "\t\t(a - c) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(-4, 10);
+                        Assert::IsTrue((a - d) == result);
+                        msg = "\t\t(a - d) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(4, 10);
+                        Assert::IsTrue((a - e) == result);
+                        msg = "\t\t(a - e) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                   { 
+                        ZFraction result(6, 10);
+                        Assert::IsTrue((a - f) == result);
+                        msg = "\t\t(a - f) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
                 }
             }
             catch (...)
@@ -582,9 +705,132 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("\ta=1/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(1, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    {
+                        ZFraction result(1, 5);
+                        Assert::IsTrue((a * b) == result);
+                        msg = "\t\t(a * b) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+
+                        Assert::IsTrue((a * c) == result);
+                        msg = "\t\t(a * c) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(38, 100);
+                        Assert::IsTrue((a * d) == result);
+                        msg = "\t\t(a * d) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(22, 100);
+                        Assert::IsTrue((a * e) == result);
+                        msg = "\t\t(a * e) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(18, 100);
+                        Assert::IsTrue((a * f) == result);
+                        msg = "\t\t(a * f) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+                }
+
+                {
+                    Logger::WriteMessage("\ta=10/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(10, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    {
+                        ZFraction result(2, 1);
+                        Assert::IsTrue((a * b) == result);
+                        msg = "\t\t(a * b) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+
+                        Assert::IsTrue((a * c) == result);
+                        msg = "\t\t(a * c) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(38, 10);
+                        Assert::IsTrue((a * d) == result);
+                        msg = "\t\t(a * d) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(22, 10);
+                        Assert::IsTrue((a * e) == result);
+                        msg = "\t\t(a * e) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(18, 10);
+                        Assert::IsTrue((a * f) == result);
+                        msg = "\t\t(a * f) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+                }
+
+                {
+                    Logger::WriteMessage("\ta=1.5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(1.5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    {
+                        ZFraction result(3, 2);
+                        Assert::IsTrue((a * b) == result);
+                        msg = "\t\t(a * b) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+
+                        Assert::IsTrue((a * c) == result);
+                        msg = "\t\t(a * c) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(285, 100);
+                        Assert::IsTrue((a * d) == result);
+                        msg = "\t\t(a * d) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(165, 100);
+                        Assert::IsTrue((a * e) == result);
+                        msg = "\t\t(a * e) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(135, 100);
+                        Assert::IsTrue((a * f) == result);
+                        msg = "\t\t(a * f) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
                 }
             }
             catch (...)
@@ -601,9 +847,108 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("\ta=1/5 ; b=int(1) ; c=long int(1) ; d=double(2.) ; e=double(0.5) ...");
+                    ZFraction a(1, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(2.);
+                    double e(0.5);
+                    std::string msg;
+
+                    {
+                        ZFraction result(1, 5);
+                        Assert::IsTrue((a / b) == result);
+                        msg = "\t\t(a / b) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+
+                        Assert::IsTrue((a * c) == result);
+                        msg = "\t\t(a / c) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(10, 100);
+                        Assert::IsTrue((a / d) == result);
+                        msg = "\t\t(a / d) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(40, 100);
+                        Assert::IsTrue((a / e) == result);
+                        msg = "\t\t(a / e) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+                }
+
+                {
+                    Logger::WriteMessage("\ta=10/5 ; b=int(1) ; c=long int(1) ; d=double(2.) ; e=double(0.5) ...");
+                    ZFraction a(10, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(2.);
+                    double e(0.5);
+                    std::string msg;
+
+                    {
+                        ZFraction result(2, 1);
+                        Assert::IsTrue((a / b) == result);
+                        msg = "\t\t(a / b) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+
+                        Assert::IsTrue((a / c) == result);
+                        msg = "\t\t(a / c) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(10, 10);
+                        Assert::IsTrue((a / d) == result);
+                        msg = "\t\t(a / d) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(40, 10);
+                        Assert::IsTrue((a / e) == result);
+                        msg = "\t\t(a / e) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+                }
+
+                {
+                    Logger::WriteMessage("\ta=1.5 ; b=int(1) ; c=long int(1) ; d=double(2.) ; e=double(0.5) ...");
+                    ZFraction a(1.5);
+                    int b(1);
+                    long int c(1);
+                    double d(2.);
+                    double e(0.5);
+                    std::string msg;
+
+                    {
+                        ZFraction result(3, 2);
+                        Assert::IsTrue((a / b) == result);
+                        msg = "\t\t(a / b) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+
+                        Assert::IsTrue((a / c) == result);
+                        msg = "\t\t(a / c) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(75, 100);
+                        Assert::IsTrue((a / d) == result);
+                        msg = "\t\t(a / d) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
+
+                    {
+                        ZFraction result(3, 1);
+                        Assert::IsTrue((a / e) == result);
+                        msg = "\t\t(a / e) == " + result.afficherPlainText() + "\t... OK !";
+                        Logger::WriteMessage(msg.c_str());
+                    }
                 }
             }
             catch (...)

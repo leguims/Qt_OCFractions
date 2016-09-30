@@ -159,6 +159,7 @@ private:
     long int _numerateur = 0;   //Numerateur
     long int _denominateur = 1; //Denominateur
 private:
+    long int getPGCD(long int, long int) const;
     void simplifier();
     void verifierDenominateur() const;
 };
