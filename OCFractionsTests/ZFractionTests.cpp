@@ -174,6 +174,47 @@ namespace ZFractionTests
             }
         }
 
+        TEST_METHOD(ZFraction_conversionNumerateurReel5)
+        {
+            Logger::WriteMessage("\nZFraction_conversionNumerateurReel5");
+            wchar_t message[200];
+            try
+            {
+                ZFraction result_max(std::numeric_limits<long int>::max());
+                ZFraction result_min(-std::numeric_limits<long int>::max());
+                ZFraction result_zero(0);
+                {
+                    Logger::WriteMessage("\ta=1'234'567'891'234'564'789.0 ...");
+                    ZFraction a(1'234'567'891'234'564'789.0);
+                    Assert::AreEqual<long int>(result_max.getNumerateur(), a.getNumerateur());
+                    Assert::AreEqual<long int>(result_max.getDenominateur(), a.getDenominateur());
+                }
+                {
+                    Logger::WriteMessage("\ta=-1'234'567'891'234'564'789.0 ...");
+                    ZFraction a(-1'234'567'891'234'564'789.0);
+                    Assert::AreEqual<long int>(result_min.getNumerateur(), a.getNumerateur());
+                    Assert::AreEqual<long int>(result_min.getDenominateur(), a.getDenominateur());
+                }
+                {
+                    Logger::WriteMessage("\ta=1. / 1'234'567'891'234'564'789.0 ...");
+                    ZFraction a(1. / 1'234'567'891'234'564'789.0);
+                    Assert::AreEqual<long int>(result_zero.getNumerateur(), a.getNumerateur());
+                    Assert::AreEqual<long int>(result_zero.getDenominateur(), a.getDenominateur());
+                }
+                {
+                    Logger::WriteMessage("\ta=-1. / 1'234'567'891'234'564'789.0 ...");
+                    ZFraction a(-1. / 1'234'567'891'234'564'789.0);
+                    Assert::AreEqual<long int>(result_zero.getNumerateur(), a.getNumerateur());
+                    Assert::AreEqual<long int>(result_zero.getDenominateur(), a.getDenominateur());
+                }
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
         TEST_METHOD(ZFraction_getNumerateurDenominateur)
         {
             Logger::WriteMessage("ZFraction_getNumerateurDenominateur");

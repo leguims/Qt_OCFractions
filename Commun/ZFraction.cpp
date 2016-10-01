@@ -21,6 +21,28 @@ ZFraction::ZFraction(long int numerateur, long int denominateur) : _numerateur(n
 
 ZFraction::ZFraction(double numerateur)
 {
+    if ((-1. / std::numeric_limits<long int>::max() < numerateur)
+        && (numerateur < 1. / std::numeric_limits<long int>::max()))
+    {
+        _numerateur = 0;
+        _denominateur = 1;
+        return;
+    }
+
+    if (numerateur < -std::numeric_limits<long int>::max())
+    {
+        _numerateur = -std::numeric_limits<long int>::max();
+        _denominateur = 1;
+        return;
+    }
+
+    if (std::numeric_limits<long int>::max() < numerateur)
+    {
+        _numerateur = std::numeric_limits<long int>::max();
+        _denominateur = 1;
+        return;
+    }
+
     double pd_ = numerateur - std::floor(numerateur); // Partie decimale
     const long int precision_ = pow(10, std::floor(std::log10(std::numeric_limits<long int>::max()) - std::log10(numerateur < 1 ? 1 : numerateur))); //Precision
     //const long int precision_ = 1'000'000'000 / (pow(10, std::ceil(1 + std::log10(std::abs(numerateur))))); //Precision ; C++14 Digital Separator; std::numeric_limits<long int>::max()
