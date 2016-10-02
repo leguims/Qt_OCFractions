@@ -136,50 +136,6 @@ namespace ZFractionTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("\ta=0.00000005 ...");
-                ZFraction a(0.00000005);
-                swprintf_s(message, L"Pas d'exception generee");
-                Assert::Fail(message, LINE_INFO());
-            }
-            catch (std::domain_error ex)
-            {
-                Logger::WriteMessage("\tException attendue => OK !");
-            }
-            catch (...)
-            {
-                swprintf_s(message, L"Mauvaise exception generee");
-                Assert::Fail(message, LINE_INFO());
-            }
-        }
-
-        TEST_METHOD(ZFraction_conversionNumerateurReel4)
-        {
-            Logger::WriteMessage("\nZFraction_conversionNumerateurReel4");
-            wchar_t message[200];
-            try
-            {
-                Logger::WriteMessage("\ta=123456.0000005 ...");
-                ZFraction a(123456.0000005);
-                swprintf_s(message, L"Pas d'exception generee");
-                Assert::Fail(message, LINE_INFO());
-            }
-            catch (std::domain_error ex)
-            {
-                Logger::WriteMessage("\tException attendue => OK !");
-            }
-            catch (...)
-            {
-                swprintf_s(message, L"Mauvaise exception generee");
-                Assert::Fail(message, LINE_INFO());
-            }
-        }
-
-        TEST_METHOD(ZFraction_conversionNumerateurReel5)
-        {
-            Logger::WriteMessage("\nZFraction_conversionNumerateurReel5");
-            wchar_t message[200];
-            try
-            {
                 ZFraction result_max(std::numeric_limits<long int>::max());
                 ZFraction result_min(-std::numeric_limits<long int>::max());
                 ZFraction result_zero(0);
