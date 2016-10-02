@@ -955,6 +955,23 @@ namespace ZFractionTests
             }
         }
 
+        TEST_METHOD(ZFraction_constructorByCopy)
+        {
+            Logger::WriteMessage("ZFraction_constructorByCopy");
+            wchar_t message[200];
+            try
+            {
+                ZFraction a, result(1);
+                a = 1;
+                Assert::IsTrue(a == result);
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
         TEST_METHOD(ZFraction_operatorINFERIOR)
         {
             Logger::WriteMessage("ZFraction_operatorINFERIOR");
@@ -962,9 +979,47 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("\ta=1/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(1, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsTrue(a < b); msg = "\t\t(a < b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a < c); msg = "\t\t(a < c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a < d); msg = "\t\t(a < d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a < e); msg = "\t\t(a < e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a < f); msg = "\t\t(a < f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(b < a); msg = "\t\t!(b < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(c < a); msg = "\t\t!(c < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(d < a); msg = "\t\t!(d < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(e < a); msg = "\t\t!(e < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(f < a); msg = "\t\t!(f < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                }
+
+                {
+                    Logger::WriteMessage("\ta=10/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(10, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsFalse(a < b); msg = "\t\t!(a < b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a < c); msg = "\t\t!(a < c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a < d); msg = "\t\t!(a < d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a < e); msg = "\t\t!(a < e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a < f); msg = "\t\t!(a < f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(b < a); msg = "\t\t(b < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(c < a); msg = "\t\t(c < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(d < a); msg = "\t\t(d < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(e < a); msg = "\t\t(e < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(f < a); msg = "\t\t(f < a) \t... OK !"; Logger::WriteMessage(msg.c_str());
                 }
             }
             catch (...)
@@ -981,9 +1036,49 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("\ta=1/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(1, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsTrue(a <= a); msg = "\t\t(a <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a <= b); msg = "\t\t(a <= b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a <= c); msg = "\t\t(a <= c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a <= d); msg = "\t\t(a <= d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a <= e); msg = "\t\t(a <= e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a <= f); msg = "\t\t(a <= f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(b <= a); msg = "\t\t!(b <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(c <= a); msg = "\t\t!(c <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(d <= a); msg = "\t\t!(d <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(e <= a); msg = "\t\t!(e <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(f <= a); msg = "\t\t!(f <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                }
+
+                {
+                    Logger::WriteMessage("\ta=10/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(10, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsTrue(a <= a); msg = "\t\t!(a <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a <= b); msg = "\t\t!(a <= b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a <= c); msg = "\t\t!(a <= c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a <= d); msg = "\t\t!(a <= d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a <= e); msg = "\t\t!(a <= e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a <= f); msg = "\t\t!(a <= f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(b <= a); msg = "\t\t(b <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(c <= a); msg = "\t\t(c <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(d <= a); msg = "\t\t(d <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(e <= a); msg = "\t\t(e <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(f <= a); msg = "\t\t(f <= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
                 }
             }
             catch (...)
@@ -1000,9 +1095,47 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("\ta=1/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(1, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsFalse(a > b); msg = "\t\t!(a > b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a > c); msg = "\t\t!(a > c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a > d); msg = "\t\t!(a > d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a > e); msg = "\t\t!(a > e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a > f); msg = "\t\t!(a > f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(b > a); msg = "\t\t(b > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(c > a); msg = "\t\t(c > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(d > a); msg = "\t\t(d > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(e > a); msg = "\t\t(e > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(f > a); msg = "\t\t(f > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                }
+
+                {
+                    Logger::WriteMessage("\ta=10/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(10, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsTrue(a > b); msg = "\t\t(a > b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a > c); msg = "\t\t(a > c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a > d); msg = "\t\t(a > d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a > e); msg = "\t\t(a > e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a > f); msg = "\t\t(a > f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(b > a); msg = "\t\t!(b > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(c > a); msg = "\t\t!(c > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(d > a); msg = "\t\t!(d > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(e > a); msg = "\t\t!(e > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(f > a); msg = "\t\t!(f > a) \t... OK !"; Logger::WriteMessage(msg.c_str());
                 }
             }
             catch (...)
@@ -1019,9 +1152,49 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("\ta=1/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(1, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsTrue(a >= a); msg = "\t\t!(a >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a >= b); msg = "\t\t!(a >= b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a >= c); msg = "\t\t!(a >= c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a >= d); msg = "\t\t!(a >= d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a >= e); msg = "\t\t!(a >= e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(a >= f); msg = "\t\t!(a >= f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(b >= a); msg = "\t\t(b >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(c >= a); msg = "\t\t(c >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(d >= a); msg = "\t\t(d >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(e >= a); msg = "\t\t(e >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(f >= a); msg = "\t\t(f >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                }
+
+                {
+                    Logger::WriteMessage("\ta=10/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(10, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsTrue(a >= a); msg = "\t\t(a >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a >= b); msg = "\t\t(a >= b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a >= c); msg = "\t\t(a >= c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a >= d); msg = "\t\t(a >= d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a >= e); msg = "\t\t(a >= e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a >= f); msg = "\t\t(a >= f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(b >= a); msg = "\t\t!(b >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(c >= a); msg = "\t\t!(c >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(d >= a); msg = "\t\t!(d >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(e >= a); msg = "\t\t!(e >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(f >= a); msg = "\t\t!(f >= a) \t... OK !"; Logger::WriteMessage(msg.c_str());
                 }
             }
             catch (...)
@@ -1038,9 +1211,8 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("ZFraction_operatorEQUAL");
+                    Logger::WriteMessage("\tTeste avec les operator+-*/");
                 }
             }
             catch (...)
@@ -1057,9 +1229,39 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("\ta=1/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(1, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsTrue(a != b); msg = "\t\t(a != b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a != c); msg = "\t\t(a != c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a != d); msg = "\t\t(a != d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a != e); msg = "\t\t(a != e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a != f); msg = "\t\t(a != f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(b != c); msg = "\t\t!(b != c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                }
+
+                {
+                    Logger::WriteMessage("\ta=10/5 ; b=int(1) ; c=long int(1) ; d=double(1.9) ; e=double(1.1) ; f=double(0.9) ...");
+                    ZFraction a(10, 5);
+                    int b(1);
+                    long int c(1);
+                    double d(1.9);
+                    double e(1.1);
+                    double f(0.9);
+                    std::string msg;
+
+                    Assert::IsTrue(a != b); msg = "\t\t(a != b) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a != c); msg = "\t\t(a != c) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a != d); msg = "\t\t(a != d) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a != e); msg = "\t\t(a != e) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsTrue(a != f); msg = "\t\t(a != f) \t... OK !"; Logger::WriteMessage(msg.c_str());
+                    Assert::IsFalse(b != c); msg = "\t\t!(b != c) \t... OK !"; Logger::WriteMessage(msg.c_str());
                 }
             }
             catch (...)
