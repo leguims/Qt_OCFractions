@@ -1271,9 +1271,9 @@ namespace ZFractionTests
             }
         }
 
-        TEST_METHOD(ZFraction_afficher)
+        TEST_METHOD(ABANDON_ZFraction_afficher)
         {
-            Logger::WriteMessage("ZFraction_afficher");
+            Logger::WriteMessage("ABANDON_ZFraction_afficher");
             wchar_t message[200];
             try
             {
@@ -1346,9 +1346,9 @@ namespace ZFractionTests
             }
         }
 
-        TEST_METHOD(ZFraction_afficherHTML)
+        TEST_METHOD(ABANDON_ZFraction_afficherHTML)
         {
-            Logger::WriteMessage("ZFraction_afficherHTML");
+            Logger::WriteMessage("ABANDON_ZFraction_afficherHTML");
             wchar_t message[200];
             try
             {
