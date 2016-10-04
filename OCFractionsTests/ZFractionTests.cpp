@@ -94,15 +94,9 @@ namespace ZFractionTests
                 ZFraction a(1.05);
                 Logger::WriteMessage("\tPas d'exception => OK !");
             }
-            catch (std::domain_error ex)
-            {
-                Logger::WriteMessage("\tException inattendue !");
-                swprintf_s(message, L"Exception inattendue !");
-                Assert::Fail(message, LINE_INFO());
-            }
             catch (...)
             {
-                swprintf_s(message, L"Mauvaise exception generee");
+                swprintf_s(message, L"Exception inattendue !");
                 Assert::Fail(message, LINE_INFO());
             }
         }
@@ -117,15 +111,9 @@ namespace ZFractionTests
                 ZFraction a(0.0005);
                 Logger::WriteMessage("\tPas d'exception => OK !");
             }
-            catch (std::domain_error ex)
-            {
-                Logger::WriteMessage("\tException inattendue !");
-                swprintf_s(message, L"Exception inattendue !");
-                Assert::Fail(message, LINE_INFO());
-            }
             catch (...)
             {
-                swprintf_s(message, L"Mauvaise exception generee");
+                swprintf_s(message, L"Exception inattendue !");
                 Assert::Fail(message, LINE_INFO());
             }
         }
@@ -1281,6 +1269,9 @@ namespace ZFractionTests
                     Logger::WriteMessage("** ECRIRE LE TEST **");
                     swprintf_s(message, L"** ECRIRE LE TEST **");
                     Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("** Test abandonne **");
+                    swprintf_s(message, L"** Test abandonne **");
+                    Assert::Fail(message, LINE_INFO());
                 }
             }
             catch (...)
@@ -1355,6 +1346,9 @@ namespace ZFractionTests
                 {
                     Logger::WriteMessage("** ECRIRE LE TEST **");
                     swprintf_s(message, L"** ECRIRE LE TEST **");
+                    Assert::Fail(message, LINE_INFO());
+                    Logger::WriteMessage("** Test abandonne **");
+                    swprintf_s(message, L"** Test abandonne **");
                     Assert::Fail(message, LINE_INFO());
                 }
             }

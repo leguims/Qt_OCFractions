@@ -24,6 +24,9 @@ public:
     ~Membre();
     void vider();
 
+    // Surcharger les operation +-*/
+    // Surcharger les operation += -= *= /=
+
     Membre& operator+=(const Membre& a);
     Membre& operator-=(const Membre& a);
     Membre& operator/=(const Membre& a);
@@ -45,8 +48,9 @@ public:
     std::string afficherOperationHTML(void) const;
     static std::string afficherOperationPlainText(operation);
     static std::string afficherOperationHTML(operation);
-    // Retourne vrai si le membre ne contient pas d'operation, mais seulement un nombre.
+    // Retourne vrai si le membre ne contient rien (pas d'operation, pas de nombre et pas de parenthese)
     bool isEmpty() const;
+    // Idem Empty, mais indifferent aux parentheses
     bool isValueless() const;
     bool isSimple() const;
     bool isHalfComplex() const;
@@ -58,9 +62,6 @@ public:
     bool fermerParenthese();
     void setAfficherFraction(bool =true);
     bool getAfficherFraction(void) const;
-
-    // Surcharger les operation +-*/
-    // Surcharger les operation += -= *= /=
 
 private:
     void ouvrirParenthese_valueless(operation);
@@ -74,13 +75,13 @@ private:
 
 
 protected:
-    parenthese parenthese_ = parenthese_Aucune; // Etat des parentheses
-    //Type d'affichage : fraction(true) ou reel(false)
-    bool afficherFraction_ = true;
+    ZFraction *nombre_ = nullptr; // Pointeur sur le nombre
     Membre *membre1_ = nullptr; //Pointeur sur le 1er membre de l'operation
     operation operation_ = operation_Aucune; // Operation du membre
     Membre *membre2_ = nullptr; //Pointeur sur le 2ond membre de l'operation
-    ZFraction *nombre_ = nullptr; // Pointeur sur le nombre
+    parenthese parenthese_ = parenthese_Aucune; // Etat des parentheses
+    //Type d'affichage : fraction(true) ou reel(false)
+    bool afficherFraction_ = true;
 };
 
 std::ostream& operator<<(std::ostream&, Membre const&);

@@ -165,7 +165,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Commun\Membre.cpp" />
     <ClCompile Include="..\Commun\ZFraction.cpp" />
+    <ClCompile Include="MembreTests.cpp" />
     <ClCompile Include="ZFractionTests.cpp" />
   </ItemGroup>
   <ItemGroup>

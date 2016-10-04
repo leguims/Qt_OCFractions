@@ -62,8 +62,16 @@ public:
     ZFraction& operator+=<double>(const double& numerateur)
     {
         ZFraction tmp((1.*_numerateur / _denominateur) + numerateur);
-        _numerateur = tmp.getNumerateur();
-        _denominateur = tmp.getDenominateur();
+
+        // INFO : Pour 10'000'000 iterations: methode1=6.7s, methode2=7.2s
+
+        // Methode 1
+        *this = tmp;
+
+        // Methode 2
+        //_numerateur = tmp.getNumerateur();
+        //_denominateur = tmp.getDenominateur();
+
         return *this;
     }
 
@@ -87,8 +95,7 @@ public:
     ZFraction& operator-=<double>(const double& numerateur)
     {
         ZFraction tmp((1.*_numerateur / _denominateur) - numerateur);
-        _numerateur = tmp.getNumerateur();
-        _denominateur = tmp.getDenominateur();
+        *this = tmp;
         return *this;
     }
 
@@ -121,8 +128,7 @@ public:
         else
         {
             ZFraction tmp(_numerateur / (numerateur * _denominateur));
-            _numerateur = tmp.getNumerateur();
-            _denominateur = tmp.getDenominateur();
+            *this = tmp;
         }
         return *this;
     }
@@ -147,8 +153,7 @@ public:
     ZFraction& operator*=<double>(const double& numerateur)
     {
         ZFraction tmp( (_numerateur * numerateur) / _denominateur);
-        _numerateur = tmp.getNumerateur();
-        _denominateur = tmp.getDenominateur();
+        *this = tmp;
         return *this;
     }
 

@@ -36,12 +36,12 @@ Membre::Membre(int n1, int d1, operation oper, int n2, int d2) : membre1_(new Me
 }
 
 Membre::Membre(Membre const &membreACopier)
-    : parenthese_(membreACopier.parenthese_),
-      afficherFraction_(membreACopier.afficherFraction_),
-      membre1_(nullptr != membreACopier.membre1_ ? new Membre(*(membreACopier.membre1_)) : nullptr),
-      operation_(membreACopier.operation_),
-      membre2_(nullptr != membreACopier.membre2_ ? new Membre(*(membreACopier.membre2_)) : nullptr),
-      nombre_(nullptr != membreACopier.nombre_ ? new ZFraction(*(membreACopier.nombre_)) : nullptr)
+    : nombre_(nullptr != membreACopier.nombre_ ? new ZFraction(*(membreACopier.nombre_)) : nullptr),
+    membre1_(nullptr != membreACopier.membre1_ ? new Membre(*(membreACopier.membre1_)) : nullptr),
+    operation_(membreACopier.operation_),
+    membre2_(nullptr != membreACopier.membre2_ ? new Membre(*(membreACopier.membre2_)) : nullptr),
+    parenthese_(membreACopier.parenthese_),
+    afficherFraction_(membreACopier.afficherFraction_)
 {
 }
 
@@ -50,14 +50,26 @@ Membre & Membre::operator=(Membre const &membreACopier)
     //On vérifie que l'objet n'est pas le même que celui reçu en argument
     if (this != &membreACopier)
     {
-        parenthese_ = membreACopier.parenthese_;
-        afficherFraction_ = membreACopier.afficherFraction_;
+        delete nombre_;
+        nombre_ = nullptr;
+        if (nullptr != membreACopier.nombre_)
+        {
+            nombre_ = new ZFraction(*(membreACopier.nombre_));
+        }
 
-        delete membre1_;
-        membre1_ = nullptr;
         if (nullptr != membreACopier.membre1_)
         {
-            membre1_ = new Membre(*(membreACopier.membre1_));
+            //nullptr == membre1_ ? membre1_ = new Membre(*(membreACopier.membre1_)) : *membre1_ = *membreACopier.membre1_;
+            if (nullptr != membre1_)
+            {
+                delete membre1_;
+            }
+            membre1_ = new Membre(*membreACopier.membre1_);
+        }
+        else if(nullptr != membre1_)
+        {
+            delete membre1_;
+            membre1_ = nullptr;
         }
 
         operation_ = membreACopier.operation_;
@@ -69,32 +81,28 @@ Membre & Membre::operator=(Membre const &membreACopier)
             membre2_ = new Membre(*(membreACopier.membre2_));
         }
 
-        delete nombre_;
-        nombre_ = nullptr;
-        if (nullptr != membreACopier.nombre_)
-        {
-            nombre_ = new ZFraction(*(membreACopier.nombre_));
-        }
+        parenthese_ = membreACopier.parenthese_;
+        afficherFraction_ = membreACopier.afficherFraction_;
     }
     return *this; //On renvoie l'objet lui-même
 }
 
 Membre::~Membre()
 {
+    delete nombre_; nombre_ = nullptr;
     delete membre1_; membre1_ = nullptr;
     delete membre2_; membre2_ = nullptr;
-    delete nombre_; nombre_ = nullptr;
 }
 
 // libere toute les allocations.
 void Membre::vider()
 {
-    parenthese_ = parenthese_Aucune;
-    afficherFraction_ = true;
+    delete nombre_; nombre_ = nullptr;
     delete membre1_; membre1_ = nullptr;
     operation_ = operation_Aucune;
     delete membre2_; membre2_ = nullptr;
-    delete nombre_; nombre_ = nullptr;
+    parenthese_ = parenthese_Aucune;
+    afficherFraction_ = true;
 }
 
 bool Membre::operator_generic(const Membre & a, const operation oper, const bool enreg)
@@ -687,7 +695,7 @@ std::string Membre::afficherOperationHTML(operation oper)
 
 bool Membre::isEmpty() const
 {
-    // Empty si membres/nombre vides.
+    // Empty si membres/nombre/parenthese vides.
     if (nullptr == nombre_ && nullptr == membre1_ && operation_Aucune == operation_ && nullptr == membre2_ && parenthese_Aucune == parenthese_)
     {
         return true;
@@ -700,7 +708,7 @@ bool Membre::isEmpty() const
 
 bool Membre::isValueless() const
 {
-    // Empty si membres/nombre vides.
+    // Valueless si membres/nombre vides, mais indifferent aux parentheses.
     if (nullptr == nombre_ && nullptr == membre1_ && operation_Aucune == operation_ && nullptr == membre2_)
     {
         return true;
