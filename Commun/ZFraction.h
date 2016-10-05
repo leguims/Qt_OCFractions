@@ -34,12 +34,12 @@ public:
     template <typename T = long int>
     bool estSuperieur(const T numerateur) const
     {
-        return ( (static_cast<double>(_numerateur) / _denominateur) > static_cast<double>(numerateur) );
+        return ( getDouble() > static_cast<double>(numerateur) );
     }
     template <>
     bool estSuperieur<ZFraction>(const ZFraction a) const
     {
-        return ((static_cast<double>(_numerateur) / _denominateur) > (static_cast<double>(a._numerateur) / a._denominateur));
+        return ( getDouble() > (static_cast<double>(a._numerateur) / a._denominateur));
     }
 
 

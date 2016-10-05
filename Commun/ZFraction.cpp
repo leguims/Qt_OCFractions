@@ -19,42 +19,42 @@ ZFraction::ZFraction(long int numerateur, long int denominateur) : _numerateur(n
 }
 
 
-ZFraction::ZFraction(double numerateur)
+ZFraction::ZFraction(double nbReel)
 {
-    if ((-1. / std::numeric_limits<long int>::max() < numerateur)
-        && (numerateur < 1. / std::numeric_limits<long int>::max()))
+    if ((-1. / std::numeric_limits<long int>::max() < nbReel)
+        && (nbReel < 1. / std::numeric_limits<long int>::max()))
     {
         _numerateur = 0;
         _denominateur = 1;
         return;
     }
 
-    if (numerateur < -std::numeric_limits<long int>::max())
+    if (nbReel < -std::numeric_limits<long int>::max())
     {
         _numerateur = -std::numeric_limits<long int>::max();
         _denominateur = 1;
         return;
     }
 
-    if (std::numeric_limits<long int>::max() < numerateur)
+    if (std::numeric_limits<long int>::max() < nbReel)
     {
         _numerateur = std::numeric_limits<long int>::max();
         _denominateur = 1;
         return;
     }
 
-    double pd_ = numerateur - std::floor(numerateur); // Partie decimale
-    const long int precision_ = pow(10, std::floor(std::log10(std::numeric_limits<long int>::max()) - std::log10(numerateur < 1 ? 1 : numerateur))); //Precision
-    //const long int precision_ = 1'000'000'000 / (pow(10, std::ceil(1 + std::log10(std::abs(numerateur))))); //Precision ; C++14 Digital Separator; std::numeric_limits<long int>::max()
+    double pd_ = nbReel - std::floor(nbReel); // Partie decimale
+    const long int precision_ = pow(10, std::floor(std::log10(std::numeric_limits<long int>::max()) - std::log10(nbReel < 1 ? 1 : nbReel))); //Precision
+    //const long int precision_ = 1'000'000'000 / (pow(10, std::ceil(1 + std::log10(std::abs(nbReel))))); //Precision ; C++14 Digital Separator; std::numeric_limits<long int>::max()
     long int pgcd_ = getPGCD(std::round(pd_ * precision_), precision_);
 
-    _numerateur = round(pd_ * precision_) / pgcd_ + std::floor(numerateur)*precision_ / pgcd_;
+    _numerateur = round(pd_ * precision_) / pgcd_ + std::floor(nbReel)*precision_ / pgcd_;
     _denominateur = precision_ / pgcd_;
 
-    if (std::trunc(numerateur) != std::trunc(_numerateur / _denominateur))
+    if (std::trunc(nbReel) != std::trunc(_numerateur / _denominateur))
     {
-        // numerateur reel perdu !
-        throw std::domain_error("Numerateur reel (" + std::to_string(numerateur) + ") impossible a convertir en fraction");
+        // nbReel reel perdu !
+        throw std::domain_error("Numerateur reel (" + std::to_string(nbReel) + ") impossible a convertir en fraction");
     }
 }
 
@@ -143,7 +143,13 @@ long int ZFraction::getDenominateur(void) const
 
 double ZFraction::getDouble(void) const
 {
-    return 1.0*_numerateur/_denominateur;
+    // INFO : Pour 1'000'000'000 iterations: methode1=7.6s, methode2=9.4s
+
+    // Methode 1
+    return static_cast<double>(_numerateur) / _denominateur;
+
+    // Methode 2
+    // return 1.* _numerateur / _denominateur;
 }
 
 void ZFraction::setAfficherFraction(bool cmd)
