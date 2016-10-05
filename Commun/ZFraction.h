@@ -39,7 +39,7 @@ public:
     template <>
     bool estSuperieur<ZFraction>(const ZFraction a) const
     {
-        return ( getDouble() > (static_cast<double>(a._numerateur) / a._denominateur));
+        return ( getDouble() > a.getDouble() );
     }
 
 
@@ -61,7 +61,7 @@ public:
     template <>
     ZFraction& operator+=<double>(const double& numerateur)
     {
-        ZFraction tmp((1.*_numerateur / _denominateur) + numerateur);
+        ZFraction tmp( getDouble() + numerateur);
 
         // INFO : Pour 10'000'000 iterations: methode1=6.7s, methode2=7.2s
 
@@ -94,7 +94,7 @@ public:
     template <>
     ZFraction& operator-=<double>(const double& numerateur)
     {
-        ZFraction tmp((1.*_numerateur / _denominateur) - numerateur);
+        ZFraction tmp( getDouble() - numerateur);
         *this = tmp;
         return *this;
     }
