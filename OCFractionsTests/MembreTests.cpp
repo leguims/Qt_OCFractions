@@ -151,7 +151,6 @@ namespace MembreTests
             }
         }
 
-
         TEST_METHOD(Membre_get_setAfficherFraction)
         {
             Logger::WriteMessage("\n Membre_get_setAfficherFraction");
@@ -183,9 +182,179 @@ namespace MembreTests
                 Assert::Fail(message, LINE_INFO());
             }
         }
+
+        TEST_METHOD(Membre_getResultat)
+        {
+            Logger::WriteMessage("\n Membre_getResultat");
+            wchar_t message[200];
+            try
+            {
+                Membre m0;
+                Membre m1(1);
+                Membre m2(2, 3);
+                Membre m3(m1, Membre::operation::operation_addition, m2);
+                Membre m4(m3, Membre::operation::operation_addition, Membre(1, 3));
+
+                ZFraction s0(0), s1(1), s2(2,3), s3(0), s4(0);
+
+                Assert::IsTrue(m0.getResultat() == s0);
+                Assert::IsTrue(m1.getResultat() == s1);
+                Assert::IsTrue(m2.getResultat() == s2);
+                Assert::IsTrue(m3.getResultat() == s3);
+                Assert::IsTrue(m4.getResultat() == s4);
+
+                Logger::WriteMessage("\t ... ok !");
+            }
+            catch (...)
+            {
+                Logger::WriteMessage("\t Mauvaise exception generee ... KO !");
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(Membre_simplifier1)
+        {
+            Logger::WriteMessage("\n Membre_simplifier1");
+            wchar_t message[200];
+            try
+            {
+                Membre m0;
+                Membre m1(1);
+                Membre m2(2, 3);
+                Membre m3(m1, Membre::operation::operation_addition, m2);
+                Membre m4(m3, Membre::operation::operation_addition, Membre(1, 3));
+
+                Assert::IsFalse(m0.simplifier());
+                Assert::IsFalse(m1.simplifier());
+                Assert::IsFalse(m2.simplifier());
+                Assert::IsTrue(m3.simplifier());
+                Assert::IsTrue(m4.simplifier());
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(Membre_simplifier2)
+        {
+            Logger::WriteMessage("\n Membre_simplifier2");
+            wchar_t message[200];
+            try
+            {
+                Membre m1(1);
+                Membre m2(2, 3);
+                Membre m3(m1, Membre::operation::operation_addition, m2);
+                Membre m4(m3, Membre::operation::operation_addition, Membre(1, 3));
+
+                ZFraction s3(5, 3), s4(6, 3);
+
+                Assert::IsTrue(m3.simplifier());
+                Assert::IsTrue(m3.getResultat() == s3);
+                Assert::IsFalse(m3.simplifier());
+
+                Assert::IsTrue(m4.simplifier());
+                Assert::IsTrue(m4.simplifier());
+                Assert::IsTrue(m4.getResultat() == s4);
+                Assert::IsFalse(m4.simplifier());
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(Membre_simplifier3)
+        {
+            Logger::WriteMessage("\n Membre_simplifier3");
+            wchar_t message[200];
+            try
+            {
+                ZFraction correction;
+                Membre m0, m1(1), m2(2, 3);
+
+                Membre m20(m1 + m2);
+                m20.simplifier();
+                correction = ZFraction(5, 3);
+                Assert::IsTrue(m20.getResultat() == correction);
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(Membre_simplifier4)
+        {
+            Logger::WriteMessage("\n Membre_simplifier4");
+            wchar_t message[200];
+            try
+            {
+                ZFraction correction;
+                Membre m0, m1(1), m2(2, 3);
+
+                Membre m21(m1 - m2);
+                m21.simplifier();
+                correction = ZFraction(1, 3);
+                Assert::IsTrue(m21.getResultat() == correction);
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(Membre_simplifier5)
+        {
+            Logger::WriteMessage("\n Membre_simplifier5");
+            wchar_t message[200];
+            try
+            {
+                ZFraction correction;
+                Membre m0, m1(1), m2(2, 3);
+
+                Membre m22(m1 / m2);
+                m22.simplifier();
+                correction = ZFraction(3, 2);
+                Assert::IsTrue(m22.getResultat() == correction);
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(Membre_simplifier6)
+        {
+            Logger::WriteMessage("\n Membre_simplifier6");
+            wchar_t message[200];
+            try
+            {
+                ZFraction correction;
+                Membre m0, m1(1), m2(2, 3);
+
+                Membre m23(m1 * m2 * 7);
+                m23.simplifier();
+                m23.simplifier();
+                correction = ZFraction(14, 3);
+                Assert::IsTrue(m23.getResultat() == correction);
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
         TEST_METHOD(Membre_aduaduadu)
         {
-            Logger::WriteMessage("\nMembre_aduaduadu");
+            Logger::WriteMessage("\n Membre_aduaduadu");
             wchar_t message[200];
             try
             {

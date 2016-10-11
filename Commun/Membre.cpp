@@ -763,7 +763,8 @@ bool Membre::isComplex() const
 // Appelle m_operation->simplifier() et si m_operation->isSimple() est vrai alors enregistre m_nombre=m_operation->resultat() libere m_operation.
 bool Membre::simplifier()
 {
-    bool loop = !isSimple();
+    // Pas de boucle si simple ou ou vide
+    bool loop = !(isSimple() || isValueless());
 
     // Si les membres sont simples, realiser l'operation
     if (isComplex() && membre1_->isSimple() && membre2_->isSimple())

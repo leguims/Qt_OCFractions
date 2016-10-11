@@ -5,14 +5,8 @@
 
 using namespace std;
 
-void test_divisionZero(void);
-void test_constructeurCopie(void);
-void test_isSimple(void);
-void test_simplifier(void);
-void test_getResultat(void);
 void test_cout(void);
 void test_setAfficherFraction(void);
-void test_constructeurOperator(void);
 void test_afficherPlainText(void);
 void test_afficherHTML(void);
 void test_saisieCalculatrice_PlainText_01(void);
@@ -26,16 +20,26 @@ static int nbBug = 0;
 
 void main()
 {
+    //int n(1), d(5);
+    //for (int i = 0; i < 1'000'000; ++i)
+    //{
+    //    double re(0.);
+    //    re = static_cast<double>(n) / d;
+    //}
+    //cout << "Loop1 " << endl;
+
+    //for (int i = 0; i < 1'000'000; ++i)
+    //{
+    //    double re(0.);
+    //    re = 1. * n / d;
+    //}
+    //cout << "Loop2 " << endl;
+
     try
     {
-        // genere dans ZFractionTests : test_divisionZero();
-        test_constructeurCopie();
-        //test_isSimple();
-        //test_simplifier();
-        //test_getResultat();
+        // genere dans ZFractionTests : 
         test_cout();
         test_setAfficherFraction();
-        test_constructeurOperator();
         test_afficherPlainText();
         //test_afficherHTML();
         test_saisieCalculatrice_PlainText_01();
@@ -51,103 +55,6 @@ void main()
     {
         cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
     }
-}
-
-// genere dans ZFractionTests :
-void test_divisionZero(void)
-{
-    //cout << endl << endl << "### test_divisionZero :" << endl;
-    //try
-    //{
-    //    cout << "ZFraction a(5, 0);..." << endl;
-    //    ZFraction a(5, 0);
-    //}
-    //catch (exception const& e) //On rattrape les exceptions standard de tous types
-    //{
-    //    cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
-    //}
-
-    //try
-    //{
-    //    cout << "a=4/1 ; b=0/3 ; c=a/b ..." << endl;
-    //    ZFraction a(4,1), b(0,3), c;
-    //    c = a / b;
-    //}
-    //catch (exception const& e) //On rattrape les exceptions standard de tous types
-    //{
-    //    cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
-    //}
-
-    //try
-    //{
-    //    cout << "a=3/7 ; b=0 ; c=a/b ..." << endl;
-    //    ZFraction a(3,7), c;
-    //    int b(0);
-    //    c = a / b;
-    //}
-    //catch (exception const& e) //On rattrape les exceptions standard de tous types
-    //{
-    //    cerr << "ERREUR : " << e.what() << endl; //On affiche la description de l'erreur
-    //}
-}
-
-void test_constructeurCopie(void)
-{
-    cout << endl << endl << "### test_constructeurCopie :" << endl;
-    Membre m0;
-
-    cout << "Membre m0; ..." << endl;
-    cout << "m0 = " << m0 << endl;
-    cout << "... m0 = 1 ..." << endl; m0 = 1;
-    cout << "m0 = " << m0 << endl << endl;
-}
-
-void test_isSimple(void)
-{
-    cout << endl << endl << "### test_isSimple :" << endl;
-    Membre m0;
-    Membre m1(1);
-    Membre m2(2, 3);
-    Membre m3(m1, Membre::operation::operation_addition, m2);
-    Membre m4(m3, Membre::operation::operation_addition, Membre(1, 3));
-
-    m0.isSimple();
-    m1.isSimple();
-    m2.isSimple();
-    m3.isSimple();
-    m4.isSimple();
-}
-
-void test_simplifier(void)
-{
-    cout << endl << endl << "### test_simplifier :" << endl;
-    Membre m0;
-    Membre m1(1);
-    Membre m2(2, 3);
-    Membre m3(m1, Membre::operation::operation_addition, m2);
-    Membre m4(m3, Membre::operation::operation_addition, Membre(1, 3));
-
-    m0.simplifier();
-    m1.simplifier();
-    m2.simplifier();
-    m3.simplifier();
-    m4.simplifier();
-}
-
-void test_getResultat(void)
-{
-    cout << endl << endl << "### test_getResultat :" << endl;
-    Membre m0;
-    Membre m1(1);
-    Membre m2(2, 3);
-    Membre m3(m1, Membre::operation::operation_addition, m2);
-    Membre m4(m3, Membre::operation::operation_addition, Membre(1, 3));
-
-    m0.getResultat();
-    m1.getResultat();
-    m2.getResultat();
-    m3.getResultat();
-    m4.getResultat();
 }
 
 void test_cout(void)
@@ -260,60 +167,6 @@ void test_setAfficherFraction(void)
     }
 
     cout << endl;
-}
-
-void test_constructeurOperator(void)
-{
-    cout << endl << endl << "### test_constructeurOperator :" << endl;
-
-    ZFraction correction;
-    Membre m0, m1(1), m2(2, 3);
-    cout << "m1 = " << m1 << endl;
-    cout << "m2 = " << m2 << endl;
-
-    Membre m20(m1 + m2);
-    cout << "m1 + m2 = " << m20;
-    m20.simplifier();
-    cout << " simplifie = " << m20 << endl;
-    correction = ZFraction(5, 3);
-    if (m20.getResultat() != correction)
-    {
-        cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
-    }
-
-    Membre m21(m1 - m2);
-    cout << "m1 - m2 = " << m21;
-    m21.simplifier();
-    cout << " simplifie = " << m21 << endl;
-    correction = ZFraction(1, 3);
-    if (m21.getResultat() != correction)
-    {
-        cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
-    }
-
-    Membre m22(m1 / m2);
-    cout << "m1 / m2 = " << m22;
-    m22.simplifier();
-    cout << " simplifie = " << m22 << endl;
-    correction = ZFraction(3, 2);
-    if (m22.getResultat() != correction)
-    {
-        cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
-    }
-
-    Membre m23(m1 * m2 * 7);
-    cout << "m1 * m2 *7 = " << m23;
-    m23.simplifier();
-    cout << " simplifie = " << m23 << endl;
-    m23.simplifier();
-    cout << " simplifie = " << m23 << endl;
-    cout << " simplifie = " << m23 << endl;
-    correction = ZFraction(14, 3);
-    if (m23.getResultat() != correction)
-    {
-        cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
-    }
-
 }
 
 void test_afficherPlainText(void)
