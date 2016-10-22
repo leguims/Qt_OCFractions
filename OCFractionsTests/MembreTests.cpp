@@ -439,6 +439,54 @@ namespace MembreTests
             }
         }
 
+        TEST_METHOD(Membre_constructorByCopy4)
+        {
+            Logger::WriteMessage("\n Membre_constructorByCopy4");
+            wchar_t message[200];
+            try
+            {
+                {
+                    ZFraction correction;
+                    Membre src, dst;
+
+                    dst = src;
+                    correction = ZFraction();
+                    Assert::IsTrue(dst.getResultat() == correction);
+                }
+                {
+                    ZFraction correction;
+                    Membre src, dst(1);
+
+                    dst = src;
+                    correction = ZFraction();
+                    Assert::IsTrue(dst.getResultat() == correction);
+                }
+                {
+                    ZFraction correction;
+                    Membre src(1), dst;
+
+                    dst = src;
+                    correction = ZFraction(1);
+                    Assert::IsTrue(dst.getResultat() == correction);
+                }
+                {
+                    ZFraction correction;
+                    Membre src(1), dst(2);
+
+                    dst = src;
+                    correction = ZFraction(1);
+                    Assert::IsTrue(dst.getResultat() == correction);
+                }
+
+                Logger::WriteMessage("\t ... ok !");
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
 
 
         TEST_METHOD(Membre_operatorMINUSunit)
