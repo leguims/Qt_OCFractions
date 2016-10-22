@@ -151,6 +151,8 @@ namespace ZFractionTests
                     Assert::AreEqual<long int>(result_zero.getNumerateur(), a.getNumerateur());
                     Assert::AreEqual<long int>(result_zero.getDenominateur(), a.getDenominateur());
                 }
+
+                Logger::WriteMessage("\t ... ok !");
             }
             catch (...)
             {
@@ -391,6 +393,8 @@ namespace ZFractionTests
                     Assert::IsTrue((-b) == a);
                     Logger::WriteMessage("\t\t(-b) == a\t... OK !");
                 }
+
+                Logger::WriteMessage("\t ... ok !");
             }
             catch (...)
             {

@@ -7,7 +7,6 @@ using namespace std;
 
 void test_cout(void);
 void test_setAfficherFraction(void);
-void test_afficherPlainText(void);
 void test_afficherHTML(void);
 void test_saisieCalculatrice_PlainText_01(void);
 void test_saisieCalculatrice_PlainText_02(void);
@@ -40,7 +39,6 @@ void main()
         // genere dans ZFractionTests : 
         test_cout();
         test_setAfficherFraction();
-        test_afficherPlainText();
         //test_afficherHTML();
         test_saisieCalculatrice_PlainText_01();
         test_saisieCalculatrice_PlainText_02();
@@ -167,29 +165,6 @@ void test_setAfficherFraction(void)
     }
 
     cout << endl;
-}
-
-void test_afficherPlainText(void)
-{
-    cout << endl << endl << "### test_afficherPlainText :" << endl;
-
-    Membre m0, m1(1), m2(2, 3);
-    cout << "m1 = " << m1 << endl;
-    cout << "m2 = " << m2 << endl;
-
-    Membre m24(m1 * m2 * 7);
-    cout << "afficherPlainText()" << endl;
-    cout << "m1 * m2 *7 = " << m24.afficherPlainText().c_str();
-    m24.simplifier();
-    cout << " simplifie = " << m24.afficherPlainText().c_str() << endl;
-    m24.simplifier();
-    cout << " simplifie = " << m24.afficherPlainText().c_str() << endl;
-
-    ZFraction correction(14, 3);
-    if (m24.getResultat() != correction)
-    {
-        cout << "!! BUG !! ==> Correction : " << correction << endl; nbBug++;
-    }
 }
 
 void test_afficherHTML(void)
