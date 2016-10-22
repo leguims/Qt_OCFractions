@@ -45,6 +45,8 @@ public:
     GUICalulatrice();
     ~GUICalulatrice();
 	void plainText(bool);
+    std::string  afficherMembrePlainText();     // for debug only
+    std::string  afficherResultatPlainText();   // for debug only
 
 private:
 	Membre	membre_;

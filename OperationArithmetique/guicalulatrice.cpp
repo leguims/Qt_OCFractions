@@ -196,28 +196,43 @@ void GUICalulatrice::enregistrerNombre()
 
 void GUICalulatrice::afficherMembre()
 {
-	if (plainText_)
-	{
-		std::cout << membre_.afficherPlainText();
-		std::cout << Membre::afficherOperationPlainText(oper_) << std::endl;
-	}
-	else
-	{
-		std::cout << membre_.afficherHTML();
-		std::cout << Membre::afficherOperationHTML(oper_) << std::endl;
-	}
+    if (plainText_)
+    {
+        std::cout << membre_.afficherPlainText();
+        std::cout << Membre::afficherOperationPlainText(oper_) << std::endl;
+    }
+    else
+    {
+        std::cout << membre_.afficherHTML();
+        std::cout << Membre::afficherOperationHTML(oper_) << std::endl;
+    }
+}
+
+std::string GUICalulatrice::afficherMembrePlainText()
+{
+    std::string out;
+    out = membre_.afficherPlainText();
+    out += Membre::afficherOperationPlainText(oper_);
+    return out;
 }
 
 void GUICalulatrice::afficherResultat()
 {
-	if (plainText_)
-	{
-		std::cout << membre_.afficherPlainText() << std::endl;
-	}
-	else
-	{
-		std::cout << membre_.afficherHTML() << std::endl;
-	}
+    if (plainText_)
+    {
+        std::cout << membre_.afficherPlainText() << std::endl;
+    }
+    else
+    {
+        std::cout << membre_.afficherHTML() << std::endl;
+    }
+}
+
+std::string  GUICalulatrice::afficherResultatPlainText()
+{
+    std::string out;
+    out = membre_.afficherPlainText();
+    return out;
 }
 
 void GUICalulatrice::on_bouton_chiffre_9_clicked()

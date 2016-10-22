@@ -167,6 +167,8 @@
   <ItemGroup>
     <ClCompile Include="..\Commun\Membre.cpp" />
     <ClCompile Include="..\Commun\ZFraction.cpp" />
+    <ClCompile Include="..\OperationArithmetique\guicalulatrice.cpp" />
+    <ClCompile Include="GUICalculatriceTests.cpp" />
     <ClCompile Include="MembreTests.cpp" />
     <ClCompile Include="ZFractionTests.cpp" />
   </ItemGroup>

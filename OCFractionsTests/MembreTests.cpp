@@ -1,6 +1,5 @@
 //#include "stdafx.h"
 #include "CppUnitTest.h"
-//#include "../Commun/Membre.h"
 #include "../Commun/Membre.h"
 #include <string>
 
@@ -111,8 +110,8 @@ namespace MembreTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("** ECRIRE LE TEST **");
-                swprintf_s(message, L"** ECRIRE LE TEST **");
+                Logger::WriteMessage("** Test abandonne **");
+                swprintf_s(message, L"** Test abandonne **");
                 Assert::Fail(message, LINE_INFO());
             }
             catch (...)
@@ -1220,8 +1219,8 @@ namespace MembreTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("** ECRIRE LE TEST **");
-                swprintf_s(message, L"** ECRIRE LE TEST **");
+                Logger::WriteMessage("** Test abandonne **");
+                swprintf_s(message, L"** Test abandonne **");
                 Assert::Fail(message, LINE_INFO());
             }
             catch (...)
@@ -1304,8 +1303,8 @@ namespace MembreTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("** ECRIRE LE TEST **");
-                swprintf_s(message, L"** ECRIRE LE TEST **");
+                Logger::WriteMessage("** Test abandonne **");
+                swprintf_s(message, L"** Test abandonne **");
                 Assert::Fail(message, LINE_INFO());
             }
             catch (...)
@@ -1321,8 +1320,8 @@ namespace MembreTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("** ECRIRE LE TEST **");
-                swprintf_s(message, L"** ECRIRE LE TEST **");
+                Logger::WriteMessage("** Test abandonne **");
+                swprintf_s(message, L"** Test abandonne **");
                 Assert::Fail(message, LINE_INFO());
             }
             catch (...)
@@ -1374,8 +1373,8 @@ namespace MembreTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("** ECRIRE LE TEST **");
-                swprintf_s(message, L"** ECRIRE LE TEST **");
+                Logger::WriteMessage("** Test abandonne **");
+                swprintf_s(message, L"** Test abandonne **");
                 Assert::Fail(message, LINE_INFO());
             }
             catch (...)
@@ -1391,8 +1390,8 @@ namespace MembreTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("** ECRIRE LE TEST **");
-                swprintf_s(message, L"** ECRIRE LE TEST **");
+                Logger::WriteMessage("** Test abandonne **");
+                swprintf_s(message, L"** Test abandonne **");
                 Assert::Fail(message, LINE_INFO());
             }
             catch (...)
@@ -1408,8 +1407,8 @@ namespace MembreTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("** ECRIRE LE TEST **");
-                swprintf_s(message, L"** ECRIRE LE TEST **");
+                Logger::WriteMessage("** Test abandonne **");
+                swprintf_s(message, L"** Test abandonne **");
                 Assert::Fail(message, LINE_INFO());
             }
             catch (...)
@@ -1425,8 +1424,8 @@ namespace MembreTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("** ECRIRE LE TEST **");
-                swprintf_s(message, L"** ECRIRE LE TEST **");
+                Logger::WriteMessage("** Test abandonne **");
+                swprintf_s(message, L"** Test abandonne **");
                 Assert::Fail(message, LINE_INFO());
             }
             catch (...)
@@ -1442,8 +1441,8 @@ namespace MembreTests
             wchar_t message[200];
             try
             {
-                Logger::WriteMessage("** ECRIRE LE TEST **");
-                swprintf_s(message, L"** ECRIRE LE TEST **");
+                Logger::WriteMessage("** Test abandonne **");
+                swprintf_s(message, L"** Test abandonne **");
                 Assert::Fail(message, LINE_INFO());
             }
             catch (...)

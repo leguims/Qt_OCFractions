@@ -1,6 +1,5 @@
 //#include "stdafx.h"
 #include "CppUnitTest.h"
-//#include "../Commun/Membre.h"
 #include "../Commun/ZFraction.h"
 #include <string>
 
@@ -1270,9 +1269,6 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
                     Logger::WriteMessage("** Test abandonne **");
                     swprintf_s(message, L"** Test abandonne **");
                     Assert::Fail(message, LINE_INFO());
@@ -1348,9 +1344,6 @@ namespace ZFractionTests
             try
             {
                 {
-                    Logger::WriteMessage("** ECRIRE LE TEST **");
-                    swprintf_s(message, L"** ECRIRE LE TEST **");
-                    Assert::Fail(message, LINE_INFO());
                     Logger::WriteMessage("** Test abandonne **");
                     swprintf_s(message, L"** Test abandonne **");
                     Assert::Fail(message, LINE_INFO());
