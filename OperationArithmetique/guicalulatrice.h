@@ -47,9 +47,10 @@ public:
 	void plainText(bool);
     std::string  afficherMembrePlainText();     // for debug only
     std::string  afficherResultatPlainText();   // for debug only
+    ZFraction getResultat() const;
 
 private:
-	Membre	membre_;
+    Membre	membre_;
 	Membre::operation oper_ = Membre::operation_Aucune;
 	int		saisieNumerateur_ = 0;
 	int		saisieDenominateur_ = 1;

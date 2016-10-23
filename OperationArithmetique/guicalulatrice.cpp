@@ -235,6 +235,11 @@ std::string  GUICalulatrice::afficherResultatPlainText()
     return out;
 }
 
+ZFraction GUICalulatrice::getResultat() const
+{
+    return membre_.getResultat();
+}
+
 void GUICalulatrice::on_bouton_chiffre_9_clicked()
 {
 	saisieNumerateur_ *= 10;
@@ -314,3 +319,4 @@ void GUICalulatrice::plainText(bool pt)
 {
 	plainText_ = pt;
 }
+
