@@ -151,6 +151,8 @@ namespace GUICalculatriceTests
             wchar_t message[200];
             try
             {
+                //for (int i = 0; i < 1'000; ++i)
+                //{
                 {
                     Logger::WriteMessage("1+(2/3)*4");
 
@@ -182,6 +184,7 @@ namespace GUICalculatriceTests
                     Assert::IsTrue(calcul.getResultat() == correction);
                     Logger::WriteMessage("\t ... ok !");
                 }
+                //}
             }
             catch (...)
             {
@@ -253,6 +256,8 @@ namespace GUICalculatriceTests
             wchar_t message[200];
             try
             {
+                //for (int i = 0; i < 1'000; ++i)
+                //{
                 {
                     Logger::WriteMessage("1+2*(3-4*5*6*7)");
 
@@ -278,7 +283,6 @@ namespace GUICalculatriceTests
                     calcul.on_bouton_chiffre_7_clicked();
                     calcul.on_bouton_parenthese_fermante_clicked();
 
-
                     calcul.on_bouton_resultat_clicked();
                     calcul.on_bouton_resultat_clicked();
                     calcul.on_bouton_resultat_clicked();
@@ -292,6 +296,7 @@ namespace GUICalculatriceTests
                     Assert::IsTrue(calcul.getResultat() == correction);
                     Logger::WriteMessage("\t ... ok !");
                 }
+                //}
             }
             catch (...)
             {
@@ -450,6 +455,8 @@ namespace GUICalculatriceTests
             wchar_t message[200];
             try
             {
+                //for (int i = 0; i < 1'000; ++i)
+                //{
                 {
                     Logger::WriteMessage("1+ (2+ ( (1/3)/ (4-(3x2)) ) )");
                     int i(0);
@@ -511,6 +518,7 @@ namespace GUICalculatriceTests
                     Assert::IsTrue(calcul.getResultat() == correction);
                     Logger::WriteMessage("\t ... ok !");
                 }
+                //}
             }
             catch (...)
             {

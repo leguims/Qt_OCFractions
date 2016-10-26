@@ -66,7 +66,7 @@ Membre & Membre::operator=(Membre const &membreACopier)
             }
             membre1_ = new Membre(*membreACopier.membre1_);
         }
-        else if(nullptr != membre1_)
+        else if (nullptr != membre1_)
         {
             delete membre1_;
             membre1_ = nullptr;
@@ -142,20 +142,18 @@ bool Membre::operator_valueless(const Membre & a, const operation oper)
     if (isValueless())
     {
         // Le membre est vide ==> il devient simple ou reste vide
+        // Aucune operation autorisee si le membre est vide !
         switch (oper) {
         case operation_multiplication:
         case operation_division:
+            throw std::invalid_argument("Ajout d'un operateur inattendu.");
             break;
         case operation_Aucune:
-            // 1er nombre apres une ouverture de parenthese.
-            nombre_ = new ZFraction(a.nombre_ != nullptr ? *a.nombre_ : 0);
-            menr = true;
-            break;
-        case operation_addition:
+        case operation_addition:        // Interprete comme un signe
             membre1_ = new Membre(a);
             menr = true;
             break;
-        case operation_soustraction:
+        case operation_soustraction:    // Interprete comme un signe
             membre1_ = new Membre(-a);
             menr = true;
             break;
@@ -196,54 +194,86 @@ bool Membre::operator_halfComplex(const Membre & a, const operation oper, const 
 
     if (isHalfComplex())
     {
-        // Le membre est semi-complexe ==> il devient complexe
-        if (nullptr == membre1_)
-        {
-            // Nouveau membre toujours dans "membre2_" => copie membre2_ dans membre1_.
-            membre1_ = membre2_;
-            membre2_ = nullptr;
-        }
-
+        // Phase 1 (cf. Membre::operator_complex)
         if (parenthese_ == parenthese_fermee && enreg && operation_Aucune != oper)
         {
+            if (nullptr == membre1_)
+            {
+                // copie membre2_ dans membre1_ pour le move
+                membre1_ = membre2_;
+                membre2_ = nullptr;
+            }
+
             // Si les parentheses sont fermees => appliquer l'operation a un nouveau membre
-            // Pas de priorite a gerer
-            Membre *copie = new Membre(*this);
-            vider();
-            membre1_ = copie;
+            moveThisToMembre1();
+
             operation_ = oper;
             membre2_ = new Membre(a);
-            menr = true;
+
+            return true;
         }
-        else if (parenthese_fermee != parenthese_)
+        // Aucune operation et 'this->parenthese_' == fermee => ERREUR !!!
+        else if (parenthese_ == parenthese_fermee && enreg && operation_Aucune == oper)
         {
-            // Si les parentheses sont ouvertes ou absentes => Appliquer sur membre1_ puis forcer sur membre_2
-            menr = membre1_->operator_generic(a, oper, false);
-            if (!menr && enreg)
+            throw std::invalid_argument("Necessite une parenthese ouvrante");
+        }
+        // 'this->parenthese_' == fermee => retour sans enregistrement (return 'menr'=false)
+        else if (parenthese_ == parenthese_fermee && !enreg)
+        {
+            return false;
+        }
+
+
+        // Phase 2 (cf. Membre::operator_complex)
+        if (operation_Aucune == oper)
+        {
+            if (nullptr != membre2_)
             {
-                // membre1_ n'est pas simple => gerer les priorites
-                switch (oper)
-                {
-                case operation_multiplication:
-                case operation_division:
-                    // Operation en cours est une operation prioritaire ==> appliquer sur le membre1_
-                    menr = membre1_->operator_generic(a, oper, true);
-                    break;
-                case operation_addition:
-                case operation_soustraction:
-                    // L'operation en cours n'est pas prioritaire ==> pas de priorite a gerer
-                    // Le membre est semi-complexe ==> il devient complexe
-                    operation_ = oper;
-                    membre2_ = new Membre(a);
-                    menr = true;
-                    break;
-                case operation_Aucune:
-                    // Pas d'operation en cours ==> cas non gere !
-                    break;
-                }
+                menr = membre2_->operator_generic(a, oper, false);
             }
+            if (!menr && nullptr != membre1_)
+            {
+                menr = membre1_->operator_generic(a, oper, false);
+                if (!menr)
+                    throw std::invalid_argument("Necessite une parenthese ouvrante");
+            }
+            return menr;
+        }
+
+
+        // Phase 3 (cf. Membre::operator_complex)
+        if (operation_Aucune != oper)
+        {
+            if (nullptr != membre2_ && (membre2_->isHalfComplex() || membre2_->isComplex()))
+            {
+                menr = membre2_->operator_generic(a, oper, false);
+            }
+            if (!menr && nullptr != membre1_ && (membre1_->isHalfComplex() || membre1_->isComplex()))
+            {
+                menr = membre1_->operator_generic(a, oper, false);
+            }
+            if (menr)
+                return menr;
+        }
+
+
+        // Phase 4 (cf. Membre::operator_complex)
+        // Phase 5 (cf. Membre::operator_complex)
+        if (!menr)
+        {
+            if (nullptr == membre1_)
+            {
+                // copie membre2_ dans membre1_ pour ajouter l'operation
+                membre1_ = membre2_;
+                membre2_ = nullptr;
+            }
+            operation_ = oper;
+            membre2_ = new Membre(a);
+
+            return true;
         }
     }
+
     return menr;
 }
 
@@ -254,73 +284,170 @@ bool Membre::operator_complex(const Membre & a, const operation oper, const bool
 
     if (isComplex())
     {
+        // Phase 1
+        // 'this->parenthese_' == fermee + obligation enregistrement => copie 'this' dans 'membre1_' avec parenthese et opération sur 'membre2_' (gere le cas d'une parenthese sur membre du sommet)
+        // 'this->parenthese_' == fermee et Aucune operation => ERREUR !!!
+        // 'this->parenthese_' == fermee + sans obligation => retour sans enregistrement (return 'menr'=false)
+
+        // Phase 2
+        // 'this->parenthese_' != fermee  ==> Traitement ci-dessous
+        // 'oper' absente => IDEE GLOBALE : Chercher 'membre2_' le plus profond "sans valeur avec parenthese ouvrante". Si echec, tester 'membre1_'. Si echec membre 1 remonter d'un cran.
+        // 'oper' absente => Appliquer traitement à 'this->membre2_'. Si retour false, appliquer à 'this->membre1_'. Si retour false, retour sans enregistrement (return 'menr'=false).
+        // 'oper' absente => Aucun membre "sans valeur avec parenthese ouvrante" => ERREUR !!!
+
+        // Phase 3
+        // 'oper' presente => Traitement ci-dessous
+        // IDEE GLOBALE : Toujours commencer les traitements par les 'membre2_' les plus profonds.
+        // 'this->membre2_->isHalfComplex || this->membre2_->isComplex' => Appliquer traitement à 'this->membre2_'. Si retour false, poursuivre le traitement.
+
+        // Phase 4
+        // Retour false ou membre2_->isSimple/Valueless => Traitement ci-dessous
+        // Note : membre2_->isSimple signifie que le traitement dépend de l'operation qui lie 'membre1_' et 'membre2_', donc la décision est à prendre ici et surtout pas à sous-traiter à 'membre2_'
+        // 'this->operation_' prioritaire (mul/div) ==> Deplacer le membre "prioritaire" en place (=this) sur 'membre1_' et copier le nouveau membre sur 'membre2_'. Maintenir la parenthese ouvrante sur le noeud (=this) malgres le deplacement qui le descend d'un etage.
+
+        // Phase 5
+        // 'this->operation_' non prioritaire (add/sub) ==> Traitement ci-dessous
+        // 'oper' non prioritaire (add/sub) ==> Meme traitement que "'this->operation_' prioritaire (mul/div)" ci-dessus
+        // 'oper' prioritaire (mul/div) ==> Allouer un nouveau 'membre2_' initialisé avec : 'membre1_' = ancien 'membre2_', 'operation_'='oper' et 'membre2_' = nouveau membre.
+
+        // REGLE NOUVELLE : Ouvrir parenthese sur 'this->membre2_' uniquement
+        // REGLE NOUVELLE : Deplacer 'this->membre2_' sur 'this->membre1_' si 'this->membre2_->parenthese==fermee' et 'membre1_' vide.
+
+
+        // Phase 1
+        // 'this->parenthese_' == fermee + obligation enregistrement => copie 'this' dans 'membre1_' avec parenthese et opération sur 'membre2_' (gere le cas d'une parenthese sur membre du sommet)
         if (parenthese_ == parenthese_fermee && enreg && operation_Aucune != oper)
         {
             // Si les parentheses sont fermees => appliquer l'operation a un nouveau membre
-            // Pas de priorite a gerer
-            Membre *copie = new Membre(*this);
-            vider();
-            membre1_ = copie;
+            moveThisToMembre1();
+
             operation_ = oper;
             membre2_ = new Membre(a);
-            menr = true;
+
+            return true;
         }
-        else if (parenthese_fermee != parenthese_)
+        // Aucune operation et 'this->parenthese_' == fermee => ERREUR !!!
+        else if (parenthese_ == parenthese_fermee && enreg && operation_Aucune == oper)
         {
-            // Si les parentheses sont ouvertes ou absentes
-            // ET que l'opération du membre isComplex() n'est pas prioritaire
-            // => Appliquer sur membre2_
-            if (operation_ != operation_multiplication && operation_ != operation_division)
+            throw std::invalid_argument("Necessite une parenthese ouvrante");
+        }
+        // 'this->parenthese_' == fermee => retour sans enregistrement (return 'menr'=false)
+        else if (parenthese_ == parenthese_fermee && !enreg)
+        {
+            return false;
+        }
+
+
+        // Phase 2
+        // 'this->parenthese_' != fermee  ==> Traitement ci-dessous
+        // 'oper' absente => IDEE GLOBALE : Chercher 'membre2_' le plus profond "sans valeur avec parenthese ouvrante". Si echec, tester 'membre1_'. Si echec membre 1 remonter d'un cran.
+        // 'oper' absente => Appliquer traitement à 'this->membre2_'. Si retour false, appliquer à 'this->membre1_'. Si retour false, retour sans enregistrement (return 'menr'=false).
+        // 'oper' absente => Aucun membre "sans valeur avec parenthese ouvrante" => ERREUR !!!
+        if (operation_Aucune == oper)
+        {
+            if (nullptr != membre2_)
             {
                 menr = membre2_->operator_generic(a, oper, false);
+                if (!menr && nullptr != membre1_)
+                {
+                    menr = membre1_->operator_generic(a, oper, false);
+                    if (!menr)
+                        throw std::invalid_argument("Necessite une parenthese ouvrante");
+                }
+            }
+            return menr;
+        }
+
+
+        // Phase 3
+        // 'oper' presente => Traitement ci-dessous
+        // IDEE GLOBALE : Toujours commencer les traitements par les 'membre2_' les plus profonds.
+        // 'this->membre2_->isHalfComplex || this->membre2_->isComplex' => Appliquer traitement à 'this->membre2_'. Si retour false, poursuivre le traitement.
+        if (operation_Aucune != oper)
+        {
+            if (nullptr != membre2_ && (membre2_->isHalfComplex() || membre2_->isComplex()))
+            {
+                menr = membre2_->operator_generic(a, oper, false);
+                if (!menr && nullptr != membre1_)
+                {
+                    menr = membre1_->operator_generic(a, oper, false);
+                }
+            }
+            if (menr)
+                return menr;
+        }
+
+
+        // Phase 4
+        // Retour false ou membre2_->isSimple/Valueless => Traitement ci-dessous
+        // Note : membre2_->isSimple signifie que le traitement dépend de l'operation qui lie 'membre1_' et 'membre2_', donc la décision est à prendre ici et surtout pas à sous-traiter à 'membre2_'
+        // 'this->operation_' prioritaire (mul/div) ==> Deplacer le membre "prioritaire" en place (=this) sur 'membre1_' et copier le nouveau membre sur 'membre2_'. Maintenir la parenthese ouvrante sur le noeud (=this) malgres le deplacement qui le descend d'un etage.
+        if (operation_multiplication == operation_ || operation_division == operation_  // Phase 4
+            || operation_addition == oper || operation_soustraction == oper)            // debut Phase 5
+        {
+            Membre::parenthese copie = parenthese_;
+            moveThisToMembre1();
+
+            operation_ = oper;
+            membre2_ = new Membre(a);
+
+            // Remonter la parenthese ouvrante au niveau de l'operation
+            if (parenthese_ouverte == copie)
+            {
+                parenthese_ = copie;
+                membre1_->parenthese_ = parenthese_Aucune;
             }
 
-            if (!menr && enreg)
-            {
-                // Si l'opération du membre isComplex() est prioritaire
-                // OU
-                // Si l'opération à réaliser n'est pas prioritaire
-                // => Creer un nouveau membre pour traiter l'operateur
-                if (operation_multiplication == operation_ || operation_division == operation_
-                        || operation_addition == oper || operation_soustraction == oper)
-                {
-                    Membre *copie = new Membre(*this);
-                    vider();
-                    membre1_ = copie;
-                    if (parenthese_ouverte == copie->parenthese_)
-                    {
-                        // Remonter la parenthese ouvrante au niveau de l'operation
-                        parenthese_ = copie->parenthese_;
-                        membre1_->parenthese_ = parenthese_Aucune;
-                    }
-                    operation_ = oper;
-                    membre2_ = new Membre(a);
-                    menr = true;
-                }
-                else
-                {
-                    // Aucune parenthese ou priorité sur l'operation precedente
-                    switch (oper)
-                    {
-                    case operation_multiplication:
-                    case operation_division:
-                        // Operation en cours est une operation prioritaire ==> appliquer sur le membre2_
-                        menr = membre2_->operator_generic(a, oper, true);
-                        break;
-                    case operation_addition:
-                    case operation_soustraction:
-                        // Traité dans le if() ci-dessus.
-                        break;
-                    case operation_Aucune:
-                        // Pas d'operation en cours ==> cas non gere !
-                        break;
-                    }
-                }
-            }
+            return true;
+        }
+
+
+        // Phase 5
+        // 'this->operation_' non prioritaire (add/sub) ==> Traitement ci-dessous
+        // 'oper' non prioritaire (add/sub) ==> Meme traitement que "'this->operation_' prioritaire (mul/div)" ci-dessus (=> Phase 4)
+        // 'oper' prioritaire (mul/div) ==> Allouer un nouveau 'membre2_' initialisé avec : 'membre1_' = ancien 'membre2_', 'operation_'='oper' et 'membre2_' = nouveau membre.
+        if (operation_multiplication == oper || operation_division == oper)
+        {
+            Membre *copie = membre2_;
+            membre2_ = new Membre();
+            membre2_->membre1_ = copie;
+            membre2_->operation_ = oper;
+            membre2_->membre2_ = new Membre(a);
+
+            return true;
         }
     }
+
     return menr;
 }
+
+void Membre::moveThisToMembre1(void)
+{
+    //Membre *copie = new Membre(*this);
+    //vider();
+    //membre1_ = copie;
+
+
+    // Optimisation à vérifier => semble equivalent.
+    // Deplacement du contenu de 'this' dans un nouveau 'this->membre1_'
+    Membre *copie = membre1_;
+    membre1_ = new Membre();
+    membre1_->nombre_ = nombre_;
+    membre1_->membre1_ = copie;
+    membre1_->operation_ = operation_;
+    membre1_->membre2_ = membre2_;
+    membre1_->parenthese_ = parenthese_;
+    membre1_->afficherFraction_ = afficherFraction_;
+
+    Membre vide;
+    nombre_ = vide.nombre_;
+    // 'membre1_' = 'new' ci-dessus
+    operation_ = vide.operation_;
+    membre2_ = vide.membre2_;
+    parenthese_ = vide.parenthese_;
+    afficherFraction_ = vide.afficherFraction_;
+}
+
 
 Membre & Membre::operator+=(const Membre & a)
 {
@@ -350,6 +477,11 @@ Membre & Membre::operator*=(const Membre & a)
     return *this;
 }
 
+void Membre::operator_aucuneOperation(const Membre& a)
+{
+    // 1er nombre d'une parenthese, donc sans operation
+    operator_generic(a, operation_Aucune, true);
+}
 
 ZFraction Membre::getResultat() const
 {
@@ -486,25 +618,25 @@ std::string Membre::afficherHTML(void) const
             break;
         case parenthese_ouverte:
             out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
-                    + nombre_->afficherHTML() + "</td>"
-                    + "   </tr>"
-                    + "</table>";
+                + nombre_->afficherHTML() + "</td>"
+                + "   </tr>"
+                + "</table>";
             break;
         case parenthese_fermee:
             out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
-                    + nombre_->afficherHTML() + "</td><td>)</td>"
-                    + "   </tr>"
-                    + "</table>";
+                + nombre_->afficherHTML() + "</td><td>)</td>"
+                + "   </tr>"
+                + "</table>";
             break;
         }
     }
     else if (isHalfComplex())
     {
         Membre *m = nullptr;
-        if (nullptr != membre1_)    { m = membre1_; }
-        if (nullptr != membre2_)    { m = membre2_; }
+        if (nullptr != membre1_) { m = membre1_; }
+        if (nullptr != membre2_) { m = membre2_; }
 
-        if(nullptr != m)
+        if (nullptr != m)
         {
             switch (parenthese_)
             {
@@ -513,15 +645,15 @@ std::string Membre::afficherHTML(void) const
                 break;
             case parenthese_ouverte:
                 out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
-                        + m->afficherHTML() + "</td>"
-                        + "   </tr>"
-                        + "</table>";
+                    + m->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
                 break;
             case parenthese_fermee:
                 out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
-                        + m->afficherHTML() + "</td><td>)</td>"
-                        + "   </tr>"
-                        + "</table>";
+                    + m->afficherHTML() + "</td><td>)</td>"
+                    + "   </tr>"
+                    + "</table>";
                 break;
             }
         }
@@ -538,27 +670,27 @@ std::string Membre::afficherHTML(void) const
             {
             case parenthese_Aucune:
                 out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>"
-                        + membre1_->afficherHTML() + "</td>"
-                        + "      <td>" + afficherOperationHTML() + "</td>"
-                        + "      <td>" + membre2_->afficherHTML() + "</td>"
-                        + "   </tr>"
-                        + "</table>";
+                    + membre1_->afficherHTML() + "</td>"
+                    + "      <td>" + afficherOperationHTML() + "</td>"
+                    + "      <td>" + membre2_->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
                 break;
             case parenthese_ouverte:
                 out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
-                        + membre1_->afficherHTML() + "</td>"
-                        + "      <td>" + afficherOperationHTML() + "</td>"
-                        + "      <td>" + membre2_->afficherHTML() + "</td>"
-                        + "   </tr>"
-                        + "</table>";
+                    + membre1_->afficherHTML() + "</td>"
+                    + "      <td>" + afficherOperationHTML() + "</td>"
+                    + "      <td>" + membre2_->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
                 break;
             case parenthese_fermee:
                 out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"text-align:center;vertical-align:middle;\">      <td>(</td><td>"
-                        + membre1_->afficherHTML() + "</td>"
-                        + "      <td>" + afficherOperationHTML() + "</td>"
-                        + "      <td>" + membre2_->afficherHTML() + "</td><td>)</td>"
-                        + "   </tr>"
-                        + "</table>";
+                    + membre1_->afficherHTML() + "</td>"
+                    + "      <td>" + afficherOperationHTML() + "</td>"
+                    + "      <td>" + membre2_->afficherHTML() + "</td><td>)</td>"
+                    + "   </tr>"
+                    + "</table>";
                 break;
             }
             break;
@@ -567,34 +699,34 @@ std::string Membre::afficherHTML(void) const
             {
             case parenthese_Aucune:
                 out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td style=\"text-align:center;\">"
-                        + membre1_->afficherHTML()
-                        + "<hr /></td>"     // Barre de fraction
-                        + "   </tr>"
-                        + "   <tr style=\"vertical-align:middle;\">"
-                        + "      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
-                        + "   </tr>"
-                        + "</table>";
+                    + membre1_->afficherHTML()
+                    + "<hr /></td>"     // Barre de fraction
+                    + "   </tr>"
+                    + "   <tr style=\"vertical-align:middle;\">"
+                    + "      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
                 break;
             case parenthese_ouverte:
                 out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td rowspan=\"2\" style=\"font-size:20px;\">(</td><td style=\"text-align:center;\">"
-                        + membre1_->afficherHTML()
-                        + "<hr /></td>"     // Barre de fraction
-                        + "   </tr>"
-                        + "   <tr style=\"vertical-align:middle;\">"
-                        + "      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
-                        + "   </tr>"
-                        + "</table>";
+                    + membre1_->afficherHTML()
+                    + "<hr /></td>"     // Barre de fraction
+                    + "   </tr>"
+                    + "   <tr style=\"vertical-align:middle;\">"
+                    + "      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
                 break;
             case parenthese_fermee:
                 out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td rowspan=\"2\" style=\"font-size:20px;\">(</td><td style=\"text-align:center;\">"
-                        + membre1_->afficherHTML()
-                        + "<hr /></td>"     // Barre de fraction
-                        + "<td rowspan=\"2\" style=\"font-size:20px;\">)</td>"
-                        + "   </tr>"
-                        + "   <tr style=\"vertical-align:middle;\">"
-                        + "      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
-                        + "   </tr>"
-                        + "</table>";
+                    + membre1_->afficherHTML()
+                    + "<hr /></td>"     // Barre de fraction
+                    + "<td rowspan=\"2\" style=\"font-size:20px;\">)</td>"
+                    + "   </tr>"
+                    + "   <tr style=\"vertical-align:middle;\">"
+                    + "      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
                 break;
             }
             break;
@@ -851,12 +983,6 @@ void Membre::ouvrirParenthese(operation oper)
     }
 }
 
-void Membre::operator_aucuneOperation(const Membre& a)
-{
-    // 1er nombre d'une parenthese, donc sans operation
-    operator_generic(a, operation_Aucune, true);
-}
-
 void Membre::ouvrirParenthese_valueless(operation oper)
 {
     // Positionner les parentheses "ouvrantes" (parenthese_ouverte)
@@ -874,11 +1000,13 @@ void Membre::ouvrirParenthese_valueless(operation oper)
             break;
         case parenthese_ouverte:
             // Deja ! Allouer un nouveau membre pour les nouvelles parentheses.
-            membre1_ = new Membre();
-            membre1_->ouvrirParenthese(oper);
+            membre2_ = new Membre();
+            membre2_->ouvrirParenthese(oper);
             break;
         }
     }
+    else
+        throw std::invalid_argument("Ajout d'un operateur inattendu pour l'ouverture de parenthese.");
 }
 
 void Membre::ouvrirParenthese_simple(operation oper)
@@ -900,10 +1028,8 @@ void Membre::ouvrirParenthese_simple(operation oper)
             break;
         case parenthese_Aucune:
         case parenthese_ouverte:
-            // Copie Parenthese sur membre1_ et ouvrante sur membre2_
+            // Copie nombre_ sur membre1_ et conserve parenthese_ et ouvrante sur membre2_
             membre1_ = new Membre(*nombre_);
-            membre1_->parenthese_ = parenthese_;
-            parenthese_ = parenthese_Aucune;
             delete nombre_; nombre_ = nullptr;
             operation_ = oper;
             membre2_ = new Membre();
@@ -911,6 +1037,8 @@ void Membre::ouvrirParenthese_simple(operation oper)
             break;
         }
     }
+    else
+        throw std::invalid_argument("Manque un operateur pour l'ouverture de parenthese.");
 }
 
 void Membre::ouvrirParenthese_halfComplex(operation oper)
@@ -919,37 +1047,18 @@ void Membre::ouvrirParenthese_halfComplex(operation oper)
 
     if (isHalfComplex())
     {
-        // Le membre est semi-complexe ==> l'autre membre ouvre ses parentheses
-        if (nullptr == membre1_)
+        if (nullptr != membre2_)
+            membre2_->ouvrirParenthese(oper);
+        else
         {
-            // Nouveau membre toujours dans "membre2_" => copie membre2_ dans membre1_.
-            membre1_ = membre2_;
-            membre2_ = nullptr;
-        }
-
-        if ((oper != operation_Aucune && operation_ == operation_Aucune)
-                || (oper == operation_Aucune && operation_ != operation_Aucune))
-        {
-            switch (parenthese_) {
-            case parenthese_Aucune:
-            case parenthese_ouverte:
-                if (oper != operation_Aucune)
-                {
-                    operation_ = oper;
-                }
-                // membre2_ est alloue avec des parentheses ouvrantes
+            if (oper != operation_Aucune && operation_ == operation_Aucune)
+            {
+                operation_ = oper;
                 membre2_ = new Membre();
                 membre2_->ouvrirParenthese(operation_Aucune);
-                break;
-            case parenthese_fermee:
-                // isHalfComplex() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
-                break;
             }
-        }
-        // isHalfComplex() sans operation avec parenthese ouverte => parentheses imbriquees
-        else if (oper == operation_Aucune && operation_ == operation_Aucune && parenthese_ == parenthese_ouverte)
-        {
-            membre1_->ouvrirParenthese(oper);
+            else
+                throw std::invalid_argument("Incoherence sur l'operateur pour l'ouverture de parenthese.");
         }
     }
 }
@@ -960,20 +1069,11 @@ void Membre::ouvrirParenthese_complex(operation oper)
 
     if (isComplex())
     {
-        if (oper != operation_Aucune)
-        {
-            // Le membre est complexe ==> Creer un nouveau membre pour ouvrir les parentheses
-            Membre *copie = new Membre(*this);
-            vider();
-            membre1_ = copie;
-            operation_ = oper;
-            membre2_ = new Membre();
-            membre2_->ouvrirParenthese(operation_Aucune);
-        }
-        // isComplex() sans operation => parentheses imbriquees
+        if (nullptr != membre2_)
+            membre2_->ouvrirParenthese(oper);
         else
         {
-            membre2_->ouvrirParenthese(oper);
+            throw std::invalid_argument("Faux membre complex pour l'ouverture de parenthese.");
         }
     }
 }
@@ -987,24 +1087,24 @@ bool Membre::fermerParenthese()
 
     if (isValueless())
     {
-        fpr = fermerParenthese_valueless();
+        fpr = fermerParenthese_valueless_simple();
     }
     else if (isSimple())
     {
-        fpr = fermerParenthese_simple();
+        fpr = fermerParenthese_valueless_simple();
     }
     else if (isHalfComplex())
     {
-        fpr = fermerParenthese_halfComplex();
+        fpr = fermerParenthese_halfComplex_complex();
     }
     else if (isComplex())
     {
-        fpr = fermerParenthese_complex();
+        fpr = fermerParenthese_halfComplex_complex();
     }
     return fpr;
 }
 
-bool Membre::fermerParenthese_valueless()
+bool Membre::fermerParenthese_valueless_simple()
 {
     // Positionner les parentheses "fermee" (parenthese_fermee)
 
@@ -1012,7 +1112,7 @@ bool Membre::fermerParenthese_valueless()
     bool fpr(false);
 
     // isValueless() avec operation => O_o => Ignorer ce cas
-    if (isValueless())
+    if (isValueless() || isSimple())
     {
         // Le membre est vide ==> Aucune interet d'avoir des parentheses !
         switch (parenthese_) {
@@ -1031,83 +1131,31 @@ bool Membre::fermerParenthese_valueless()
     return fpr;
 }
 
-bool Membre::fermerParenthese_simple()
+bool Membre::fermerParenthese_halfComplex_complex()
 {
     // Positionner les parentheses "fermantes" (parenthese_fermee)
 
     // Indique si la Fermeture de la Parenthese est Realisee
     bool fpr(false);
 
-    if (isSimple())
+    if (isHalfComplex() || isComplex())
     {
-        // Le membre est simple ==> Aucune interet d'avoir des parentheses !
-        switch (parenthese_) {
-        case parenthese_Aucune:
-        case parenthese_fermee:
-            break;
-        case parenthese_ouverte:
-            fpr = true;
-            break;
-        }
-        parenthese_ = parenthese_Aucune;
-    }
-    return fpr;
-}
-
-bool Membre::fermerParenthese_halfComplex()
-{
-    // Positionner les parentheses "fermantes" (parenthese_fermee)
-
-    // Indique si la Fermeture de la Parenthese est Realisee
-    bool fpr(false);
-
-    if (isHalfComplex())
-    {
-        if (nullptr == membre1_)
-        {
-            // Nouveau membre toujours dans "membre2_" => copie membre2_ dans membre1_.
-            membre1_ = membre2_;
-            membre2_ = nullptr;
-        }
-
-        // Le membre est semi-complexe ==> Fermer les parentheses les plus imbriquees en priorite.
-        if (membre1_->fermerParenthese())
+        // Le membre est (semi-)complexe ==> Fermer les parentheses les plus imbriquees en priorite.
+        if (nullptr != membre2_ && membre2_->fermerParenthese())
         {
             fpr = true;
-            if (membre1_->isValueless() && membre1_->parenthese_ == parenthese_Aucune)
-            {
-                // Liberer tous les membres vides sans parentheses
-                delete membre1_; membre1_ = nullptr;
-            }
-        }
-        // Pas de parenthese imbriquee => verifier la parenthese courante
-        else if (parenthese_ == parenthese_ouverte)
-        {
-            // Fermer la parenthese locale
-            parenthese_ = parenthese_fermee;
-            fpr = true;
-        }
-    }
-    return fpr;
-}
 
-bool Membre::fermerParenthese_complex()
-{
-    // Positionner les parentheses "fermantes" (parenthese_fermee)
-
-    // Indique si la Fermeture de la Parenthese est Realisee
-    bool fpr(false);
-
-    if (isComplex())
-    {
-        // Le membre est complexe ==> Fermer les parentheses les plus imbriquees en priorite.
-        if (membre2_->fermerParenthese())
-        {
-            fpr = true;
+            // Liberer le membre vide sans parentheses
             if (membre2_->isValueless() && membre2_->parenthese_ == parenthese_Aucune)
             {
-                // Liberer tous les membres vides sans parentheses
                 delete membre2_; membre2_ = nullptr;
+            }
+
+            // Deplace membre2_ avec parenthese fermees dans membre1_ => Simplifie l'arbre, car les parentheses fermees rendent le membre inalterable.
+            if (nullptr == membre1_ && membre2_->parenthese_ == parenthese_fermee)
+            {
+                membre1_ = membre2_;
+                membre2_ = nullptr;
             }
         }
         // Pas de parenthese imbriquee => verifier la parenthese courante

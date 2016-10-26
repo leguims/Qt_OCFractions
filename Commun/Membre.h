@@ -31,12 +31,14 @@ public:
     Membre& operator-=(const Membre& a);
     Membre& operator/=(const Membre& a);
     Membre& operator*=(const Membre& a);
+    void operator_aucuneOperation(const Membre&);
 private:
     bool operator_generic(const Membre& a, const operation oper, const bool =false);
     bool operator_valueless(const Membre& a, const operation oper);
     bool operator_simple(const Membre& a, const operation oper);
     bool operator_halfComplex(const Membre& a, const operation oper, const bool =false);
-    bool operator_complex(const Membre& a, const operation oper, const bool =false);
+    bool operator_complex(const Membre& a, const operation oper, const bool = false);
+    void moveThisToMembre1(void);
 
 public:
     ZFraction getResultat() const;
@@ -58,7 +60,6 @@ public:
     // Appelle m_membre1/2->simplifier() et si m_membre1/2->isSimple() sont vrais alors enregistre m_nombre=m_operation->getResultat() libere m_operation/m_membre1/m_membre2.
     bool simplifier();
     void ouvrirParenthese(operation =operation_Aucune);
-    void operator_aucuneOperation(const Membre&);
     bool fermerParenthese();
     void setAfficherFraction(bool =true);
     bool getAfficherFraction(void) const;
@@ -68,10 +69,8 @@ private:
     void ouvrirParenthese_simple(operation);
     void ouvrirParenthese_halfComplex(operation);
     void ouvrirParenthese_complex(operation);
-    bool fermerParenthese_valueless();
-    bool fermerParenthese_simple();
-    bool fermerParenthese_halfComplex();
-    bool fermerParenthese_complex();
+    bool fermerParenthese_valueless_simple();
+    bool fermerParenthese_halfComplex_complex();
 
 
 protected:
