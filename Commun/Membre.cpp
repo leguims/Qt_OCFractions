@@ -248,7 +248,7 @@ bool Membre::operator_halfComplex(const Membre & a, const operation oper, const 
             {
                 menr = membre2_->operator_generic(a, oper, false);
             }
-            if (!menr && nullptr != membre1_ && (membre1_->isHalfComplex() || membre1_->isComplex()))
+            else if(nullptr != membre1_ && (membre1_->isHalfComplex() || membre1_->isComplex()))
             {
                 menr = membre1_->operator_generic(a, oper, false);
             }
@@ -368,10 +368,6 @@ bool Membre::operator_complex(const Membre & a, const operation oper, const bool
             if (nullptr != membre2_ && (membre2_->isHalfComplex() || membre2_->isComplex()))
             {
                 menr = membre2_->operator_generic(a, oper, false);
-                if (!menr && nullptr != membre1_)
-                {
-                    menr = membre1_->operator_generic(a, oper, false);
-                }
             }
             if (menr)
                 return menr;
@@ -428,7 +424,7 @@ void Membre::moveThisToMembre1(void)
     //membre1_ = copie;
 
 
-    // Optimisation à vérifier => semble equivalent.
+    // Optimisation à vérifier => legerement plus rapide, presque equivalent. :(
     // Deplacement du contenu de 'this' dans un nouveau 'this->membre1_'
     Membre *copie = membre1_;
     membre1_ = new Membre();

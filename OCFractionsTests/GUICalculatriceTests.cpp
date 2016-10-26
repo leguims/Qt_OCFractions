@@ -58,6 +58,39 @@ namespace GUICalculatriceTests
             }
         }
 
+        TEST_METHOD(GUICalculatriceTests_saisiePlainText_011)
+        {
+            Logger::WriteMessage("\n GUICalculatriceTests_saisiePlainText_011");
+            wchar_t message[200];
+            try
+            {
+                {
+                    Logger::WriteMessage("2 + 2 (dedicace Pimousse)");
+
+                    GUICalulatrice	calcul;
+
+                    calcul.plainText(true);
+
+                    calcul.on_bouton_chiffre_2_clicked();
+
+                    calcul.on_bouton_addition_clicked();
+
+                    calcul.on_bouton_chiffre_2_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+
+                    ZFraction correction(4);
+                    Assert::IsTrue(calcul.getResultat() == correction);
+                    Logger::WriteMessage("\t ... ok !");
+                }
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
         TEST_METHOD(GUICalculatriceTests_saisiePlainText_020)
         {
             Logger::WriteMessage("\n GUICalculatriceTests_saisiePlainText_020");
@@ -311,6 +344,8 @@ namespace GUICalculatriceTests
             wchar_t message[200];
             try
             {
+                //for (int i = 0; i < 5'000; ++i)
+                //{
                 {
                     Logger::WriteMessage("( ( (1+2)-5 ) -4 ) /7");
 
@@ -352,6 +387,7 @@ namespace GUICalculatriceTests
                     Assert::IsTrue(calcul.getResultat() == correction);
                     Logger::WriteMessage("\t ... ok !");
                 }
+                //}
             }
             catch (...)
             {
