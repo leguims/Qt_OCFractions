@@ -91,6 +91,58 @@ namespace GUICalculatriceTests
             }
         }
 
+        TEST_METHOD(GUICalculatriceTests_saisiePlainText_012)
+        {
+            Logger::WriteMessage("\n GUICalculatriceTests_saisiePlainText_012");
+            wchar_t message[200];
+            try
+            {
+                {
+                    Logger::WriteMessage("(1+ (2/3))+(1/3)");
+
+                    GUICalulatrice	calcul;
+
+                    calcul.plainText(true);
+
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_chiffre_1_clicked();
+
+                    calcul.on_bouton_addition_clicked();
+
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_chiffre_2_clicked();
+                    calcul.on_bouton_division_clicked();
+                    calcul.on_bouton_chiffre_3_clicked();
+                    calcul.on_bouton_parenthese_fermante_clicked();
+
+                    calcul.on_bouton_parenthese_fermante_clicked();
+
+                    calcul.on_bouton_addition_clicked();
+
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_chiffre_1_clicked();
+                    calcul.on_bouton_division_clicked();    // ERREUR !!!!!
+                    calcul.on_bouton_chiffre_3_clicked();
+                    calcul.on_bouton_parenthese_fermante_clicked();
+
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+
+                    ZFraction correction(2);
+                    Assert::IsTrue(calcul.getResultat() == correction);
+                    Logger::WriteMessage("\t ... ok !");
+                }
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
         TEST_METHOD(GUICalculatriceTests_saisiePlainText_020)
         {
             Logger::WriteMessage("\n GUICalculatriceTests_saisiePlainText_020");

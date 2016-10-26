@@ -993,6 +993,7 @@ void Membre::ouvrirParenthese_valueless(operation oper)
             break;
         case parenthese_fermee:
             // isValueless() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
+            throw std::invalid_argument("Incoherence lors de l'ouverture de parenthese.");
             break;
         case parenthese_ouverte:
             // Deja ! Allouer un nouveau membre pour les nouvelles parentheses.
@@ -1021,6 +1022,7 @@ void Membre::ouvrirParenthese_simple(operation oper)
         switch (parenthese_) {
         case parenthese_fermee:
             // isSimple() et Fermee ?! O_o => ignorer l'ordre d'ouverture de parenthese
+            throw std::invalid_argument("Incoherence lors de l'ouverture de parenthese.");
             break;
         case parenthese_Aucune:
         case parenthese_ouverte:
@@ -1043,11 +1045,22 @@ void Membre::ouvrirParenthese_halfComplex(operation oper)
 
     if (isHalfComplex())
     {
-        if (nullptr != membre2_)
+        // Si les parenthese du membre en cours sont fermees => le deplacer dans un nouveau membre1_ et appliquer les parentheses au membre2_ associe
+        if (Membre::parenthese_fermee == parenthese_)
+        {
+            moveThisToMembre1();
+
+            operation_ = oper;
+            membre2_ = new Membre;
+            membre2_->ouvrirParenthese(Membre::operation_Aucune);
+        }
+        else if (nullptr != membre2_)
+        {
             membre2_->ouvrirParenthese(oper);
+        }
         else
         {
-            if (oper != operation_Aucune && operation_ == operation_Aucune)
+            if ( operation_Aucune != oper && operation_Aucune == operation_)
             {
                 operation_ = oper;
                 membre2_ = new Membre();
@@ -1065,7 +1078,16 @@ void Membre::ouvrirParenthese_complex(operation oper)
 
     if (isComplex())
     {
-        if (nullptr != membre2_)
+        // Si les parenthese du membre en cours sont fermees => le deplacer dans un nouveau membre1_ et appliquer les parentheses au membre2_ associe
+        if (Membre::parenthese_fermee == parenthese_)
+        {
+            moveThisToMembre1();
+
+            operation_ = oper;
+            membre2_ = new Membre;
+            membre2_->ouvrirParenthese(Membre::operation_Aucune);
+        }
+        else if (nullptr != membre2_)
             membre2_->ouvrirParenthese(oper);
         else
         {

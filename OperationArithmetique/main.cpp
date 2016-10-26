@@ -64,36 +64,10 @@ void test_setAfficherFraction(void)
     cout << endl << endl << "### test_setAfficherFraction :" << endl;
     Membre m0, m1(1), m2(2, 3);
     Membre m3(m1, Membre::operation::operation_addition, m2);
-    Membre m4(m3, Membre::operation::operation_addition, Membre(1, 3));
-    Membre m5(m4);
     Membre m6(Membre(Membre(1), Membre::operation::operation_addition, Membre(2, 3)), Membre::operation::operation_addition, Membre(1, 3));
     Membre m7(1, Membre::operation::operation_addition, 2);
     Membre m8(1, 2, Membre::operation::operation_addition, 2, 3);
     Membre m9(1);
-
-    m4.setAfficherFraction(false);
-    cout << "m4 = " << endl;
-    do
-    {
-        cout << m4 << endl;
-    } while (m4.simplifier());
-    if (m4.getResultat() != ZFraction(2))
-    {
-        cout << "!! BUG !! ==> Correction : m4 = 2" << endl; nbBug++;
-    }
-
-    cout << endl;
-
-    m5.setAfficherFraction();
-    cout << "m5 = " << endl;
-    do
-    {
-        cout << m5 << endl;
-    } while (m5.simplifier());
-    if (m5.getResultat() != ZFraction(2))
-    {
-        cout << "!! BUG !! ==> Correction : m5 = 2" << endl; nbBug++;
-    }
 
     cout << endl;
 
