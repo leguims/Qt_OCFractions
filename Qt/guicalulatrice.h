@@ -53,15 +53,18 @@ public:
     explicit GUICalulatrice(QWidget *parent = 0);
     ~GUICalulatrice();
     void plainText(bool);
+    std::string  afficherMembrePlainText();     // for debug only
+    std::string  afficherResultatPlainText();   // for debug only
+    ZFraction getResultat() const;
 
 private:
     Membre	membre_;
-    Membre::operation oper_;
-    int		saisieNumerateur_;
-    int		saisieDenominateur_;
-    bool	saisieDecimales_;
-    bool	saisieVide_;
-    bool	plainText_;
+	Membre::operation oper_ = Membre::operation_Aucune;
+	int		saisieNumerateur_ = 0;
+	int		saisieDenominateur_ = 1;
+	bool	saisieDecimales_ = false;
+	bool	saisieVide_ = true;
+	bool	plainText_ = false;
 
     Ui::GUICalulatrice *ui;
 };

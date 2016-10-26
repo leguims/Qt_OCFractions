@@ -4,12 +4,6 @@
 GUICalulatrice::GUICalulatrice(QWidget *parent) :
     QDialog(parent),
     membre_(),
-    oper_(Membre::operation_Aucune),
-    saisieNumerateur_(0),
-    saisieDenominateur_(1),
-    saisieDecimales_(false),
-    saisieVide_(true),
-    plainText_(false),
     ui(new Ui::GUICalulatrice)
 {
     ui->setupUi(this);
@@ -268,6 +262,14 @@ void GUICalulatrice::afficherMembre()
     }
 }
 
+std::string GUICalulatrice::afficherMembrePlainText()
+{
+    std::string out;
+    out = membre_.afficherPlainText();
+    out += Membre::afficherOperationPlainText(oper_);
+    return out;
+}
+
 void GUICalulatrice::afficherResultat()
 {
     if(plainText_)
@@ -278,6 +280,18 @@ void GUICalulatrice::afficherResultat()
     {
         ui->affichageResultat->append( "<br/>\n" + QString::fromUtf8( membre_.afficherHTML().data(), membre_.afficherHTML().size() ) );
     }
+}
+
+std::string  GUICalulatrice::afficherResultatPlainText()
+{
+    std::string out;
+    out = membre_.afficherPlainText();
+    return out;
+}
+
+ZFraction GUICalulatrice::getResultat() const
+{
+    return membre_.getResultat();
 }
 
 void GUICalulatrice::on_bouton_chiffre_9_clicked()
