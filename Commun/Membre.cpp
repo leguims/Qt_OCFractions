@@ -923,7 +923,7 @@ bool Membre::simplifier()
         operation_ = operation_Aucune;
     }
     // Si semi-complex avec membre simple, membre devient simple
-    if (isHalfComplex() && (nullptr != membre1_ && membre1_->isSimple() || nullptr != membre2_ && membre2_->isSimple()))
+    if (isHalfComplex() && ( (nullptr != membre1_ && membre1_->isSimple()) || (nullptr != membre2_ && membre2_->isSimple())) )
     {
         if (nullptr != membre1_)
         {

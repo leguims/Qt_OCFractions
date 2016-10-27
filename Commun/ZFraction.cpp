@@ -221,3 +221,24 @@ ZFraction operator-(ZFraction const& a)
     return copie;
 }
 
+//template <typename T = long int>
+bool operator==(ZFraction const& a, ZFraction const& b)
+{
+    return a.estEgal(b);
+}
+bool operator==(ZFraction const& a, long int const& b)
+{
+    return a.estEgal(b);
+}
+
+
+//template <typename T = long int>
+bool operator!=(ZFraction const& a, ZFraction const& b) // Astuce : a!=b <==> !(a==b)
+{
+    return !a.estEgal(b);
+}
+bool operator!=(ZFraction const& a, long int const& b) // Astuce : a!=b <==> !(a==b)
+{
+    return !a.estEgal(b);
+}
+

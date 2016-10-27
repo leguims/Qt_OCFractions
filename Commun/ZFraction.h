@@ -160,9 +160,9 @@ public:
 
 private:
     //Type d'affichage : fraction(true) ou reel(false)
-    bool _afficherFraction = true;  
     long int _numerateur = 0;   //Numerateur
     long int _denominateur = 1; //Denominateur
+    bool _afficherFraction = true;
 private:
     long int getPGCD(long int, long int) const;
     void simplifier();
@@ -173,7 +173,17 @@ private:
 std::ostream& operator<<(std::ostream& , ZFraction const& );
 ZFraction operator-(ZFraction const& a); // opérateur « moins unaire » (exemple : a= -b)
 
-template <typename T>
+//template <typename T = long int> ... ABANDON, conflit avec Qt
+bool operator==(ZFraction const& a, ZFraction const& b);
+bool operator==(ZFraction const& a, long int const& b);
+
+//template <typename T = long int> ... ABANDON, conflit avec Qt
+bool operator!=(ZFraction const& a, ZFraction const& b);
+bool operator!=(ZFraction const& a, long int const& b);
+
+
+
+template <typename T = long int>
 ZFraction operator+(ZFraction const& a, T const& b)
 {
     ZFraction copie(a);	//On utilise le constructeur de copie de la classe Duree !
@@ -181,7 +191,7 @@ ZFraction operator+(ZFraction const& a, T const& b)
     return copie;		//Et on renvoie le résultat. Ni a ni b n'ont changé.
 }
 
-template <typename T>
+template <typename T = long int>
 ZFraction operator-(ZFraction const& a, T const& b)
 {
     ZFraction copie(a);
@@ -189,7 +199,7 @@ ZFraction operator-(ZFraction const& a, T const& b)
     return copie;
 }
 
-template <typename T>
+template <typename T = long int>
 ZFraction operator/(ZFraction const& a, T const& b)
 {
     ZFraction copie(a);
@@ -197,7 +207,7 @@ ZFraction operator/(ZFraction const& a, T const& b)
     return copie;
 }
 
-template <typename T>
+template <typename T = long int>
 ZFraction operator*(ZFraction const& a, T const& b)
 {
     ZFraction copie(a);
@@ -205,42 +215,29 @@ ZFraction operator*(ZFraction const& a, T const& b)
     return copie;
 }
 
-template <typename T>
-bool operator==(ZFraction const& a, T const& b)
-{
-    return a.estEgal(b);
-}
 
-
-template <typename T>
-bool operator!=(ZFraction const& a, T const& b) // Astuce : a!=b <==> !(a==b)
-{
-    return !a.estEgal(b);
-}
-
-
-template <typename T>
+template <typename T = long int>
 bool operator<(ZFraction const& a, T const& b) // Astuce : a<b <==> !(a>b || a==b)
 {
     return !( a.estSuperieur(b) || a.estEgal(b) );
 }
 
 
-template <typename T>
+template <typename T = long int>
 bool operator<=(ZFraction const& a, T const& b) // Astuce : a<=b <==> !(a>b)
 {
     return !a.estSuperieur(b);
 }
 
 
-template <typename T>
+template <typename T = long int>
 bool operator>(ZFraction const& a, T const& b)
 {
     return a.estSuperieur(b);
 }
 
 
-template <typename T>
+template <typename T = long int>
 bool operator>=(ZFraction const& a, T const& b) // Astuce : a>=b <==> a>b || a==b
 {
     return a.estSuperieur(b) || a.estEgal(b);
