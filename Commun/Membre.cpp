@@ -761,14 +761,12 @@ void Membre::afficherOperation(std::ostream &out) const
 
 std::string Membre::afficherOperationPlainText(void) const
 {
-    std::string out = afficherOperationPlainText(operation_);
-    return out;
+    return afficherOperationPlainText(operation_);
 }
 
 std::string Membre::afficherOperationHTML(void) const
 {
-    std::string out = afficherOperationHTML(operation_);
-    return out;
+    return afficherOperationHTML(operation_);
 }
 
 std::string Membre::afficherOperationPlainText(operation oper)
@@ -798,27 +796,7 @@ std::string Membre::afficherOperationPlainText(operation oper)
 
 std::string Membre::afficherOperationHTML(operation oper)
 {
-    std::string out;
-    switch (oper)
-    {
-    case operation_addition:
-        out += "+";
-        break;
-    case operation_soustraction:
-        out += "-";
-        break;
-    case operation_multiplication:
-        out += "x";
-        break;
-    case operation_division:
-        out += "/";
-        break;
-    case operation_Aucune:
-        //    default:
-        out += " ";
-        break;
-    }
-    return out;
+    return afficherOperationPlainText(oper);
 }
 
 bool Membre::isEmpty() const
