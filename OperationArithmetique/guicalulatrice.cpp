@@ -203,7 +203,7 @@ void GUICalulatrice::afficherMembre()
     }
     else
     {
-        std::cout << membre_.afficherHTML();
+        std::cout << membre_.afficherHTML(true);
         std::cout << Membre::afficherOperationHTML(oper_) << std::endl;
     }
 }
@@ -224,7 +224,7 @@ void GUICalulatrice::afficherResultat()
     }
     else
     {
-        std::cout << membre_.afficherHTML() << std::endl;
+        std::cout << membre_.afficherHTML(true) << std::endl;
     }
 }
 

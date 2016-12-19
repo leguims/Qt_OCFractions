@@ -537,6 +537,11 @@ void Membre::afficher(std::ostream &out) const
 
 std::string Membre::afficherPlainText(void) const
 {
+    return Membre::afficherPlainText1();
+}
+
+std::string Membre::afficherPlainText1(void) const
+{
     std::string out;
     if (parenthese_ != parenthese_Aucune)
     {
@@ -586,7 +591,15 @@ std::string Membre::afficherPlainText(void) const
     return out;
 }
 
-std::string Membre::afficherHTML(void) const
+std::string Membre::afficherHTML(bool racine) const
+{
+    return Membre::afficherHTML1(racine);
+    //return Membre::afficherHTML2(racine);
+}
+
+// Méthode historique avec affichage propre (sauf centrage vertical).
+// Crée de nombreuses "<table>...</table>" qui provoque de gros ralentissements sur Qt.
+std::string Membre::afficherHTML1(bool racine) const
 {
     std::string out;
 
@@ -733,6 +746,156 @@ std::string Membre::afficherHTML(void) const
         // Erreur
         out += "Erreur : Membre vide3";
     }
+    return out;
+}
+
+// Méthode qui limite la création de tables, mais l'affichage est dégradé.
+// Disparition des ralentissements sur Qt.
+std::string Membre::afficherHTML2(bool racine) const
+{
+    std::string out;
+
+    // Membre racine donc debut de la table
+    if (racine)
+    {
+        out += "\n<table style=\"border-collapse:collapse;\">\n<tr style=\"text-align:center;vertical-align:middle;\"> <td>";
+    }
+
+    if (isEmpty() || isValueless())
+    {
+        switch (parenthese_)
+        {
+        case parenthese_Aucune:
+            out += " ";
+            break;
+        case parenthese_ouverte:
+            out += "( ";
+            break;
+        case parenthese_fermee:
+            out += "( )";
+            break;
+        }
+    }
+    else if (isSimple())
+    {
+        switch (parenthese_)
+        {
+        case parenthese_Aucune:
+            out += nombre_->afficherHTML();
+            break;
+        case parenthese_ouverte:
+            out += "(</td><td>"
+                + nombre_->afficherHTML() + "</td><td>";
+            break;
+        case parenthese_fermee:
+            out += "(</td><td>"
+                + nombre_->afficherHTML() + "</td><td>)</td><td>";
+            break;
+        }
+    }
+    else if (isHalfComplex())
+    {
+        Membre *m = nullptr;
+        if (nullptr != membre1_) { m = membre1_; }
+        if (nullptr != membre2_) { m = membre2_; }
+
+        if (nullptr != m)
+        {
+            switch (parenthese_)
+            {
+            case parenthese_Aucune:
+                out += m->afficherHTML();
+                break;
+            case parenthese_ouverte:
+                out += "(</td><td>"
+                    + m->afficherHTML() + "</td><td>";
+                break;
+            case parenthese_fermee:
+                out += "<td>(</td><td>"
+                    + m->afficherHTML() + "</td><td>)</td><td>";
+                break;
+            }
+        }
+    }
+    else if (isComplex())
+    {
+        switch (operation_)
+        {
+        case operation_addition:
+        case operation_soustraction:
+        case operation_multiplication:
+        case operation_Aucune:
+            switch (parenthese_)
+            {
+            case parenthese_Aucune:
+                out += membre1_->afficherHTML() + "</td><td>"
+                    + afficherOperationHTML() + "</td><td>"
+                    + membre2_->afficherHTML() + "</td><td>";
+                break;
+            case parenthese_ouverte:
+                out += "(</td><td>"
+                    + membre1_->afficherHTML() + "</td><td>"
+                    + afficherOperationHTML() + "</td><td>"
+                    + membre2_->afficherHTML() + "</td><td>";
+                break;
+            case parenthese_fermee:
+                out += "(</td><td>"
+                    + membre1_->afficherHTML() + "</td><td>"
+                    + afficherOperationHTML() + "</td><td>"
+                    + membre2_->afficherHTML() + "</td><td>)</td><td>";
+                break;
+            }
+            break;
+        case operation_division:
+            switch (parenthese_)
+            {
+            case parenthese_Aucune:
+                out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td style=\"text-align:center;\">"
+                    + membre1_->afficherHTML()
+                    + "<hr /></td>"     // Barre de fraction
+                    + "   </tr>"
+                    + "   <tr style=\"vertical-align:middle;\">"
+                    + "      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
+                break;
+            case parenthese_ouverte:
+                out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td rowspan=\"2\" style=\"font-size:20px;\">(</td><td style=\"text-align:center;\">"
+                    + membre1_->afficherHTML()
+                    + "<hr /></td>"     // Barre de fraction
+                    + "   </tr>"
+                    + "   <tr style=\"vertical-align:middle;\">"
+                    + "      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
+                break;
+            case parenthese_fermee:
+                out += "\n<table style=\"border-collapse:collapse;\">   <tr style=\"vertical-align:middle;\">      <td rowspan=\"2\" style=\"font-size:20px;\">(</td><td style=\"text-align:center;\">"
+                    + membre1_->afficherHTML()
+                    + "<hr /></td>"     // Barre de fraction
+                    + "<td rowspan=\"2\" style=\"font-size:20px;\">)</td>"
+                    + "   </tr>"
+                    + "   <tr style=\"vertical-align:middle;\">"
+                    + "      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
+                    + "   </tr>"
+                    + "</table>";
+                break;
+            }
+            break;
+        }
+    }
+    else
+    {
+        // Erreur
+        out += "Erreur : Membre vide3";
+    }
+
+    // Membre racine donc fin de la table
+    if (racine)
+    {
+        out += "</td></tr>\n</table>";
+    }
+
     return out;
 }
 

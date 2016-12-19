@@ -56,7 +56,7 @@ private:
 	int		saisieDenominateur_ = 1;
 	bool	saisieDecimales_ = false;
 	bool	saisieVide_ = true;
-	bool	plainText_ = true;
+	bool	plainText_ = false;
 };
 
 #endif // GUICALULATRICE_H

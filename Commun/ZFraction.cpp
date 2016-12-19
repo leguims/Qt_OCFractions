@@ -87,6 +87,11 @@ void ZFraction::afficher(ostream &out) const
 
 std::string ZFraction::afficherPlainText(void) const
 {
+    return ZFraction::afficherPlainText1();
+}
+
+std::string ZFraction::afficherPlainText1(void) const
+{
     std::string out;
     if (_afficherFraction)
     {
@@ -105,19 +110,24 @@ std::string ZFraction::afficherPlainText(void) const
 
 std::string ZFraction::afficherHTML(void) const
 {
+    return ZFraction::afficherHTML1();
+}
+
+std::string ZFraction::afficherHTML1(void) const
+{
     std::string out;
     if (_afficherFraction)
     {
         if (_denominateur != 1)
         {
             out += "\n<table style=\"border-collapse:collapse;\">   <tr>      <td style=\"text-align:center;vertical-align:middle;\">"
-                    + std::to_string(_numerateur)
-                    + "<hr /></td>"     // Barre de fraction
-                    + "   </tr>"
-                    + "   <tr>"
-                    + "      <td style=\"text-align:center;vertical-align:middle;\">"+ std::to_string(_denominateur) +"</td>"
-                    + "   </tr>"
-                    + "</table>";
+                + std::to_string(_numerateur)
+                + "<hr /></td>"     // Barre de fraction
+                + "   </tr>"
+                + "   <tr>"
+                + "      <td style=\"text-align:center;vertical-align:middle;\">" + std::to_string(_denominateur) + "</td>"
+                + "   </tr>"
+                + "</table>";
         }
         else
         {

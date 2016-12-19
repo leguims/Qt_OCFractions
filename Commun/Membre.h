@@ -44,7 +44,7 @@ public:
     ZFraction getResultat() const;
     void afficher(std::ostream &) const;
     std::string afficherPlainText(void) const;
-    std::string afficherHTML(void) const;
+    std::string afficherHTML(bool =false) const;
     void afficherOperation(std::ostream &) const;
     std::string afficherOperationPlainText(void) const;
     std::string afficherOperationHTML(void) const;
@@ -65,6 +65,9 @@ public:
     bool getAfficherFraction(void) const;
 
 private:
+    std::string afficherPlainText1(void) const;
+    std::string afficherHTML1(bool) const;
+    std::string afficherHTML2(bool) const;
     void ouvrirParenthese_valueless(operation);
     void ouvrirParenthese_simple(operation);
     void ouvrirParenthese_halfComplex(operation);

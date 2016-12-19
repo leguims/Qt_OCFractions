@@ -236,29 +236,35 @@ void GUICalulatrice::enregistrerNombre()
 
 void GUICalulatrice::afficherMembre()
 {
+    std::string aMembre, aOper;
+
     if(plainText_)
     {
-        ui->affichageResultat->setText( QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
+        aMembre = membre_.afficherPlainText();
+        ui->affichageResultat->setText( QString::fromUtf8( aMembre.data(), aMembre.size() ) );
 
         // Move cursor into end of line
         QTextCursor cursor = ui->affichageResultat->textCursor();
         cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
         ui->affichageResultat->setTextCursor(cursor);
 
-        ui->affichageResultat->insertPlainText( QString::fromUtf8( Membre::afficherOperationPlainText(oper_).data(), Membre::afficherOperationPlainText(oper_).size() ) );
-        //ui->affichageResultat->append( QString::fromUtf8( Membre::afficherOperationPlainText(oper_).data(), Membre::afficherOperationPlainText(oper_).size() ) );
+        aOper = Membre::afficherOperationPlainText(oper_);
+        ui->affichageResultat->insertPlainText( QString::fromUtf8( aOper.data(), aOper.size() ) );
+        //ui->affichageResultat->append( QString::fromUtf8( aOper.data(), aOper.size() ) );
     }
     else
     {
-        ui->affichageResultat->setHtml( QString::fromUtf8( membre_.afficherHTML().data(), membre_.afficherHTML().size() ) );
+        aMembre = membre_.afficherHTML(true);
+        ui->affichageResultat->setHtml( QString::fromUtf8( aMembre.data(), aMembre.size() ) );
 
         // Move cursor into end of line
         QTextCursor cursor = ui->affichageResultat->textCursor();
         cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
         ui->affichageResultat->setTextCursor(cursor);
 
-        ui->affichageResultat->insertHtml( QString::fromUtf8( Membre::afficherOperationHTML(oper_).data(), Membre::afficherOperationHTML(oper_).size() ) );
-        //ui->affichageResultat->append( QString::fromUtf8( Membre::afficherOperationHTML(oper_).data(), Membre::afficherOperationHTML(oper_).size() ) );
+        aOper = Membre::afficherOperationHTML(oper_);
+        ui->affichageResultat->insertHtml( QString::fromUtf8( aOper.data(), aOper.size() ) );
+        //ui->affichageResultat->append( QString::fromUtf8( aOper.data(), aOper.size() ) );
     }
 }
 
@@ -272,13 +278,17 @@ std::string GUICalulatrice::afficherMembrePlainText()
 
 void GUICalulatrice::afficherResultat()
 {
+    std::string aMembre;
+
     if(plainText_)
     {
-        ui->affichageResultat->append( "\n" + QString::fromUtf8( membre_.afficherPlainText().data(), membre_.afficherPlainText().size() ) );
+        aMembre = membre_.afficherPlainText();
+        ui->affichageResultat->append( "\n" + QString::fromUtf8( aMembre.data(), aMembre.size() ) );
     }
     else
     {
-        ui->affichageResultat->append( "<br/>\n" + QString::fromUtf8( membre_.afficherHTML().data(), membre_.afficherHTML().size() ) );
+        aMembre = membre_.afficherHTML(true);
+        ui->affichageResultat->append( "<br/>\n" + QString::fromUtf8( aMembre.data(), aMembre.size() ) );
     }
 }
 

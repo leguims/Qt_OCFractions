@@ -164,6 +164,8 @@ private:
     long int _denominateur = 1; //Denominateur
     bool _afficherFraction = true;
 private:
+    std::string afficherPlainText1(void) const;
+    std::string afficherHTML1(void) const;
     long int getPGCD(long int, long int) const;
     void simplifier();
     void verifierDenominateur() const;
