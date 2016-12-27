@@ -11,6 +11,8 @@ public:
     ZFraction(ZFraction const&);
     ~ZFraction();
     void afficher(std::ostream &out) const;
+    int getHauteur() const;
+    int getLargeur() const;
     std::string afficherPlainText(void) const;
     std::string afficherHTML(void) const;
     long int getNumerateur(void) const;
@@ -166,6 +168,7 @@ private:
 private:
     std::string afficherPlainText1(void) const;
     std::string afficherHTML1(void) const;
+    std::string afficherHTML2(void) const;
     long int getPGCD(long int, long int) const;
     void simplifier();
     void verifierDenominateur() const;

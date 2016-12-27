@@ -1,5 +1,7 @@
 #include "Membre.h"
 
+#include <algorithm>    // std::max
+
 using namespace std;
 
 Membre::Membre()
@@ -535,6 +537,96 @@ void Membre::afficher(std::ostream &out) const
     out << flush;
 }
 
+int Membre::getHauteur() const
+{
+    int hauteur = 0;
+
+    if (isSimple())
+    {
+        hauteur = nombre_->getHauteur();
+    }
+    else if (isHalfComplex())
+    {
+        if (nullptr != membre1_)
+        {
+            hauteur = membre1_->getHauteur();
+        }
+
+        if (nullptr != membre2_)
+        {
+            hauteur = membre2_->getHauteur();
+        }
+    }
+    else if (isComplex())
+    {
+        switch (operation_)
+        {
+        case operation_addition:
+        case operation_soustraction:
+        case operation_multiplication:
+        case operation_Aucune:
+            hauteur = std::max(membre1_->getHauteur(), membre2_->getHauteur());
+            break;
+        case operation_division:
+            hauteur = membre1_->getHauteur() + membre2_->getHauteur() + 1;
+            break;
+        }
+    }
+
+    return hauteur;
+}
+
+int Membre::getLargeur() const
+{
+    int largeur = 0;
+
+    if (isSimple())
+    {
+        largeur = nombre_->getLargeur();
+    }
+    else if (isHalfComplex())
+    {
+        if (nullptr != membre1_)
+        {
+            largeur = membre1_->getLargeur();
+        }
+
+        if (nullptr != membre2_)
+        {
+            largeur = membre2_->getLargeur();
+        }
+    }
+    else if (isComplex())
+    {
+        switch (operation_)
+        {
+        case operation_addition:
+        case operation_soustraction:
+        case operation_multiplication:
+        case operation_Aucune:
+            largeur = membre1_->getLargeur() + membre2_->getLargeur() + 1;
+            break;
+        case operation_division:
+            largeur = std::max(membre1_->getLargeur(), membre2_->getLargeur());
+            break;
+        }
+    }
+
+    switch (parenthese_)
+    {
+    case parenthese_Aucune:
+        break;
+    case parenthese_ouverte:
+        ++largeur;
+        break;
+    case parenthese_fermee:
+        largeur += 2;
+        break;
+    }
+
+    return largeur;
+}
+
 std::string Membre::afficherPlainText(void) const
 {
     return Membre::afficherPlainText1();
@@ -593,8 +685,9 @@ std::string Membre::afficherPlainText1(void) const
 
 std::string Membre::afficherHTML(bool racine) const
 {
-    return Membre::afficherHTML1(racine);
+    //return Membre::afficherHTML1(racine);
     //return Membre::afficherHTML2(racine);
+    return Membre::afficherHTML3(racine);
 }
 
 // Méthode historique avec affichage propre (sauf centrage vertical).
@@ -894,6 +987,149 @@ std::string Membre::afficherHTML2(bool racine) const
     if (racine)
     {
         out += "</td></tr>\n</table>";
+    }
+
+    return out;
+}
+
+// Méthode qui restreint les "<table>" à la racine et aux fractions.
+// Méthode qui restreint les "styles" à la balise "<table>".
+// Avertissement : Les alignement adoptés sont obligatoires pour le rendu sur Qt, meme s'ils seraient facultatifs pour un navigateur classique.
+// Disparition des ralentissements sur Qt.
+std::string Membre::afficherHTML3(bool racine) const
+{
+    std::string out;
+
+    if (racine)
+    {
+        out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td style=\"text-align:center;\">";
+    }
+
+    if (isEmpty() || isValueless())
+    {
+        switch (parenthese_)
+        {
+        case parenthese_Aucune:
+            out += " ";
+            break;
+        case parenthese_ouverte:
+            out += "( ";
+            break;
+        case parenthese_fermee:
+            out += "( )";
+            break;
+        }
+    }
+    else if (isSimple())
+    {
+        switch (parenthese_)
+        {
+        case parenthese_Aucune:
+            out += nombre_->afficherHTML();
+            break;
+        case parenthese_ouverte:
+            out += "(</td>\n      <td style=\"text-align:center;\">" + nombre_->afficherHTML();
+            break;
+        case parenthese_fermee:
+            out += "(</td>\n      <td style=\"text-align:center;\">" + nombre_->afficherHTML() + "</td>\n      <td>)";
+            break;
+        }
+    }
+    else if (isHalfComplex())
+    {
+        Membre *m = nullptr;
+        if (nullptr != membre1_) { m = membre1_; }
+        if (nullptr != membre2_) { m = membre2_; }
+
+        if (nullptr != m)
+        {
+            switch (parenthese_)
+            {
+            case parenthese_Aucune:
+                out += m->afficherHTML();
+                break;
+            case parenthese_ouverte:
+                out += "(</td>\n      <td style=\"text-align:center;\">" + m->afficherHTML();
+                break;
+            case parenthese_fermee:
+                out += "(</td>\n      <td style=\"text-align:center;\">" + m->afficherHTML() + "</td>\n      <td style=\"text-align:center;\">)";
+                break;
+            }
+        }
+    }
+    else if (isComplex())
+    {
+        switch (operation_)
+        {
+        case operation_addition:
+        case operation_soustraction:
+        case operation_multiplication:
+        case operation_Aucune:
+            switch (parenthese_)
+            {
+            case parenthese_Aucune:
+                out += membre1_->afficherHTML() + "</td>"
+                    + "\n      <td style=\"text-align:center;\">" + afficherOperationHTML() + "</td>"
+                    + "\n      <td style=\"text-align:center;\">" + membre2_->afficherHTML();
+                break;
+            case parenthese_ouverte:
+                out += "(</td>\n      <td style=\"text-align:center;\">" + membre1_->afficherHTML() + "</td>"
+                    + "\n      <td style=\"text-align:center;\">" + afficherOperationHTML() + "</td>"
+                    + "\n      <td style=\"text-align:center;\">" + membre2_->afficherHTML();
+                break;
+            case parenthese_fermee:
+                out += "(</td>\n      <td style=\"text-align:center;\">" + membre1_->afficherHTML() + "</td>"
+                    + "\n      <td style=\"text-align:center;\">" + afficherOperationHTML() + "</td>"
+                    + "\n      <td style=\"text-align:center;\">" + membre2_->afficherHTML() + "</td>"
+                    + "\n      <td style=\"text-align:center;\">)";
+                break;
+            }
+            break;
+        case operation_division:
+            switch (parenthese_)
+            {
+            case parenthese_Aucune:
+                out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td style=\"text-align:center;\">"
+                    + membre1_->afficherHTML() + "</td>"
+                    + "\n   </tr>"
+                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"     // Barre de fraction + Denominateur
+                    + "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\"><hr />" + membre2_->afficherHTML() + "</td>"
+                    + "\n   </tr>"
+                    + "\n</table>";
+                break;
+            case parenthese_ouverte:
+                out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td>(</td>\n      <td style=\"text-align:center;\">"
+                    + membre1_->afficherHTML() + "</td>"
+                    + "\n   </tr>"
+                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"     // Barre de fraction + Denominateur
+                    + "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\"><hr />" + membre2_->afficherHTML() + "</td>"
+                    + "\n   </tr>"
+                    + "\n</table>";
+                break;
+            case parenthese_fermee:
+                out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td>(</td>\n      <td style=\"text-align:center;\">"
+                    + membre1_->afficherHTML() + "</td>"
+                    + "\n      <td style=\"text-align:center;\">)</td>"
+                    + "\n   </tr>"
+                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"     // Barre de fraction + Denominateur
+                        + "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\"><hr />" + membre2_->afficherHTML() + "</td>"
+                    + "\n   </tr>"
+                    + "\n</table>";
+                break;
+            }
+            break;
+        }
+    }
+    else
+    {
+        // Erreur
+        out += "Erreur : Membre vide3";
+    }
+
+    // Membre racine donc fin de la table
+    if (racine)
+    {
+        out += "</td>\n   </tr>\n</table>";
     }
 
     return out;

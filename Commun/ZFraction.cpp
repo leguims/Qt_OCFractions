@@ -85,6 +85,25 @@ void ZFraction::afficher(ostream &out) const
     }
 }
 
+int ZFraction::getHauteur() const
+{
+    int hauteur = 1;
+
+    if (_denominateur != 1)
+    {
+        hauteur = 3;
+    }
+
+    return hauteur;
+}
+
+int ZFraction::getLargeur() const
+{
+    int largeur = 1;
+
+    return largeur;
+}
+
 std::string ZFraction::afficherPlainText(void) const
 {
     return ZFraction::afficherPlainText1();
@@ -110,7 +129,7 @@ std::string ZFraction::afficherPlainText1(void) const
 
 std::string ZFraction::afficherHTML(void) const
 {
-    return ZFraction::afficherHTML1();
+    return ZFraction::afficherHTML2();
 }
 
 std::string ZFraction::afficherHTML1(void) const
@@ -122,10 +141,42 @@ std::string ZFraction::afficherHTML1(void) const
         {
             out += "\n<table style=\"border-collapse:collapse;\">   <tr>      <td style=\"text-align:center;vertical-align:middle;\">"
                 + std::to_string(_numerateur)
-                + "<hr /></td>"     // Barre de fraction
+                + "</td>"
                 + "   </tr>"
-                + "   <tr>"
-                + "      <td style=\"text-align:center;vertical-align:middle;\">" + std::to_string(_denominateur) + "</td>"
+                + "   <tr>"     // Barre de fraction + Denominateur
+                + "      <td style=\"text-align:center;vertical-align:middle;\">"
+                + "         <hr />" + std::to_string(_denominateur)
+                + "      </td>"
+                + "   </tr>"
+                + "</table>";
+        }
+        else
+        {
+            out += std::to_string(_numerateur);
+        }
+    }
+    else
+    {
+        out += std::to_string(getDouble());
+    }
+    return out;
+}
+
+std::string ZFraction::afficherHTML2(void) const
+{
+    std::string out;
+    if (_afficherFraction)
+    {
+        if (_denominateur != 1)
+        {
+            out += "\n<table style=\"border-collapse:collapse;text-align:center;\">   <tr>      <td>"
+                + std::to_string(_numerateur)
+                + "</td>"
+                + "   </tr>"
+                + "   <tr>"     // Barre de fraction + Denominateur
+                + "      <td>"
+                + "         <hr />" + std::to_string(_denominateur)
+                + "      </td>"
                 + "   </tr>"
                 + "</table>";
         }
