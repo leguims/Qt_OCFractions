@@ -1031,7 +1031,8 @@ std::string Membre::afficherHTML3(bool racine) const
             out += "(</td>\n      <td style=\"text-align:center;\">" + nombre_->afficherHTML();
             break;
         case parenthese_fermee:
-            out += "(</td>\n      <td style=\"text-align:center;\">" + nombre_->afficherHTML() + "</td>\n      <td>)";
+            out += nombre_->afficherHTML();
+            //out += "(</td>\n      <td style=\"text-align:center;\">" + nombre_->afficherHTML() + "</td>\n      <td>)";
             break;
         }
     }
@@ -1086,33 +1087,51 @@ std::string Membre::afficherHTML3(bool racine) const
             }
             break;
         case operation_division:
+            // Placement de la barre de fraction + centrage
+            std::string headNum, tailNum;
+            std::string headDen, tailDen;
+            if(membre1_->getLargeur() >= membre2_->getLargeur())
+            {
+                headNum = "\n      <td style=\"text-align:center;\">";
+                tailNum = "</td>";
+                headDen = "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\"><hr />";
+                tailDen = "</td>";
+            }
+            else
+            {
+                headNum = "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre2_->getLargeur()) + "\">";
+                tailNum = "<hr /></td>";
+                headDen = "\n      <td style=\"text-align:center;\">";
+                tailDen = "</td>";
+            }
+            // Placement des parentheses + presentation globale
             switch (parenthese_)
             {
             case parenthese_Aucune:
-                out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td style=\"text-align:center;\">"
-                    + membre1_->afficherHTML() + "</td>"
+                out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">"
+                    + headNum + membre1_->afficherHTML() + tailNum
                     + "\n   </tr>"
                     + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"     // Barre de fraction + Denominateur
-                    + "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\"><hr />" + membre2_->afficherHTML() + "</td>"
+                    + headDen + membre2_->afficherHTML() + tailDen
                     + "\n   </tr>"
                     + "\n</table>";
                 break;
             case parenthese_ouverte:
-                out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td>(</td>\n      <td style=\"text-align:center;\">"
-                    + membre1_->afficherHTML() + "</td>"
+                out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td>(</td>"
+                    + headNum + membre1_->afficherHTML() + tailNum
                     + "\n   </tr>"
                     + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"     // Barre de fraction + Denominateur
-                    + "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\"><hr />" + membre2_->afficherHTML() + "</td>"
+                    + headDen + membre2_->afficherHTML() + tailDen
                     + "\n   </tr>"
                     + "\n</table>";
                 break;
             case parenthese_fermee:
-                out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td>(</td>\n      <td style=\"text-align:center;\">"
-                    + membre1_->afficherHTML() + "</td>"
+                out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td>(</td>"
+                    + headNum + membre1_->afficherHTML() + tailNum
                     + "\n      <td style=\"text-align:center;\">)</td>"
                     + "\n   </tr>"
                     + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"     // Barre de fraction + Denominateur
-                        + "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\"><hr />" + membre2_->afficherHTML() + "</td>"
+                    + headDen + membre2_->afficherHTML() + tailDen
                     + "\n   </tr>"
                     + "\n</table>";
                 break;
