@@ -555,7 +555,7 @@ namespace GUICalculatriceTests
 
                     calcul.on_bouton_chiffre_1_clicked();
                     calcul.on_bouton_addition_clicked();
-                    Logger::WriteMessage((std::to_string(++i)+std::string(" : ")+ calcul.afficherMembrePlainText()).c_str());
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
 
                     calcul.on_bouton_parenthese_ouvrante_clicked();
                     calcul.on_bouton_chiffre_2_clicked();
@@ -603,6 +603,116 @@ namespace GUICalculatriceTests
                     calcul.on_bouton_resultat_clicked();
 
                     ZFraction correction(17, 6);
+                    Assert::IsTrue(calcul.getResultat() == correction);
+                    Logger::WriteMessage("\t ... ok !");
+                }
+                //}
+            }
+            catch (...)
+            {
+                swprintf_s(message, L"Mauvaise exception generee");
+                Assert::Fail(message, LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(GUICalculatriceTests_saisiePlainText_08)
+        {
+            Logger::WriteMessage("\n GUICalculatriceTests_saisiePlainText_08");
+            wchar_t message[200];
+            try
+            {
+                //for (int i = 0; i < 1'000; ++i)
+                //{
+                {
+                    Logger::WriteMessage("((1+3)*5)/9-2+(((7-3)/5)/((9-4)/3))*5-1");
+                    int i(0);
+
+                    GUICalulatrice	calcul;
+
+                    calcul.plainText(false);
+
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_chiffre_1_clicked();
+                    calcul.on_bouton_addition_clicked();
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
+
+                    calcul.on_bouton_chiffre_3_clicked();
+                    calcul.on_bouton_parenthese_fermante_clicked();
+                    calcul.on_bouton_division_clicked();
+                    calcul.on_bouton_chiffre_7_clicked();
+                    calcul.on_bouton_multiplication_clicked();
+                    calcul.on_bouton_chiffre_5_clicked();
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
+
+                    calcul.on_bouton_parenthese_fermante_clicked();
+                    calcul.on_bouton_division_clicked();
+                    calcul.on_bouton_chiffre_9_clicked();
+                    calcul.on_bouton_parenthese_fermante_clicked();
+                    calcul.on_bouton_soustraction_clicked();
+                    calcul.on_bouton_chiffre_2_clicked();
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
+
+                    calcul.on_bouton_addition_clicked();
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_chiffre_7_clicked();
+                    calcul.on_bouton_soustraction_clicked();
+                    calcul.on_bouton_chiffre_3_clicked();
+                    calcul.on_bouton_parenthese_fermante_clicked();
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
+
+                    calcul.on_bouton_division_clicked();
+                    calcul.on_bouton_chiffre_5_clicked();
+                    calcul.on_bouton_parenthese_fermante_clicked();
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
+
+                    calcul.on_bouton_division_clicked();
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_parenthese_ouvrante_clicked();
+                    calcul.on_bouton_chiffre_9_clicked();
+                    calcul.on_bouton_soustraction_clicked();
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
+
+                    calcul.on_bouton_chiffre_4_clicked();
+                    calcul.on_bouton_parenthese_fermante_clicked();
+                    calcul.on_bouton_division_clicked();
+                    calcul.on_bouton_chiffre_3_clicked();
+                    calcul.on_bouton_parenthese_fermante_clicked();
+                    calcul.on_bouton_parenthese_fermante_clicked();
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
+
+                    calcul.on_bouton_multiplication_clicked();
+                    calcul.on_bouton_chiffre_5_clicked();
+                    calcul.on_bouton_soustraction_clicked();
+                    calcul.on_bouton_chiffre_1_clicked();
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
+
+                    calcul.on_bouton_resultat_clicked();
+                    Logger::WriteMessage((std::to_string(++i) + std::string(" : ") + calcul.afficherMembrePlainText()).c_str());
+
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+                    calcul.on_bouton_resultat_clicked();
+
+                    calcul.on_bouton_resultat_clicked();
+
+                    ZFraction correction = ZFraction(-106, 63) + ZFraction(7, 5);
                     Assert::IsTrue(calcul.getResultat() == correction);
                     Logger::WriteMessage("\t ... ok !");
                 }
