@@ -1474,20 +1474,52 @@ void Membre::ouvrirParenthese_complex(operation oper)
 
     if (isComplex())
     {
-        // Si les parenthese du membre en cours sont fermees => le deplacer dans un nouveau membre1_ et appliquer les parentheses au membre2_ associe
-        if (Membre::parenthese_fermee == parenthese_)
+        // Aucune operation => Chercher le membre ValueLess a remplir avec la parenthese
+        if (operation::operation_Aucune == oper)
         {
-            moveThisToMembre1();
-
-            operation_ = oper;
-            membre2_ = new Membre;
-            membre2_->ouvrirParenthese(Membre::operation_Aucune);
+            if (nullptr != membre2_)
+                membre2_->ouvrirParenthese(oper);
+            else
+                throw std::invalid_argument("Faux membre complex pour l'ouverture de parenthese sans opération.");
         }
-        else if (nullptr != membre2_)
-            membre2_->ouvrirParenthese(oper);
+        // Avec une operation => Ajouter les parentheses sans denaturer les priorites d'operations en cours
         else
         {
-            throw std::invalid_argument("Faux membre complex pour l'ouverture de parenthese.");
+            // Si les parenthese du membre en cours sont fermees => le deplacer dans un nouveau membre1_ et appliquer les parentheses au membre2_ associe
+            if (Membre::parenthese_fermee == parenthese_)
+            {
+                moveThisToMembre1();
+
+                operation_ = oper;
+                membre2_ = new Membre;
+                membre2_->ouvrirParenthese(Membre::operation_Aucune);
+            }
+            else if (nullptr != membre2_)
+            {
+                // Si le membre2_ est simple ALORS veiller a tenir compte de l'operation 'oper'
+                if (membre2_->isSimple())
+                {
+                    if (operation::operation_multiplication == oper || operation::operation_division == oper)
+                    {
+                        // Traiter le membre 2 avec des parentheses implicites => il ajoute lui-meme la parenthese
+                        membre2_->ouvrirParenthese(oper);
+                    }
+                    else
+                    {
+                        // Addition / Soustraction
+                        // Le membre 2 actuel doit rester lie au membre 1
+                        moveThisToMembre1();
+
+                        operation_ = oper;
+                        membre2_ = new Membre;
+                        membre2_->ouvrirParenthese(Membre::operation_Aucune);
+                    }
+                }
+                else
+                    membre2_->ouvrirParenthese(oper);
+            }
+            else
+                throw std::invalid_argument("Faux membre complex pour l'ouverture de parenthese.");
         }
     }
 }

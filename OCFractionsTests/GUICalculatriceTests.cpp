@@ -704,14 +704,6 @@ namespace GUICalculatriceTests
                     calcul.on_bouton_resultat_clicked();
                     calcul.on_bouton_resultat_clicked();
 
-                    calcul.on_bouton_resultat_clicked();
-                    calcul.on_bouton_resultat_clicked();
-                    calcul.on_bouton_resultat_clicked();
-                    calcul.on_bouton_resultat_clicked();
-                    calcul.on_bouton_resultat_clicked();
-
-                    calcul.on_bouton_resultat_clicked();
-
                     ZFraction correction = ZFraction(-106, 63) + ZFraction(7, 5);
                     Assert::IsTrue(calcul.getResultat() == correction);
                     Logger::WriteMessage("\t ... ok !");
