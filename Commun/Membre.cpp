@@ -685,11 +685,14 @@ std::string Membre::afficherPlainText1(void) const
 
 std::string Membre::afficherHTML(bool racine) const
 {
-    //return Membre::afficherHTML1(racine);
-    //return Membre::afficherHTML2(racine);
+#if 0
+    return Membre::afficherHTML1(racine);
+    return Membre::afficherHTML2(racine);
+#endif
     return Membre::afficherHTML3(racine);
 }
 
+#if 0
 // Méthode historique avec affichage propre (sauf centrage vertical).
 // Crée de nombreuses "<table>...</table>" qui provoque de gros ralentissements sur Qt.
 std::string Membre::afficherHTML1(bool racine) const
@@ -841,7 +844,9 @@ std::string Membre::afficherHTML1(bool racine) const
     }
     return out;
 }
+#endif
 
+#if 0
 // Méthode qui limite la création de tables, mais l'affichage est dégradé.
 // Disparition des ralentissements sur Qt.
 std::string Membre::afficherHTML2(bool racine) const
@@ -991,7 +996,9 @@ std::string Membre::afficherHTML2(bool racine) const
 
     return out;
 }
+#endif
 
+#if 1
 // Méthode qui restreint les "<table>" à la racine et aux fractions.
 // Méthode qui restreint les "styles" à la balise "<table>".
 // Avertissement : Les alignement adoptés sont obligatoires pour le rendu sur Qt, meme s'ils seraient facultatifs pour un navigateur classique.
@@ -1089,18 +1096,21 @@ std::string Membre::afficherHTML3(bool racine) const
         case operation_division:
             // Placement de la barre de fraction + centrage
             std::string headNum, tailNum;
+            std::string fracBar;
             std::string headDen, tailDen;
             if(membre1_->getLargeur() >= membre2_->getLargeur())
             {
                 headNum = "\n      <td style=\"text-align:center;\">";
                 tailNum = "</td>";
-                headDen = "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\"><hr />";
+                fracBar = "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\"><hr /></td>";
+                headDen = "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre1_->getLargeur()) + "\">";
                 tailDen = "</td>";
             }
             else
             {
                 headNum = "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre2_->getLargeur()) + "\">";
-                tailNum = "<hr /></td>";
+                tailNum = "</td>";
+                fracBar = "\n      <td style=\"text-align:center;\" colspan=\"" + std::to_string(membre2_->getLargeur()) + "\"><hr /></td>";
                 headDen = "\n      <td style=\"text-align:center;\">";
                 tailDen = "</td>";
             }
@@ -1111,7 +1121,8 @@ std::string Membre::afficherHTML3(bool racine) const
                 out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">"
                     + headNum + membre1_->afficherHTML() + tailNum
                     + "\n   </tr>"
-                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"     // Barre de fraction + Denominateur
+                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">" + fracBar + "</tr>"     // Barre de fraction + Denominateur
+                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"
                     + headDen + membre2_->afficherHTML() + tailDen
                     + "\n   </tr>"
                     + "\n</table>";
@@ -1120,7 +1131,8 @@ std::string Membre::afficherHTML3(bool racine) const
                 out += "\n<table style=\"border-collapse:collapse;\">\n   <tr style=\"text-align:center;vertical-align:middle;\">\n      <td>(</td>"
                     + headNum + membre1_->afficherHTML() + tailNum
                     + "\n   </tr>"
-                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"     // Barre de fraction + Denominateur
+                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">" + fracBar + "</tr>"     // Barre de fraction + Denominateur
+                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"
                     + headDen + membre2_->afficherHTML() + tailDen
                     + "\n   </tr>"
                     + "\n</table>";
@@ -1130,7 +1142,8 @@ std::string Membre::afficherHTML3(bool racine) const
                     + headNum + membre1_->afficherHTML() + tailNum
                     + "\n      <td style=\"text-align:center;\">)</td>"
                     + "\n   </tr>"
-                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"     // Barre de fraction + Denominateur
+                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">" + fracBar + "</tr>"     // Barre de fraction + Denominateur
+                    + "\n   <tr style=\"text-align:center;vertical-align:middle;\">"
                     + headDen + membre2_->afficherHTML() + tailDen
                     + "\n   </tr>"
                     + "\n</table>";
@@ -1153,6 +1166,7 @@ std::string Membre::afficherHTML3(bool racine) const
 
     return out;
 }
+#endif
 
 void Membre::afficherOperation(std::ostream &out) const
 {

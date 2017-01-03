@@ -129,9 +129,11 @@ std::string ZFraction::afficherPlainText1(void) const
 
 std::string ZFraction::afficherHTML(void) const
 {
+    //return ZFraction::afficherHTML1();
     return ZFraction::afficherHTML2();
 }
 
+#if 0
 std::string ZFraction::afficherHTML1(void) const
 {
     std::string out;
@@ -161,7 +163,9 @@ std::string ZFraction::afficherHTML1(void) const
     }
     return out;
 }
+#endif
 
+#if 1
 std::string ZFraction::afficherHTML2(void) const
 {
     std::string out;
@@ -173,9 +177,10 @@ std::string ZFraction::afficherHTML2(void) const
                 + std::to_string(_numerateur)
                 + "</td>"
                 + "   </tr>"
+                + "   <tr><td><hr /></td></tr>"     // Barre de fraction + Denominateur
                 + "   <tr>"     // Barre de fraction + Denominateur
                 + "      <td>"
-                + "         <hr />" + std::to_string(_denominateur)
+                + "         " + std::to_string(_denominateur)
                 + "      </td>"
                 + "   </tr>"
                 + "</table>";
@@ -191,6 +196,7 @@ std::string ZFraction::afficherHTML2(void) const
     }
     return out;
 }
+#endif
 
 long int ZFraction::getNumerateur(void) const
 {

@@ -167,7 +167,9 @@ private:
     bool _afficherFraction = true;
 private:
     std::string afficherPlainText1(void) const;
+#if 0
     std::string afficherHTML1(void) const;
+#endif
     std::string afficherHTML2(void) const;
     long int getPGCD(long int, long int) const;
     void simplifier();

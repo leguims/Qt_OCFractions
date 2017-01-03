@@ -68,8 +68,10 @@ public:
 
 private:
     std::string afficherPlainText1(void) const;
+#if 0
     std::string afficherHTML1(bool) const;
     std::string afficherHTML2(bool) const;
+#endif
     std::string afficherHTML3(bool) const;
     void ouvrirParenthese_valueless(operation);
     void ouvrirParenthese_simple(operation);
